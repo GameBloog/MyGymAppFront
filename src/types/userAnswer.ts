@@ -37,3 +37,19 @@ export interface CreateUserAnswerDTO {
   dias_treino_semana?: number
   frequencia_horarios_refeicoes?: string
 }
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface UpdateUserAnswerDTO extends Partial<CreateUserAnswerDTO> {}
+
+export interface ApiError {
+  error: string
+  details?: Array<{
+    campo: string
+    mensagem: string
+  }>
+}
+
+export interface HealthCheck {
+  status: string
+  timestamp: string
+}
