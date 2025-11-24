@@ -21,12 +21,9 @@ import { showToast } from "../utils/toast"
 import { useAuth } from "../hooks/useAuth"
 
 const initialFormState = {
-  // Dados do User
   nome: "",
   email: "",
   password: "",
-
-  // Dados físicos
   telefone: "",
   alturaCm: "",
   pesoKg: "",
@@ -45,34 +42,35 @@ export const AnswerForm: React.FC = () => {
   const { user } = useAuth()
   const isEdit = Boolean(id)
 
-  // Hooks
+  // CORREÇÃO: Aluno sempre edita a si mesmo
+  const isAluno = user?.role === "ALUNO"
+  const alunoIdToEdit = isAluno ? user.id : id
+
   const createAluno = useCreateAluno()
   const updateAluno = useUpdateAluno()
-  const { data: existingAluno, isLoading: loadingAluno } = useAluno(id || "")
+  const { data: existingAluno, isLoading: loadingAluno } = useAluno(
+    alunoIdToEdit || ""
+  )
 
   const [formData, setFormData] = useState(initialFormState)
-
   const [alimentosDiario, setAlimentosDiario] = useState("")
   const [alimentosNaoCome, setAlimentosNaoCome] = useState("")
   const [alergias, setAlergias] = useState("")
   const [suplementos, setSuplementos] = useState("")
-
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  // Determinar rota de retorno baseada no role
   const getBackRoute = () => {
     if (user?.role === "ADMIN") return "/admin/alunos"
     if (user?.role === "PROFESSOR") return "/professor/dashboard"
-    return "/"
+    return "/aluno/perfil"
   }
 
-  // Preenche o formulário quando está editando
   useEffect(() => {
-    if (isEdit && existingAluno) {
+    if ((isEdit || isAluno) && existingAluno) {
       setFormData({
-        nome: "", // Não temos o nome na resposta do aluno
-        email: "", // Não temos o email na resposta do aluno
-        password: "", // Não edita senha
+        nome: "",
+        email: "",
+        password: "",
         telefone: existingAluno.telefone || "",
         alturaCm: existingAluno.alturaCm?.toString() || "",
         pesoKg: existingAluno.pesoKg?.toString() || "",
@@ -91,13 +89,12 @@ export const AnswerForm: React.FC = () => {
       setAlergias(existingAluno.alergias_alimentares?.join(", ") || "")
       setSuplementos(existingAluno.suplementos_consumidos?.join(", ") || "")
     }
-  }, [isEdit, existingAluno])
+  }, [isEdit, isAluno, existingAluno])
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {}
 
-    // Validações apenas para criação
-    if (!isEdit) {
+    if (!isEdit && !isAluno) {
       if (!formData.nome.trim()) {
         newErrors.nome = "Nome é obrigatório"
       } else if (formData.nome.trim().length < 2) {
@@ -117,7 +114,6 @@ export const AnswerForm: React.FC = () => {
       }
     }
 
-    // Validações gerais
     if (formData.dias_treino_semana) {
       const dias = Number(formData.dias_treino_semana)
       if (dias < 0 || dias > 7) {
@@ -145,8 +141,7 @@ export const AnswerForm: React.FC = () => {
     }
 
     try {
-      if (isEdit && id) {
-        // Atualizar aluno existente
+      if (isEdit || isAluno) {
         const dataToSend: UpdateAlunoDTO = {}
 
         if (formData.telefone.trim())
@@ -168,7 +163,6 @@ export const AnswerForm: React.FC = () => {
           dataToSend.frequencia_horarios_refeicoes =
             formData.frequencia_horarios_refeicoes.trim()
 
-        // Arrays
         const alimentosDiarioArray = alimentosDiario
           .split(",")
           .map((s) => s.trim())
@@ -197,15 +191,19 @@ export const AnswerForm: React.FC = () => {
         if (suplementosArray.length > 0)
           dataToSend.suplementos_consumidos = suplementosArray
 
-        await updateAluno.mutateAsync({ id, data: dataToSend })
-        showToast.success("✅ Aluno atualizado com sucesso!")
+        await updateAluno.mutateAsync({ id: alunoIdToEdit!, data: dataToSend })
+        showToast.success("✅ Dados atualizados com sucesso!")
+
+        if (!isAluno) {
+          navigate(getBackRoute())
+        }
       } else {
-        // Criar novo aluno
         const dataToSend: CreateAlunoDTO = {
           nome: formData.nome.trim(),
           email: formData.email.trim(),
           password: formData.password,
-          professorId: user!.id, // ID do professor logado (ou admin escolhe)
+          
+          professorId: user!.id,
         }
 
         if (formData.telefone.trim())
@@ -227,7 +225,6 @@ export const AnswerForm: React.FC = () => {
           dataToSend.frequencia_horarios_refeicoes =
             formData.frequencia_horarios_refeicoes.trim()
 
-        // Arrays
         const alimentosDiarioArray = alimentosDiario
           .split(",")
           .map((s) => s.trim())
@@ -259,13 +256,14 @@ export const AnswerForm: React.FC = () => {
         await createAluno.mutateAsync(dataToSend)
         showToast.success("✅ Aluno cadastrado com sucesso!")
         resetForm()
+        navigate(getBackRoute())
       }
     } catch (error: any) {
       showToast.error(error.message || "Erro ao salvar aluno")
     }
   }
 
-  if (isEdit && loadingAluno) {
+  if ((isEdit || isAluno) && loadingAluno) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
         <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
@@ -281,19 +279,21 @@ export const AnswerForm: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
-          <button
-            onClick={() => navigate(getBackRoute())}
-            className="p-2 hover:bg-white rounded-lg transition-colors"
-            title="Voltar"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </button>
+          {!isAluno && (
+            <button
+              onClick={() => navigate(getBackRoute())}
+              className="p-2 hover:bg-white rounded-lg transition-colors"
+              title="Voltar"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+          )}
           <h1 className="text-3xl font-bold text-gray-900">
-            {isEdit ? "Editar Aluno" : "Novo Aluno"}
+            {isAluno ? "Meu Perfil" : isEdit ? "Editar Aluno" : "Novo Aluno"}
           </h1>
         </div>
 
-        {!isEdit && (
+        {!isEdit && !isAluno && (
           <Button
             variant="secondary"
             icon={RotateCcw}
@@ -305,17 +305,13 @@ export const AnswerForm: React.FC = () => {
         )}
       </div>
 
-      {/* Seção: Dados de Acesso (apenas criação) */}
-      {!isEdit && (
+      {/* Dados de Acesso (apenas criação) */}
+      {!isEdit && !isAluno && (
         <Card className="mb-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <User className="h-5 w-5" />
             Dados de Acesso
           </h2>
-          <p className="text-sm text-gray-600 mb-4">
-            Estas credenciais serão usadas pelo aluno para fazer login no
-            sistema.
-          </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
@@ -369,8 +365,8 @@ export const AnswerForm: React.FC = () => {
         </Card>
       )}
 
-      {/* Seção: Dados Pessoais (apenas edição) */}
-      {isEdit && (
+      {/* Dados Pessoais (edição) */}
+      {(isEdit || isAluno) && (
         <Card className="mb-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <User className="h-5 w-5" />
@@ -403,8 +399,7 @@ export const AnswerForm: React.FC = () => {
         </Card>
       )}
 
-      {/* Seção: Dados Físicos */}
-      {!isEdit && (
+      {!isEdit && !isAluno && (
         <Card className="mb-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <Activity className="h-5 w-5" />
@@ -428,7 +423,6 @@ export const AnswerForm: React.FC = () => {
         </Card>
       )}
 
-      {/* Medidas Corporais */}
       <Card className="mb-6">
         <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
           <Activity className="h-5 w-5" />
@@ -502,7 +496,6 @@ export const AnswerForm: React.FC = () => {
         </div>
       </Card>
 
-      {/* Informações Nutricionais */}
       <Card className="mb-6">
         <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
           <Heart className="h-5 w-5" />
@@ -571,22 +564,24 @@ export const AnswerForm: React.FC = () => {
       <div className="flex flex-col sm:flex-row gap-4">
         <Button
           onClick={handleSubmit}
-          icon={isEdit ? Save : Plus}
+          icon={isEdit || isAluno ? Save : Plus}
           isLoading={isLoading}
           disabled={isLoading}
         >
-          {isEdit ? "Salvar Alterações" : "Cadastrar Aluno"}
+          {isEdit || isAluno ? "Salvar Alterações" : "Cadastrar Aluno"}
         </Button>
-        <Button
-          variant="secondary"
-          onClick={() => navigate(getBackRoute())}
-          disabled={isLoading}
-        >
-          Voltar
-        </Button>
+        {!isAluno && (
+          <Button
+            variant="secondary"
+            onClick={() => navigate(getBackRoute())}
+            disabled={isLoading}
+          >
+            Voltar
+          </Button>
+        )}
       </div>
 
-      {!isEdit && (
+      {!isEdit && !isAluno && (
         <p className="text-sm text-gray-500 mt-4">* Campos obrigatórios</p>
       )}
     </div>
