@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import {
   User,
   Mail,
+  Lock,
   Phone,
   Calendar,
   Activity,
@@ -14,17 +15,18 @@ import {
   RotateCcw,
 } from "lucide-react"
 import { Card, Input, Button, Textarea } from "../components/ui"
-import {
-  useCreateAnswer,
-  useUpdateAnswer,
-  useAnswer,
-} from "../hooks/userAnswer"
-import { type CreateUserAnswerDTO, type UpdateUserAnswerDTO } from "../types/userAnswer"
+import { useCreateAluno, useUpdateAluno, useAluno } from "../hooks/useAlunos"
+import { type CreateAlunoDTO, type UpdateAlunoDTO } from "../types"
 import { showToast } from "../utils/toast"
+import { useAuth } from "../hooks/useAuth"
 
 const initialFormState = {
+  // Dados do User
   nome: "",
   email: "",
+  password: "",
+
+  // Dados físicos
   telefone: "",
   alturaCm: "",
   pesoKg: "",
@@ -40,12 +42,13 @@ const initialFormState = {
 export const AnswerForm: React.FC = () => {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
+  const { user } = useAuth()
   const isEdit = Boolean(id)
 
   // Hooks
-  const createAnswer = useCreateAnswer()
-  const updateAnswer = useUpdateAnswer()
-  const { data: existingAnswer, isLoading: loadingAnswer } = useAnswer(id || "")
+  const createAluno = useCreateAluno()
+  const updateAluno = useUpdateAluno()
+  const { data: existingAluno, isLoading: loadingAluno } = useAluno(id || "")
 
   const [formData, setFormData] = useState(initialFormState)
 
@@ -56,47 +59,65 @@ export const AnswerForm: React.FC = () => {
 
   const [errors, setErrors] = useState<Record<string, string>>({})
 
+  // Determinar rota de retorno baseada no role
+  const getBackRoute = () => {
+    if (user?.role === "ADMIN") return "/admin/alunos"
+    if (user?.role === "PROFESSOR") return "/professor/dashboard"
+    return "/"
+  }
+
   // Preenche o formulário quando está editando
   useEffect(() => {
-    if (isEdit && existingAnswer) {
+    if (isEdit && existingAluno) {
       setFormData({
-        nome: existingAnswer.nome || "",
-        email: existingAnswer.email || "",
-        telefone: existingAnswer.telefone || "",
-        alturaCm: existingAnswer.alturaCm?.toString() || "",
-        pesoKg: existingAnswer.pesoKg?.toString() || "",
-        idade: existingAnswer.idade?.toString() || "",
-        cinturaCm: existingAnswer.cinturaCm?.toString() || "",
-        quadrilCm: existingAnswer.quadrilCm?.toString() || "",
-        pescocoCm: existingAnswer.pescocoCm?.toString() || "",
-        dias_treino_semana: existingAnswer.dias_treino_semana?.toString() || "",
-        dores_articulares: existingAnswer.dores_articulares || "",
+        nome: "", // Não temos o nome na resposta do aluno
+        email: "", // Não temos o email na resposta do aluno
+        password: "", // Não edita senha
+        telefone: existingAluno.telefone || "",
+        alturaCm: existingAluno.alturaCm?.toString() || "",
+        pesoKg: existingAluno.pesoKg?.toString() || "",
+        idade: existingAluno.idade?.toString() || "",
+        cinturaCm: existingAluno.cinturaCm?.toString() || "",
+        quadrilCm: existingAluno.quadrilCm?.toString() || "",
+        pescocoCm: existingAluno.pescocoCm?.toString() || "",
+        dias_treino_semana: existingAluno.dias_treino_semana?.toString() || "",
+        dores_articulares: existingAluno.dores_articulares || "",
         frequencia_horarios_refeicoes:
-          existingAnswer.frequencia_horarios_refeicoes || "",
+          existingAluno.frequencia_horarios_refeicoes || "",
       })
 
-      setAlimentosDiario(existingAnswer.alimentos_quer_diario?.join(", ") || "")
-      setAlimentosNaoCome(existingAnswer.alimentos_nao_comem?.join(", ") || "")
-      setAlergias(existingAnswer.alergias_alimentares?.join(", ") || "")
-      setSuplementos(existingAnswer.suplementos_consumidos?.join(", ") || "")
+      setAlimentosDiario(existingAluno.alimentos_quer_diario?.join(", ") || "")
+      setAlimentosNaoCome(existingAluno.alimentos_nao_comem?.join(", ") || "")
+      setAlergias(existingAluno.alergias_alimentares?.join(", ") || "")
+      setSuplementos(existingAluno.suplementos_consumidos?.join(", ") || "")
     }
-  }, [isEdit, existingAnswer])
+  }, [isEdit, existingAluno])
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {}
 
-    if (!formData.nome.trim()) {
-      newErrors.nome = "Nome é obrigatório"
-    } else if (formData.nome.trim().length < 2) {
-      newErrors.nome = "Nome deve ter pelo menos 2 caracteres"
+    // Validações apenas para criação
+    if (!isEdit) {
+      if (!formData.nome.trim()) {
+        newErrors.nome = "Nome é obrigatório"
+      } else if (formData.nome.trim().length < 2) {
+        newErrors.nome = "Nome deve ter pelo menos 2 caracteres"
+      }
+
+      if (!formData.email.trim()) {
+        newErrors.email = "Email é obrigatório"
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+        newErrors.email = "Email inválido"
+      }
+
+      if (!formData.password) {
+        newErrors.password = "Senha é obrigatória"
+      } else if (formData.password.length < 6) {
+        newErrors.password = "Senha deve ter pelo menos 6 caracteres"
+      }
     }
 
-    if (!formData.email.trim()) {
-      newErrors.email = "Email é obrigatório"
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Email inválido"
-    }
-
+    // Validações gerais
     if (formData.dias_treino_semana) {
       const dias = Number(formData.dias_treino_semana)
       if (dias < 0 || dias > 7) {
@@ -123,71 +144,128 @@ export const AnswerForm: React.FC = () => {
       return
     }
 
-    const dataToSend: CreateUserAnswerDTO | UpdateUserAnswerDTO = {
-      nome: formData.nome.trim(),
-      email: formData.email.trim(),
-    }
-
-    // Adiciona campos opcionais
-    if (formData.telefone.trim()) dataToSend.telefone = formData.telefone.trim()
-    if (formData.alturaCm) dataToSend.alturaCm = Number(formData.alturaCm)
-    if (formData.pesoKg) dataToSend.pesoKg = Number(formData.pesoKg)
-    if (formData.idade) dataToSend.idade = Number(formData.idade)
-    if (formData.cinturaCm) dataToSend.cinturaCm = Number(formData.cinturaCm)
-    if (formData.quadrilCm) dataToSend.quadrilCm = Number(formData.quadrilCm)
-    if (formData.pescocoCm) dataToSend.pescocoCm = Number(formData.pescocoCm)
-    if (formData.dias_treino_semana)
-      dataToSend.dias_treino_semana = Number(formData.dias_treino_semana)
-    if (formData.dores_articulares.trim())
-      dataToSend.dores_articulares = formData.dores_articulares.trim()
-    if (formData.frequencia_horarios_refeicoes.trim())
-      dataToSend.frequencia_horarios_refeicoes =
-        formData.frequencia_horarios_refeicoes.trim()
-
-    // Arrays
-    const alimentosDiarioArray = alimentosDiario
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean)
-    if (alimentosDiarioArray.length > 0)
-      dataToSend.alimentos_quer_diario = alimentosDiarioArray
-
-    const alimentosNaoComeArray = alimentosNaoCome
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean)
-    if (alimentosNaoComeArray.length > 0)
-      dataToSend.alimentos_nao_comem = alimentosNaoComeArray
-
-    const alergiasArray = alergias
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean)
-    if (alergiasArray.length > 0)
-      dataToSend.alergias_alimentares = alergiasArray
-
-    const suplementosArray = suplementos
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean)
-    if (suplementosArray.length > 0)
-      dataToSend.suplementos_consumidos = suplementosArray
-
     try {
       if (isEdit && id) {
-        await updateAnswer.mutateAsync({ id, data: dataToSend })
-        showToast.success("✅ Resposta atualizada com sucesso!")
+        // Atualizar aluno existente
+        const dataToSend: UpdateAlunoDTO = {}
+
+        if (formData.telefone.trim())
+          dataToSend.telefone = formData.telefone.trim()
+        if (formData.alturaCm) dataToSend.alturaCm = Number(formData.alturaCm)
+        if (formData.pesoKg) dataToSend.pesoKg = Number(formData.pesoKg)
+        if (formData.idade) dataToSend.idade = Number(formData.idade)
+        if (formData.cinturaCm)
+          dataToSend.cinturaCm = Number(formData.cinturaCm)
+        if (formData.quadrilCm)
+          dataToSend.quadrilCm = Number(formData.quadrilCm)
+        if (formData.pescocoCm)
+          dataToSend.pescocoCm = Number(formData.pescocoCm)
+        if (formData.dias_treino_semana)
+          dataToSend.dias_treino_semana = Number(formData.dias_treino_semana)
+        if (formData.dores_articulares.trim())
+          dataToSend.dores_articulares = formData.dores_articulares.trim()
+        if (formData.frequencia_horarios_refeicoes.trim())
+          dataToSend.frequencia_horarios_refeicoes =
+            formData.frequencia_horarios_refeicoes.trim()
+
+        // Arrays
+        const alimentosDiarioArray = alimentosDiario
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+        if (alimentosDiarioArray.length > 0)
+          dataToSend.alimentos_quer_diario = alimentosDiarioArray
+
+        const alimentosNaoComeArray = alimentosNaoCome
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+        if (alimentosNaoComeArray.length > 0)
+          dataToSend.alimentos_nao_comem = alimentosNaoComeArray
+
+        const alergiasArray = alergias
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+        if (alergiasArray.length > 0)
+          dataToSend.alergias_alimentares = alergiasArray
+
+        const suplementosArray = suplementos
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+        if (suplementosArray.length > 0)
+          dataToSend.suplementos_consumidos = suplementosArray
+
+        await updateAluno.mutateAsync({ id, data: dataToSend })
+        showToast.success("✅ Aluno atualizado com sucesso!")
       } else {
-        await createAnswer.mutateAsync(dataToSend as CreateUserAnswerDTO)
-        showToast.success("✅ Resposta cadastrada com sucesso!")
-        resetForm() // Limpa o formulário após criar
+        // Criar novo aluno
+        const dataToSend: CreateAlunoDTO = {
+          nome: formData.nome.trim(),
+          email: formData.email.trim(),
+          password: formData.password,
+          professorId: user!.id, // ID do professor logado (ou admin escolhe)
+        }
+
+        if (formData.telefone.trim())
+          dataToSend.telefone = formData.telefone.trim()
+        if (formData.alturaCm) dataToSend.alturaCm = Number(formData.alturaCm)
+        if (formData.pesoKg) dataToSend.pesoKg = Number(formData.pesoKg)
+        if (formData.idade) dataToSend.idade = Number(formData.idade)
+        if (formData.cinturaCm)
+          dataToSend.cinturaCm = Number(formData.cinturaCm)
+        if (formData.quadrilCm)
+          dataToSend.quadrilCm = Number(formData.quadrilCm)
+        if (formData.pescocoCm)
+          dataToSend.pescocoCm = Number(formData.pescocoCm)
+        if (formData.dias_treino_semana)
+          dataToSend.dias_treino_semana = Number(formData.dias_treino_semana)
+        if (formData.dores_articulares.trim())
+          dataToSend.dores_articulares = formData.dores_articulares.trim()
+        if (formData.frequencia_horarios_refeicoes.trim())
+          dataToSend.frequencia_horarios_refeicoes =
+            formData.frequencia_horarios_refeicoes.trim()
+
+        // Arrays
+        const alimentosDiarioArray = alimentosDiario
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+        if (alimentosDiarioArray.length > 0)
+          dataToSend.alimentos_quer_diario = alimentosDiarioArray
+
+        const alimentosNaoComeArray = alimentosNaoCome
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+        if (alimentosNaoComeArray.length > 0)
+          dataToSend.alimentos_nao_comem = alimentosNaoComeArray
+
+        const alergiasArray = alergias
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+        if (alergiasArray.length > 0)
+          dataToSend.alergias_alimentares = alergiasArray
+
+        const suplementosArray = suplementos
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+        if (suplementosArray.length > 0)
+          dataToSend.suplementos_consumidos = suplementosArray
+
+        await createAluno.mutateAsync(dataToSend)
+        showToast.success("✅ Aluno cadastrado com sucesso!")
+        resetForm()
       }
     } catch (error: any) {
-      showToast.error(error.message || "Erro ao salvar resposta")
+      showToast.error(error.message || "Erro ao salvar aluno")
     }
   }
 
-  if (isEdit && loadingAnswer) {
+  if (isEdit && loadingAluno) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
         <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
@@ -196,7 +274,7 @@ export const AnswerForm: React.FC = () => {
     )
   }
 
-  const isLoading = createAnswer.isLoading || updateAnswer.isLoading
+  const isLoading = createAluno.isLoading || updateAluno.isLoading
 
   return (
     <div>
@@ -204,21 +282,19 @@ export const AnswerForm: React.FC = () => {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate(getBackRoute())}
             className="p-2 hover:bg-white rounded-lg transition-colors"
             title="Voltar"
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
           <h1 className="text-3xl font-bold text-gray-900">
-            {isEdit ? "Editar Resposta" : "Nova Resposta"}
+            {isEdit ? "Editar Aluno" : "Novo Aluno"}
           </h1>
         </div>
 
-        {/* Botão de reset (apenas no modo criar) */}
         {!isEdit && (
           <Button
-          className="mt-4"
             variant="secondary"
             icon={RotateCcw}
             onClick={resetForm}
@@ -229,62 +305,128 @@ export const AnswerForm: React.FC = () => {
         )}
       </div>
 
-      {/* Informações Pessoais */}
-      <Card className="mb-6">
-        <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-          <User className="h-5 w-5" />
-          Informações Pessoais
-        </h2>
+      {/* Seção: Dados de Acesso (apenas criação) */}
+      {!isEdit && (
+        <Card className="mb-6">
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <User className="h-5 w-5" />
+            Dados de Acesso
+          </h2>
+          <p className="text-sm text-gray-600 mb-4">
+            Estas credenciais serão usadas pelo aluno para fazer login no
+            sistema.
+          </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input
-            label="Nome Completo *"
-            icon={User}
-            value={formData.nome}
-            onChange={(e) => {
-              setFormData({ ...formData, nome: e.target.value })
-              setErrors({ ...errors, nome: "" })
-            }}
-            placeholder="João Silva"
-            error={errors.nome}
-            required
-          />
-          <Input
-            label="Email *"
-            icon={Mail}
-            type="email"
-            value={formData.email}
-            onChange={(e) => {
-              setFormData({ ...formData, email: e.target.value })
-              setErrors({ ...errors, email: "" })
-            }}
-            placeholder="joao@email.com"
-            error={errors.email}
-            required
-          />
-          <Input
-            label="Telefone"
-            icon={Phone}
-            value={formData.telefone}
-            onChange={(e) =>
-              setFormData({ ...formData, telefone: e.target.value })
-            }
-            placeholder="(11) 98765-4321"
-          />
-          <Input
-            label="Idade"
-            icon={Calendar}
-            type="number"
-            value={formData.idade}
-            onChange={(e) =>
-              setFormData({ ...formData, idade: e.target.value })
-            }
-            placeholder="28"
-            min="1"
-            max="120"
-          />
-        </div>
-      </Card>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label="Nome Completo *"
+              icon={User}
+              value={formData.nome}
+              onChange={(e) => {
+                setFormData({ ...formData, nome: e.target.value })
+                setErrors({ ...errors, nome: "" })
+              }}
+              placeholder="João Silva"
+              error={errors.nome}
+              required
+            />
+            <Input
+              label="Email *"
+              icon={Mail}
+              type="email"
+              value={formData.email}
+              onChange={(e) => {
+                setFormData({ ...formData, email: e.target.value })
+                setErrors({ ...errors, email: "" })
+              }}
+              placeholder="joao@email.com"
+              error={errors.email}
+              required
+            />
+            <Input
+              label="Senha Temporária *"
+              icon={Lock}
+              type="password"
+              value={formData.password}
+              onChange={(e) => {
+                setFormData({ ...formData, password: e.target.value })
+                setErrors({ ...errors, password: "" })
+              }}
+              placeholder="Mínimo 6 caracteres"
+              error={errors.password}
+              required
+            />
+            <Input
+              label="Telefone"
+              icon={Phone}
+              value={formData.telefone}
+              onChange={(e) =>
+                setFormData({ ...formData, telefone: e.target.value })
+              }
+              placeholder="(11) 98765-4321"
+            />
+          </div>
+        </Card>
+      )}
+
+      {/* Seção: Dados Pessoais (apenas edição) */}
+      {isEdit && (
+        <Card className="mb-6">
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <User className="h-5 w-5" />
+            Dados Pessoais
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label="Telefone"
+              icon={Phone}
+              value={formData.telefone}
+              onChange={(e) =>
+                setFormData({ ...formData, telefone: e.target.value })
+              }
+              placeholder="(11) 98765-4321"
+            />
+            <Input
+              label="Idade"
+              icon={Calendar}
+              type="number"
+              value={formData.idade}
+              onChange={(e) =>
+                setFormData({ ...formData, idade: e.target.value })
+              }
+              placeholder="28"
+              min="1"
+              max="120"
+            />
+          </div>
+        </Card>
+      )}
+
+      {/* Seção: Dados Físicos */}
+      {!isEdit && (
+        <Card className="mb-6">
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <Activity className="h-5 w-5" />
+            Dados Físicos
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Input
+              label="Idade"
+              icon={Calendar}
+              type="number"
+              value={formData.idade}
+              onChange={(e) =>
+                setFormData({ ...formData, idade: e.target.value })
+              }
+              placeholder="28"
+              min="1"
+              max="120"
+            />
+          </div>
+        </Card>
+      )}
 
       {/* Medidas Corporais */}
       <Card className="mb-6">
@@ -433,18 +575,20 @@ export const AnswerForm: React.FC = () => {
           isLoading={isLoading}
           disabled={isLoading}
         >
-          {isEdit ? "Salvar Alterações" : "Cadastrar Resposta"}
+          {isEdit ? "Salvar Alterações" : "Cadastrar Aluno"}
         </Button>
         <Button
           variant="secondary"
-          onClick={() => navigate("/")}
+          onClick={() => navigate(getBackRoute())}
           disabled={isLoading}
         >
-          Voltar para Lista
+          Voltar
         </Button>
       </div>
 
-      <p className="text-sm text-gray-500 mt-4">* Campos obrigatórios</p>
+      {!isEdit && (
+        <p className="text-sm text-gray-500 mt-4">* Campos obrigatórios</p>
+      )}
     </div>
   )
 }
