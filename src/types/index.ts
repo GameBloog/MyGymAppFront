@@ -1,6 +1,3 @@
-// src/types/index.ts
-
-// ========== AUTH TYPES ==========
 export type UserRole = "ADMIN" | "PROFESSOR" | "ALUNO"
 
 export interface User {
@@ -32,7 +29,6 @@ export interface RegisterDTO {
   especialidade?: string
 }
 
-// ========== INVITE CODE TYPES ==========
 export interface InviteCode {
   id: string
   code: string
@@ -47,6 +43,16 @@ export interface InviteCode {
 export interface CreateInviteCodeDTO {
   role: "PROFESSOR" | "ADMIN"
   expiresInDays?: number
+}
+
+export interface Professor {
+  id: string
+  userId: string
+  telefone?: string | null
+  especialidade?: string | null
+  createdAt: string
+  updatedAt: string
+  user?: User
 }
 
 // ========== ALUNO TYPES ==========
@@ -70,18 +76,17 @@ export interface Aluno {
   frequencia_horarios_refeicoes?: string | null
   createdAt: string
   updatedAt: string
+  user?: User
+  professor?: Professor
 }
 
 export interface CreateAlunoDTO {
-  // Dados do User
   nome: string
   email: string
   password: string
 
-  // Vinculação
   professorId: string
 
-  // Dados físicos
   telefone?: string
   alturaCm?: number
   pesoKg?: number
@@ -90,13 +95,11 @@ export interface CreateAlunoDTO {
   quadrilCm?: number
   pescocoCm?: number
 
-  // Alimentação
   alimentos_quer_diario?: string[]
   alimentos_nao_comem?: string[]
   alergias_alimentares?: string[]
   suplementos_consumidos?: string[]
 
-  // Treino
   dores_articulares?: string
   dias_treino_semana?: number
   frequencia_horarios_refeicoes?: string
@@ -119,7 +122,6 @@ export interface UpdateAlunoDTO {
   frequencia_horarios_refeicoes?: string
 }
 
-// ========== API ERROR TYPES ==========
 export interface ApiError {
   error: string
   details?: Array<{

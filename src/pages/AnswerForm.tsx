@@ -13,10 +13,12 @@ import {
   Loader2,
   Save,
   RotateCcw,
+  UserCheck,
 } from "lucide-react"
 import { Card, Input, Button, Textarea } from "../components/ui"
 import { useCreateAluno, useUpdateAluno, useAluno } from "../hooks/useAlunos"
 import { useMyAluno } from "../hooks/useMyAluno"
+import { useProfessores } from "../hooks/useProfessores"
 import { type CreateAlunoDTO, type UpdateAlunoDTO } from "../types"
 import { showToast } from "../utils/toast"
 import { useAuth } from "../hooks/useAuth"
@@ -26,6 +28,7 @@ const initialFormState = {
   email: "",
   password: "",
   telefone: "",
+  professorId: "",
   alturaCm: "",
   pesoKg: "",
   idade: "",
@@ -42,26 +45,24 @@ export const AnswerForm: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { user } = useAuth()
 
-  // CORREÇÃO: Determinar modo de operação
   const isAluno = user?.role === "ALUNO"
-  const isEdit = Boolean(id) || isAluno // Aluno sempre está editando
-  const isCreating = !id && !isAluno // Criando novo aluno (Admin/Professor)
+  const isAdmin = user?.role === "ADMIN"
+  const isProfessor = user?.role === "PROFESSOR"
+  const isEdit = Boolean(id) || isAluno
+  const isCreating = !id && !isAluno
 
   const createAluno = useCreateAluno()
   const updateAluno = useUpdateAluno()
 
-  // Hook para buscar aluno existente (Admin/Professor editando)
+  const { data: professores, isLoading: loadingProfessores } = useProfessores()
+
+  const shouldFetchById = Boolean(id) && !isAluno
   const { data: editingAluno, isLoading: loadingEditAluno } = useAluno(
-    id || "",
-    {
-      enabled: Boolean(id) && !isAluno,
-    }
+    shouldFetchById ? id! : ""
   )
 
-  // Hook para buscar dados do próprio aluno (Aluno logado)
   const { data: myAluno, isLoading: loadingMyAluno } = useMyAluno()
 
-  // Determinar qual aluno carregar
   const existingAluno = isAluno ? myAluno : editingAluno
   const loadingAluno = isAluno ? loadingMyAluno : loadingEditAluno
 
@@ -73,10 +74,19 @@ export const AnswerForm: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const getBackRoute = () => {
-    if (user?.role === "ADMIN") return "/admin/alunos"
-    if (user?.role === "PROFESSOR") return "/professor/dashboard"
+    if (isAdmin) return "/admin/alunos"
+    if (isProfessor) return "/professor/dashboard"
     return "/aluno/perfil"
   }
+
+  useEffect(() => {
+    if (isProfessor && isCreating && professores && professores.length > 0) {
+      const meuProfessor = professores.find((p) => p.userId === user?.id)
+      if (meuProfessor) {
+        setFormData((prev) => ({ ...prev, professorId: meuProfessor.id }))
+      }
+    }
+  }, [isProfessor, isCreating, professores, user])
 
   useEffect(() => {
     if (isEdit && existingAluno) {
@@ -84,6 +94,7 @@ export const AnswerForm: React.FC = () => {
         nome: "",
         email: "",
         password: "",
+        professorId: existingAluno.professorId || "",
         telefone: existingAluno.telefone || "",
         alturaCm: existingAluno.alturaCm?.toString() || "",
         pesoKg: existingAluno.pesoKg?.toString() || "",
@@ -107,7 +118,6 @@ export const AnswerForm: React.FC = () => {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {}
 
-    // Validações apenas para criação
     if (isCreating) {
       if (!formData.nome.trim()) {
         newErrors.nome = "Nome é obrigatório"
@@ -126,9 +136,12 @@ export const AnswerForm: React.FC = () => {
       } else if (formData.password.length < 6) {
         newErrors.password = "Senha deve ter pelo menos 6 caracteres"
       }
+
+      if (!formData.professorId) {
+        newErrors.professorId = "Selecione um professor"
+      }
     }
 
-    // Validações gerais
     if (formData.dias_treino_semana) {
       const dias = Number(formData.dias_treino_semana)
       if (dias < 0 || dias > 7) {
@@ -157,9 +170,6 @@ export const AnswerForm: React.FC = () => {
 
     try {
       if (isEdit) {
-        // ============================================
-        // MODO EDIÇÃO (Admin/Professor/Aluno)
-        // ============================================
         const dataToSend: UpdateAlunoDTO = {}
 
         if (formData.telefone.trim())
@@ -209,25 +219,20 @@ export const AnswerForm: React.FC = () => {
         if (suplementosArray.length > 0)
           dataToSend.suplementos_consumidos = suplementosArray
 
-        // Determinar ID do aluno a ser atualizado
         const alunoId = isAluno ? existingAluno!.id : id!
 
         await updateAluno.mutateAsync({ id: alunoId, data: dataToSend })
         showToast.success("✅ Dados atualizados com sucesso!")
 
-        // Aluno fica na mesma página, Admin/Professor volta para lista
         if (!isAluno) {
           navigate(getBackRoute())
         }
       } else {
-        // ============================================
-        // MODO CRIAÇÃO (Admin/Professor apenas)
-        // ============================================
         const dataToSend: CreateAlunoDTO = {
           nome: formData.nome.trim(),
           email: formData.email.trim(),
           password: formData.password,
-          professorId: user!.id, // Backend deve fazer lookup se necessário
+          professorId: formData.professorId, 
         }
 
         if (formData.telefone.trim())
@@ -287,7 +292,16 @@ export const AnswerForm: React.FC = () => {
     }
   }
 
-  if ((isEdit || isAluno) && loadingAluno) {
+  if (isCreating && loadingProfessores) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 gap-4">
+        <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
+        <p className="text-gray-600">Carregando professores...</p>
+      </div>
+    )
+  }
+
+  if (isEdit && loadingAluno) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
         <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
@@ -300,7 +314,6 @@ export const AnswerForm: React.FC = () => {
 
   return (
     <div>
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           {!isAluno && (
@@ -329,7 +342,7 @@ export const AnswerForm: React.FC = () => {
         )}
       </div>
 
-      {/* Dados de Acesso (apenas criação) */}
+      {/* Dados de Acesso */}
       {isCreating && (
         <Card className="mb-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
@@ -385,6 +398,40 @@ export const AnswerForm: React.FC = () => {
               }
               placeholder="(11) 98765-4321"
             />
+          </div>
+
+          {/* SELEÇÃO DE PROFESSOR */}
+          <div className="mt-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Professor Responsável *
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <UserCheck className="h-5 w-5 text-gray-400" />
+              </div>
+              <select
+                value={formData.professorId}
+                onChange={(e) => {
+                  setFormData({ ...formData, professorId: e.target.value })
+                  setErrors({ ...errors, professorId: "" })
+                }}
+                className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+                  errors.professorId ? "border-red-500" : "border-gray-300"
+                }`}
+                disabled={isProfessor} // Professor não pode mudar
+              >
+                <option value="">Selecione um professor</option>
+                {professores?.map((prof) => (
+                  <option key={prof.id} value={prof.id}>
+                    {prof.user?.nome || `Professor ${prof.id.slice(0, 8)}`}
+                    {prof.especialidade && ` - ${prof.especialidade}`}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {errors.professorId && (
+              <p className="mt-1 text-sm text-red-600">{errors.professorId}</p>
+            )}
           </div>
         </Card>
       )}

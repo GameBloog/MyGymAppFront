@@ -6,6 +6,7 @@ import {
   type RegisterDTO,
   type InviteCode,
   type CreateInviteCodeDTO,
+  type Professor,
   type Aluno,
   type CreateAlunoDTO,
   type UpdateAlunoDTO,
@@ -80,6 +81,18 @@ export const inviteCodesApi = {
 
   getAll: async (): Promise<InviteCode[]> => {
     const response = await api.get<InviteCode[]>("/auth/invite-codes")
+    return response.data
+  },
+}
+
+export const professoresApi = {
+  getAll: async (): Promise<Professor[]> => {
+    const response = await api.get<Professor[]>("/professores")
+    return response.data
+  },
+
+  getById: async (id: string): Promise<Professor> => {
+    const response = await api.get<Professor>(`/professores/${id}`)
     return response.data
   },
 }
