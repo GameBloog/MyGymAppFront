@@ -16,6 +16,7 @@ import {
 } from "lucide-react"
 import { Card, Input, Button, Textarea } from "../components/ui"
 import { useCreateAluno, useUpdateAluno, useAluno } from "../hooks/useAlunos"
+import { useMyAluno } from "../hooks/useMyAluno"
 import { type CreateAlunoDTO, type UpdateAlunoDTO } from "../types"
 import { showToast } from "../utils/toast"
 import { useAuth } from "../hooks/useAuth"
@@ -40,17 +41,29 @@ export const AnswerForm: React.FC = () => {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const { user } = useAuth()
-  const isEdit = Boolean(id)
 
-  // CORREÇÃO: Aluno sempre edita a si mesmo
+  // CORREÇÃO: Determinar modo de operação
   const isAluno = user?.role === "ALUNO"
-  const alunoIdToEdit = isAluno ? user.id : id
+  const isEdit = Boolean(id) || isAluno // Aluno sempre está editando
+  const isCreating = !id && !isAluno // Criando novo aluno (Admin/Professor)
 
   const createAluno = useCreateAluno()
   const updateAluno = useUpdateAluno()
-  const { data: existingAluno, isLoading: loadingAluno } = useAluno(
-    alunoIdToEdit || ""
+
+  // Hook para buscar aluno existente (Admin/Professor editando)
+  const { data: editingAluno, isLoading: loadingEditAluno } = useAluno(
+    id || "",
+    {
+      enabled: Boolean(id) && !isAluno,
+    }
   )
+
+  // Hook para buscar dados do próprio aluno (Aluno logado)
+  const { data: myAluno, isLoading: loadingMyAluno } = useMyAluno()
+
+  // Determinar qual aluno carregar
+  const existingAluno = isAluno ? myAluno : editingAluno
+  const loadingAluno = isAluno ? loadingMyAluno : loadingEditAluno
 
   const [formData, setFormData] = useState(initialFormState)
   const [alimentosDiario, setAlimentosDiario] = useState("")
@@ -66,7 +79,7 @@ export const AnswerForm: React.FC = () => {
   }
 
   useEffect(() => {
-    if ((isEdit || isAluno) && existingAluno) {
+    if (isEdit && existingAluno) {
       setFormData({
         nome: "",
         email: "",
@@ -89,12 +102,13 @@ export const AnswerForm: React.FC = () => {
       setAlergias(existingAluno.alergias_alimentares?.join(", ") || "")
       setSuplementos(existingAluno.suplementos_consumidos?.join(", ") || "")
     }
-  }, [isEdit, isAluno, existingAluno])
+  }, [isEdit, existingAluno])
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {}
 
-    if (!isEdit && !isAluno) {
+    // Validações apenas para criação
+    if (isCreating) {
       if (!formData.nome.trim()) {
         newErrors.nome = "Nome é obrigatório"
       } else if (formData.nome.trim().length < 2) {
@@ -114,6 +128,7 @@ export const AnswerForm: React.FC = () => {
       }
     }
 
+    // Validações gerais
     if (formData.dias_treino_semana) {
       const dias = Number(formData.dias_treino_semana)
       if (dias < 0 || dias > 7) {
@@ -141,7 +156,10 @@ export const AnswerForm: React.FC = () => {
     }
 
     try {
-      if (isEdit || isAluno) {
+      if (isEdit) {
+        // ============================================
+        // MODO EDIÇÃO (Admin/Professor/Aluno)
+        // ============================================
         const dataToSend: UpdateAlunoDTO = {}
 
         if (formData.telefone.trim())
@@ -191,19 +209,25 @@ export const AnswerForm: React.FC = () => {
         if (suplementosArray.length > 0)
           dataToSend.suplementos_consumidos = suplementosArray
 
-        await updateAluno.mutateAsync({ id: alunoIdToEdit!, data: dataToSend })
+        // Determinar ID do aluno a ser atualizado
+        const alunoId = isAluno ? existingAluno!.id : id!
+
+        await updateAluno.mutateAsync({ id: alunoId, data: dataToSend })
         showToast.success("✅ Dados atualizados com sucesso!")
 
+        // Aluno fica na mesma página, Admin/Professor volta para lista
         if (!isAluno) {
           navigate(getBackRoute())
         }
       } else {
+        // ============================================
+        // MODO CRIAÇÃO (Admin/Professor apenas)
+        // ============================================
         const dataToSend: CreateAlunoDTO = {
           nome: formData.nome.trim(),
           email: formData.email.trim(),
           password: formData.password,
-          
-          professorId: user!.id,
+          professorId: user!.id, // Backend deve fazer lookup se necessário
         }
 
         if (formData.telefone.trim())
@@ -293,7 +317,7 @@ export const AnswerForm: React.FC = () => {
           </h1>
         </div>
 
-        {!isEdit && !isAluno && (
+        {isCreating && (
           <Button
             variant="secondary"
             icon={RotateCcw}
@@ -306,7 +330,7 @@ export const AnswerForm: React.FC = () => {
       </div>
 
       {/* Dados de Acesso (apenas criação) */}
-      {!isEdit && !isAluno && (
+      {isCreating && (
         <Card className="mb-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <User className="h-5 w-5" />
@@ -366,7 +390,7 @@ export const AnswerForm: React.FC = () => {
       )}
 
       {/* Dados Pessoais (edição) */}
-      {(isEdit || isAluno) && (
+      {isEdit && (
         <Card className="mb-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <User className="h-5 w-5" />
@@ -399,7 +423,8 @@ export const AnswerForm: React.FC = () => {
         </Card>
       )}
 
-      {!isEdit && !isAluno && (
+      {/* Dados Físicos (criação) */}
+      {isCreating && (
         <Card className="mb-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <Activity className="h-5 w-5" />
@@ -423,6 +448,7 @@ export const AnswerForm: React.FC = () => {
         </Card>
       )}
 
+      {/* Medidas Corporais */}
       <Card className="mb-6">
         <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
           <Activity className="h-5 w-5" />
@@ -496,6 +522,7 @@ export const AnswerForm: React.FC = () => {
         </div>
       </Card>
 
+      {/* Informações Nutricionais */}
       <Card className="mb-6">
         <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
           <Heart className="h-5 w-5" />
@@ -564,11 +591,11 @@ export const AnswerForm: React.FC = () => {
       <div className="flex flex-col sm:flex-row gap-4">
         <Button
           onClick={handleSubmit}
-          icon={isEdit || isAluno ? Save : Plus}
+          icon={isEdit ? Save : Plus}
           isLoading={isLoading}
           disabled={isLoading}
         >
-          {isEdit || isAluno ? "Salvar Alterações" : "Cadastrar Aluno"}
+          {isEdit ? "Salvar Alterações" : "Cadastrar Aluno"}
         </Button>
         {!isAluno && (
           <Button
@@ -581,7 +608,7 @@ export const AnswerForm: React.FC = () => {
         )}
       </div>
 
-      {!isEdit && !isAluno && (
+      {isCreating && (
         <p className="text-sm text-gray-500 mt-4">* Campos obrigatórios</p>
       )}
     </div>

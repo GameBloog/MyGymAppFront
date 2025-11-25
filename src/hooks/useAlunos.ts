@@ -4,6 +4,7 @@ import {
   useQueryClient,
   type UseQueryResult,
   type UseMutationResult,
+  UseQueryOptions,
 } from "react-query"
 import { alunosApi } from "../services/api"
 import { type Aluno, type CreateAlunoDTO, type UpdateAlunoDTO } from "../types"
@@ -18,12 +19,16 @@ export const useAlunos = (): UseQueryResult<Aluno[], Error> => {
   })
 }
 
-export const useAluno = (id: string): UseQueryResult<Aluno, Error> => {
+export const useAluno = (
+  id: string,
+  options?: UseQueryOptions<Aluno, Error>
+): UseQueryResult<Aluno, Error> => {
   return useQuery<Aluno, Error>(["aluno", id], () => alunosApi.getById(id), {
     enabled: !!id,
     staleTime: 30000,
     cacheTime: 300000,
     retry: 2,
+    ...options, 
   })
 }
 
