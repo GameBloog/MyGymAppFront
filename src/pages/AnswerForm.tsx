@@ -58,7 +58,8 @@ export const AnswerForm: React.FC = () => {
 
   const shouldFetchById = Boolean(id) && !isAluno
   const { data: editingAluno, isLoading: loadingEditAluno } = useAluno(
-    shouldFetchById ? id! : ""
+    shouldFetchById ? id! : "",
+    { enabled: shouldFetchById }
   )
 
   const { data: myAluno, isLoading: loadingMyAluno } = useMyAluno()
@@ -80,16 +81,23 @@ export const AnswerForm: React.FC = () => {
   }
 
   useEffect(() => {
-    if (isProfessor && isCreating && professores && professores.length > 0) {
-      const meuProfessor = professores.find((p) => p.userId === user?.id)
-      if (meuProfessor) {
-        setFormData((prev) => ({ ...prev, professorId: meuProfessor.id }))
-      }
-    }
+    console.log("🔧 useEffect - Verificando professor logado")
+    console.log("isProfessor:", isProfessor)
+    console.log("isCreating:", isCreating)
+    console.log("professores:", professores)
   }, [isProfessor, isCreating, professores, user])
 
   useEffect(() => {
+    console.log("🔧 useEffect - Preenchendo dados do aluno")
+    console.log("isEdit:", isEdit)
+    console.log("existingAluno:", existingAluno)
+
     if (isEdit && existingAluno) {
+      console.log(
+        "✅ Preenchendo formulário com dados do aluno:",
+        existingAluno
+      )
+
       setFormData({
         nome: "",
         email: "",
@@ -137,7 +145,7 @@ export const AnswerForm: React.FC = () => {
         newErrors.password = "Senha deve ter pelo menos 6 caracteres"
       }
 
-      if (!formData.professorId) {
+      if (isAdmin && !formData.professorId) {
         newErrors.professorId = "Selecione um professor"
       }
     }
@@ -221,18 +229,24 @@ export const AnswerForm: React.FC = () => {
 
         const alunoId = isAluno ? existingAluno!.id : id!
 
+        console.log("🔧 Atualizando aluno:", alunoId, dataToSend)
         await updateAluno.mutateAsync({ id: alunoId, data: dataToSend })
         showToast.success("✅ Dados atualizados com sucesso!")
 
         if (!isAluno) {
-          navigate(getBackRoute())
+          setTimeout(() => {
+            navigate(getBackRoute())
+          }, 300) 
         }
       } else {
         const dataToSend: CreateAlunoDTO = {
           nome: formData.nome.trim(),
           email: formData.email.trim(),
           password: formData.password,
-          professorId: formData.professorId, 
+        }
+
+        if (isAdmin && formData.professorId) {
+          dataToSend.professorId = formData.professorId
         }
 
         if (formData.telefone.trim())
@@ -282,17 +296,19 @@ export const AnswerForm: React.FC = () => {
         if (suplementosArray.length > 0)
           dataToSend.suplementos_consumidos = suplementosArray
 
+        console.log("🔧 Dados a serem enviados:", dataToSend)
         await createAluno.mutateAsync(dataToSend)
         showToast.success("✅ Aluno cadastrado com sucesso!")
         resetForm()
         navigate(getBackRoute())
       }
     } catch (error: any) {
+      console.error("❌ Erro ao salvar aluno:", error)
       showToast.error(error.message || "Erro ao salvar aluno")
     }
   }
 
-  if (isCreating && loadingProfessores) {
+  if (isCreating && isAdmin && loadingProfessores) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
         <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
@@ -342,7 +358,7 @@ export const AnswerForm: React.FC = () => {
         )}
       </div>
 
-      {/* Dados de Acesso */}
+      {/* Dados de Acesso - APENAS para criação */}
       {isCreating && (
         <Card className="mb-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
@@ -400,43 +416,56 @@ export const AnswerForm: React.FC = () => {
             />
           </div>
 
-          {/* SELEÇÃO DE PROFESSOR */}
-          <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Professor Responsável *
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <UserCheck className="h-5 w-5 text-gray-400" />
+          {isAdmin && (
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Professor Responsável (opcional)
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <UserCheck className="h-5 w-5 text-gray-400" />
+                </div>
+                <select
+                  value={formData.professorId}
+                  onChange={(e) => {
+                    setFormData({ ...formData, professorId: e.target.value })
+                    setErrors({ ...errors, professorId: "" })
+                  }}
+                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+                    errors.professorId ? "border-red-500" : "border-gray-300"
+                  }`}
+                >
+                  <option value="">Usar professor padrão</option>
+                  {professores?.map((prof) => (
+                    <option key={prof.id} value={prof.id}>
+                      {prof.user?.nome || `Professor ${prof.id.slice(0, 8)}`}
+                      {prof.especialidade && ` - ${prof.especialidade}`}
+                    </option>
+                  ))}
+                </select>
               </div>
-              <select
-                value={formData.professorId}
-                onChange={(e) => {
-                  setFormData({ ...formData, professorId: e.target.value })
-                  setErrors({ ...errors, professorId: "" })
-                }}
-                className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
-                  errors.professorId ? "border-red-500" : "border-gray-300"
-                }`}
-                disabled={isProfessor} // Professor não pode mudar
-              >
-                <option value="">Selecione um professor</option>
-                {professores?.map((prof) => (
-                  <option key={prof.id} value={prof.id}>
-                    {prof.user?.nome || `Professor ${prof.id.slice(0, 8)}`}
-                    {prof.especialidade && ` - ${prof.especialidade}`}
-                  </option>
-                ))}
-              </select>
+              {errors.professorId && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.professorId}
+                </p>
+              )}
+              <p className="mt-1 text-xs text-gray-500">
+                Se não selecionar, será usado o professor padrão
+              </p>
             </div>
-            {errors.professorId && (
-              <p className="mt-1 text-sm text-red-600">{errors.professorId}</p>
-            )}
-          </div>
+          )}
+
+          {isProfessor && (
+            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm text-blue-800">
+                ℹ️ O aluno será automaticamente vinculado a você
+              </p>
+            </div>
+          )}
         </Card>
       )}
 
-      {/* Dados Pessoais (edição) */}
+      {/* Dados Pessoais - Para edição */}
       {isEdit && (
         <Card className="mb-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
@@ -454,31 +483,6 @@ export const AnswerForm: React.FC = () => {
               }
               placeholder="(11) 98765-4321"
             />
-            <Input
-              label="Idade"
-              icon={Calendar}
-              type="number"
-              value={formData.idade}
-              onChange={(e) =>
-                setFormData({ ...formData, idade: e.target.value })
-              }
-              placeholder="28"
-              min="1"
-              max="120"
-            />
-          </div>
-        </Card>
-      )}
-
-      {/* Dados Físicos (criação) */}
-      {isCreating && (
-        <Card className="mb-6">
-          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-            <Activity className="h-5 w-5" />
-            Dados Físicos
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Input
               label="Idade"
               icon={Calendar}

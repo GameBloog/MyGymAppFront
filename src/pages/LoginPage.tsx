@@ -43,7 +43,6 @@ export const LoginPage: React.FC = () => {
 
       navigate("/")
     } catch (error) {
-      // Erro já é tratado no AuthContext com toast
       console.log(error)
     } finally {
       setIsLoading(false)

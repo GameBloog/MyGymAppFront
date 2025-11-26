@@ -5,15 +5,14 @@ import {
   type UseMutationResult,
   type UseQueryResult,
 } from "react-query"
-import { answersApi } from "../services/api"
+import { answersApi } from "../services/api.ts"
 import {
   type UserAnswer,
   type CreateUserAnswerDTO,
   type UpdateUserAnswerDTO,
-} from "../types/userAnswer"
+} from "../types/index.ts"
 import { showToast } from "../utils/toast"
 
-// Hook para listar todas as respostas
 export const useAnswers = (): UseQueryResult<UserAnswer[], Error> => {
   return useQuery<UserAnswer[], Error>("answers", answersApi.getAll, {
     staleTime: 30000,
@@ -27,7 +26,6 @@ export const useAnswers = (): UseQueryResult<UserAnswer[], Error> => {
   })
 }
 
-// Hook para buscar uma resposta por ID
 export const useAnswer = (id: string): UseQueryResult<UserAnswer, Error> => {
   return useQuery<UserAnswer, Error>(
     ["answer", id],
@@ -45,7 +43,6 @@ export const useAnswer = (id: string): UseQueryResult<UserAnswer, Error> => {
   )
 }
 
-// Hook para criar uma nova resposta
 export const useCreateAnswer = (): UseMutationResult<
   UserAnswer,
   Error,
@@ -71,7 +68,6 @@ export const useCreateAnswer = (): UseMutationResult<
   )
 }
 
-// Hook para atualizar uma resposta
 export const useUpdateAnswer = (): UseMutationResult<
   UserAnswer,
   Error,
@@ -100,7 +96,6 @@ export const useUpdateAnswer = (): UseMutationResult<
   })
 }
 
-// Hook para deletar uma resposta
 export const useDeleteAnswer = (): UseMutationResult<void, Error, string> => {
   const queryClient = useQueryClient()
 
@@ -120,7 +115,6 @@ export const useDeleteAnswer = (): UseMutationResult<void, Error, string> => {
   })
 }
 
-// Hook para health check
 export const useHealthCheck = () => {
   return useQuery("health", answersApi.healthCheck, {
     staleTime: 60000,

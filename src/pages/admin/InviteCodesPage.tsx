@@ -43,7 +43,6 @@ export const InviteCodesPage: React.FC = () => {
       showToast.success(`Código ${newCode.code} criado com sucesso!`)
       setShowModal(false)
 
-      // Copiar automaticamente
       handleCopyCode(newCode.code)
     } catch (error: any) {
       console.error("❌ Erro ao criar código:", error)

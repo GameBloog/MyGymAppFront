@@ -88,7 +88,6 @@ export const RegisterPage: React.FC = () => {
       await register(dataToSend)
       navigate("/login")
     } catch (error) {
-      // Erro já é tratado no AuthContext com toast
       console.log(error)
     } finally {
       setIsLoading(false)

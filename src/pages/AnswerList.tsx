@@ -1,12 +1,24 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Search, Plus, User, Phone, Activity, Calendar, Edit, Trash2, Loader2, AlertCircle } from 'lucide-react';
-import { Card, Badge, Input, Button } from '../components/ui';
-import { useAlunos, useDeleteAluno } from '../hooks/useAlunos';
-import { useAuth } from '../hooks/useAuth';
-import { showToast } from '../utils/toast';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import React, { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import {
+  Search,
+  Plus,
+  User,
+  Phone,
+  Activity,
+  Calendar,
+  Edit,
+  Trash2,
+  Loader2,
+  AlertCircle,
+  Mail,
+} from "lucide-react"
+import { Card, Badge, Input, Button } from "../components/ui"
+import { useAlunos, useDeleteAluno } from "../hooks/useAlunos"
+import { useAuth } from "../hooks/useAuth"
+import { showToast } from "../utils/toast"
+import { format } from "date-fns"
+import { ptBR } from "date-fns/locale"
 
 export const AnswersList: React.FC = () => {
   const navigate = useNavigate()
@@ -15,7 +27,6 @@ export const AnswersList: React.FC = () => {
   const { data: alunos, isLoading, error, refetch } = useAlunos()
   const deleteAluno = useDeleteAluno()
 
-  // Determinar rotas baseadas no role
   const getNewRoute = () => {
     if (user?.role === "ADMIN") return "/admin/alunos/new"
     if (user?.role === "PROFESSOR") return "/professor/alunos/new"
@@ -53,9 +64,15 @@ export const AnswersList: React.FC = () => {
   const filteredAlunos =
     alunos?.filter((aluno) => {
       const search = searchTerm.toLowerCase()
+      const nome = aluno.user?.nome?.toLowerCase() || ""
+      const email = aluno.user?.email?.toLowerCase() || ""
+      const telefone = aluno.telefone?.toLowerCase() || ""
+
       return (
-        aluno.id.toLowerCase().includes(search) ||
-        aluno.telefone?.toLowerCase().includes(search)
+        nome.includes(search) ||
+        email.includes(search) ||
+        telefone.includes(search) ||
+        aluno.id.toLowerCase().includes(search)
       )
     }) || []
 
@@ -120,7 +137,7 @@ export const AnswersList: React.FC = () => {
         <Card className="mb-6">
           <Input
             icon={Search}
-            placeholder="Buscar aluno por ID ou telefone..."
+            placeholder="Buscar aluno por nome, email ou telefone..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -140,7 +157,7 @@ export const AnswersList: React.FC = () => {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-lg font-semibold text-gray-900">
-                      Aluno #{aluno.id.slice(0, 8)}
+                      {aluno.user?.nome || `Aluno #${aluno.id.slice(0, 8)}`}
                     </h3>
                     <p className="text-sm text-gray-500">
                       Cadastrado em{" "}
@@ -177,6 +194,12 @@ export const AnswersList: React.FC = () => {
 
               {/* Informações Principais */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {aluno.user?.email && (
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <Mail className="h-4 w-4 flex-shrink-0" />
+                    <span className="text-sm">{aluno.user.email}</span>
+                  </div>
+                )}
                 {aluno.telefone && (
                   <div className="flex items-center gap-2 text-gray-600">
                     <Phone className="h-4 w-4 flex-shrink-0" />

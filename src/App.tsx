@@ -17,6 +17,8 @@ import { RegisterPage } from "./pages/auth/RegisterPage"
 // Admin Pages
 import { AdminDashboard } from "./pages/auth/AdminDashboard"
 import { InviteCodesPage } from "./pages/admin/InviteCodesPage"
+import { ProfessoresPage } from "./pages/admin/ProfessoresPage"
+import { ProfessorForm } from "./pages/admin/ProfessorForm"
 
 // Professor Pages
 import { ProfessorDashboard } from "./pages/professor/ProfessorDashboard"
@@ -26,7 +28,6 @@ import { AnswersList } from "./pages/AnswerList"
 import { AnswerForm } from "./pages/AnswerForm"
 import { useAuth } from "./hooks/useAuth.ts"
 
-// Redirect baseado no role
 const RoleBasedRedirect: React.FC = () => {
   const { user } = useAuth()
   const navigate = useNavigate()
@@ -57,11 +58,8 @@ const RoleBasedRedirect: React.FC = () => {
 function AppRoutes() {
   return (
     <Routes>
-      {/* Public Routes */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
-
-      {/* Root - Redirect baseado no role */}
       <Route path="/" element={<RoleBasedRedirect />} />
 
       {/* Admin Routes */}
@@ -77,6 +75,12 @@ function AppRoutes() {
                 <Route path="alunos/:id" element={<AnswersList />} />
                 <Route path="alunos/:id/edit" element={<AnswerForm />} />
                 <Route path="invite-codes" element={<InviteCodesPage />} />
+                <Route path="professores" element={<ProfessoresPage />} />
+                <Route path="professores/new" element={<ProfessorForm />} />
+                <Route
+                  path="professores/:id/edit"
+                  element={<ProfessorForm />}
+                />
               </Routes>
             </Layout>
           </AuthGuard>
@@ -138,7 +142,6 @@ function AppRoutes() {
         }
       />
 
-      {/* 404 */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )

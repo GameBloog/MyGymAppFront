@@ -1,6 +1,14 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Users, Plus, Search, User, Activity, Calendar } from "lucide-react"
+import {
+  Users,
+  Plus,
+  Search,
+  User,
+  Activity,
+  Calendar,
+  Phone,
+} from "lucide-react"
 import { Card, Button, Input, Badge } from "../../components/ui"
 import { useAlunos } from "../../hooks/useAlunos"
 import { format } from "date-fns"
@@ -14,7 +22,14 @@ export const ProfessorDashboard: React.FC = () => {
   const filteredAlunos =
     alunos?.filter((aluno) => {
       const search = searchTerm.toLowerCase()
-      return aluno.id.toLowerCase().includes(search)
+      const nome = aluno.user?.nome?.toLowerCase() || ""
+      const email = aluno.user?.email?.toLowerCase() || ""
+
+      return (
+        nome.includes(search) ||
+        email.includes(search) ||
+        aluno.id.toLowerCase().includes(search)
+      )
     }) || []
 
   if (isLoading) {
@@ -46,7 +61,7 @@ export const ProfessorDashboard: React.FC = () => {
         <Card className="mb-6">
           <Input
             icon={Search}
-            placeholder="Buscar aluno..."
+            placeholder="Buscar aluno por nome ou email..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -59,7 +74,7 @@ export const ProfessorDashboard: React.FC = () => {
           {filteredAlunos.map((aluno) => (
             <Card
               key={aluno.id}
-              className="hover:shadow-lg transition-shadow"
+              className="hover:shadow-lg transition-shadow cursor-pointer"
               onClick={() => navigate(`/professor/alunos/${aluno.id}/edit`)}
             >
               <div className="flex items-start justify-between">
@@ -69,9 +84,12 @@ export const ProfessorDashboard: React.FC = () => {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-lg font-semibold text-gray-900">
-                      Aluno #{aluno.id.slice(0, 8)}
+                      {aluno.user?.nome || `Aluno #${aluno.id.slice(0, 8)}`}
                     </h3>
                     <p className="text-sm text-gray-500">
+                      {aluno.user?.email || "Email não disponível"}
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">
                       Cadastrado em{" "}
                       {format(new Date(aluno.createdAt), "dd/MM/yyyy", {
                         locale: ptBR,
@@ -90,6 +108,12 @@ export const ProfessorDashboard: React.FC = () => {
 
               {/* Info adicional */}
               <div className="grid grid-cols-2 gap-3 mt-4">
+                {aluno.telefone && (
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <Phone className="h-4 w-4" />
+                    <span className="text-sm">{aluno.telefone}</span>
+                  </div>
+                )}
                 {aluno.idade && (
                   <div className="flex items-center gap-2 text-gray-600">
                     <Calendar className="h-4 w-4" />
@@ -119,12 +143,16 @@ export const ProfessorDashboard: React.FC = () => {
               ? "Tente ajustar sua busca"
               : "Adicione seu primeiro aluno para começar"}
           </p>
-          {!searchTerm && (
+          {!searchTerm ? (
             <Button
               icon={Plus}
               onClick={() => navigate("/professor/alunos/new")}
             >
               Adicionar Primeiro Aluno
+            </Button>
+          ) : (
+            <Button variant="secondary" onClick={() => setSearchTerm("")}>
+              Limpar Busca
             </Button>
           )}
         </Card>

@@ -1,16 +1,32 @@
 import React from "react"
 import { useNavigate } from "react-router-dom"
-import { Users, UserPlus, Ticket, BarChart3, Plus } from "lucide-react"
+import {
+  Users,
+  UserPlus,
+  Ticket,
+  BarChart3,
+  Plus,
+  UserCheck,
+} from "lucide-react"
 import { Card, Button } from "../../components/ui"
 import { useAlunos } from "../../hooks/useAlunos"
 import { useInviteCodes } from "../../hooks/useInviteCodes"
+import { useProfessores } from "../../hooks/useProfessores"
 
 export const AdminDashboard: React.FC = () => {
   const navigate = useNavigate()
   const { data: alunos, isLoading: loadingAlunos } = useAlunos()
   const { data: inviteCodes, isLoading: loadingCodes } = useInviteCodes()
+  const { data: professores, isLoading: loadingProfessores } = useProfessores()
 
   const stats = [
+    {
+      title: "Professores",
+      value: professores?.length || 0,
+      icon: UserCheck,
+      color: "bg-purple-100 text-purple-600",
+      onClick: () => navigate("/admin/professores"),
+    },
     {
       title: "Total de Alunos",
       value: alunos?.length || 0,
@@ -29,7 +45,7 @@ export const AdminDashboard: React.FC = () => {
       title: "Códigos Usados",
       value: inviteCodes?.filter((c) => c.usedBy).length || 0,
       icon: BarChart3,
-      color: "bg-purple-100 text-purple-600",
+      color: "bg-orange-100 text-orange-600",
       onClick: () => navigate("/admin/invite-codes"),
     },
   ]
@@ -45,8 +61,11 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         <div className="flex gap-3">
-          <Button icon={Ticket} onClick={() => navigate("/admin/invite-codes")}>
-            Gerar Código
+          <Button
+            icon={UserCheck}
+            onClick={() => navigate("/admin/professores/new")}
+          >
+            Novo Professor
           </Button>
           <Button icon={Plus} onClick={() => navigate("/admin/alunos/new")}>
             Novo Aluno
@@ -55,18 +74,20 @@ export const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat) => (
           <Card
             key={stat.title}
-            className="hover:shadow-lg transition-shadow"
+            className="hover:shadow-lg transition-shadow cursor-pointer"
             onClick={stat.onClick}
           >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">{stat.title}</p>
                 <p className="text-3xl font-bold text-gray-900">
-                  {loadingAlunos || loadingCodes ? "..." : stat.value}
+                  {loadingAlunos || loadingCodes || loadingProfessores
+                    ? "..."
+                    : stat.value}
                 </p>
               </div>
               <div className={`p-4 rounded-full ${stat.color}`}>
@@ -80,7 +101,20 @@ export const AdminDashboard: React.FC = () => {
       {/* Quick Actions */}
       <Card>
         <h2 className="text-xl font-semibold mb-4">Ações Rápidas</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <button
+            onClick={() => navigate("/admin/professores")}
+            className="p-4 border-2 border-gray-200 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-colors text-left"
+          >
+            <UserCheck className="h-6 w-6 text-purple-600 mb-2" />
+            <h3 className="font-semibold text-gray-900">
+              Gerenciar Professores
+            </h3>
+            <p className="text-sm text-gray-600">
+              Ver, editar e criar professores
+            </p>
+          </button>
+
           <button
             onClick={() => navigate("/admin/alunos")}
             className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors text-left"
@@ -133,7 +167,7 @@ export const AdminDashboard: React.FC = () => {
                   </div>
                   <div>
                     <p className="font-medium text-gray-900">
-                      Aluno #{aluno.id.slice(0, 8)}
+                      {aluno.user?.nome || `Aluno #${aluno.id.slice(0, 8)}`}
                     </p>
                     <p className="text-sm text-gray-600">
                       {new Date(aluno.createdAt).toLocaleDateString("pt-BR")}

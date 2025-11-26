@@ -55,7 +55,14 @@ export interface Professor {
   user?: User
 }
 
-// ========== ALUNO TYPES ==========
+export interface CreateProfessorDTO {
+  nome: string
+  email: string
+  password: string
+  telefone?: string
+  especialidade?: string
+}
+
 export interface Aluno {
   id: string
   userId: string
@@ -85,7 +92,7 @@ export interface CreateAlunoDTO {
   email: string
   password: string
 
-  professorId: string
+  professorId?: string 
 
   telefone?: string
   alturaCm?: number
