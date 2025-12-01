@@ -27,7 +27,6 @@ export const useAlunos = (): UseQueryResult<Aluno[], Error> => {
     refetchOnWindowFocus: false,
     retry: 2,
     onSuccess: (data) => {
-      console.log("✅ Lista de alunos carregada:", data.length, "alunos")
     },
   })
 }
@@ -57,7 +56,6 @@ export const useCreateAluno = (): UseMutationResult<
     (data) => alunosApi.create(data),
     {
       onSuccess: (newAluno) => {
-        console.log("✅ Aluno criado:", newAluno.id)
 
         queryClient.setQueryData<Aluno[]>("alunos", (old) => {
           if (!old) return [newAluno]
@@ -91,7 +89,6 @@ export const useUpdateAluno = (): UseMutationResult<
     UpdateAlunoContext
   >(({ id, data }) => alunosApi.update(id, data), {
     onMutate: async ({ id, data }): Promise<UpdateAlunoContext> => {
-      console.log("🔧 Iniciando atualização otimista do aluno:", id)
 
       await queryClient.cancelQueries("alunos")
       await queryClient.cancelQueries(["aluno", id])
@@ -118,13 +115,11 @@ export const useUpdateAluno = (): UseMutationResult<
         })
       }
 
-      console.log("✅ Cache atualizado otimisticamente")
 
       return { previousAlunos, previousAluno }
     },
 
     onSuccess: (updatedAluno) => {
-      console.log("✅ Aluno atualizado no servidor:", updatedAluno.id)
 
       queryClient.setQueryData<Aluno[]>("alunos", (old) => {
         if (!old) return [updatedAluno]
@@ -138,7 +133,6 @@ export const useUpdateAluno = (): UseMutationResult<
       queryClient.invalidateQueries("alunos")
       queryClient.invalidateQueries(["aluno", updatedAluno.id])
 
-      console.log("✅ Queries invalidadas - lista será atualizada")
 
       showToast.success("Dados atualizados com sucesso!")
     },
@@ -157,7 +151,6 @@ export const useUpdateAluno = (): UseMutationResult<
     },
 
     onSettled: () => {
-      console.log("✅ Atualização finalizada")
     },
   })
 }
@@ -174,7 +167,6 @@ export const useDeleteAluno = (): UseMutationResult<
     (id) => alunosApi.delete(id),
     {
       onMutate: async (deletedId): Promise<DeleteAlunoContext> => {
-        console.log("🔧 Removendo aluno do cache:", deletedId)
 
         await queryClient.cancelQueries("alunos")
 
@@ -189,7 +181,6 @@ export const useDeleteAluno = (): UseMutationResult<
       },
 
       onSuccess: (_, deletedId) => {
-        console.log("✅ Aluno deletado no servidor:", deletedId)
 
         queryClient.removeQueries(["aluno", deletedId])
         queryClient.invalidateQueries("alunos")

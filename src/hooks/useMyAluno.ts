@@ -12,18 +12,25 @@ export const useMyAluno = (): UseQueryResult<Aluno, Error> => {
     async () => {
       const alunos = await alunosApi.getAll()
 
-      if (!alunos || alunos.length === 0) {
-        throw new Error("Registro de aluno não encontrado")
+      const meuAluno = alunos.find((aluno) => aluno.userId === user?.id)
+
+      if (!meuAluno) {
+        throw new Error("Registro de aluno não encontrado para este usuário")
       }
 
-      return alunos[0]
+      return meuAluno
     },
     {
-      enabled: isAuthenticated && isAluno,
+      enabled: isAuthenticated && isAluno && !!user?.id,
       staleTime: 30000,
       cacheTime: 300000,
       retry: 2,
       refetchOnMount: true,
+      onError: (error) => {
+        console.error("❌ Erro ao buscar dados do aluno:", error)
+      },
+      onSuccess: (data) => {
+      },
     }
   )
 }

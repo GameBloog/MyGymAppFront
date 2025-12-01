@@ -38,7 +38,6 @@ export const InviteCodesPage: React.FC = () => {
       }
 
       const newCode = await createInviteCode.mutateAsync(data)
-      console.log("✅ Código criado:", newCode)
 
       showToast.success(`Código ${newCode.code} criado com sucesso!`)
       setShowModal(false)
@@ -58,13 +57,10 @@ export const InviteCodesPage: React.FC = () => {
   }
 
   const handleOpenModal = () => {
-    console.log("🔧 Abrindo modal...")
     setShowModal(true)
-    console.log("🔧 showModal agora é:", true)
   }
 
   const handleCloseModal = () => {
-    console.log("🔧 Fechando modal...")
     setShowModal(false)
   }
 

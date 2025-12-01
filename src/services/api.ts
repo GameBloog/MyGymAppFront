@@ -28,13 +28,11 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
-  console.log(`🔧 Request: ${config.method?.toUpperCase()} ${config.url}`)
   return config
 })
 
 api.interceptors.response.use(
   (response) => {
-    console.log(`✅ Response: ${response.config.url} - ${response.status}`)
     return response
   },
   (error: AxiosError<ApiError>) => {
@@ -95,9 +93,7 @@ export const inviteCodesApi = {
 
 export const professoresApi = {
   getAll: async (): Promise<Professor[]> => {
-    console.log("🔧 Buscando professores...")
     const response = await api.get<Professor[]>("/professores")
-    console.log("✅ Professores retornados:", response.data)
     return response.data
   },
 
@@ -107,9 +103,7 @@ export const professoresApi = {
   },
 
   create: async (data: CreateProfessorDTO): Promise<Professor> => {
-    console.log("🔧 Criando professor:", data)
     const response = await api.post<Professor>("/professores", data)
-    console.log("✅ Professor criado:", response.data)
     return response.data
   },
 
@@ -122,9 +116,7 @@ export const professoresApi = {
   },
 
   delete: async (id: string): Promise<void> => {
-    console.log("🔧 Deletando professor:", id)
     await api.delete(`/professores/${id}`)
-    console.log("✅ Professor deletado")
   },
 }
 
@@ -150,9 +142,7 @@ export const alunosApi = {
       return acc
     }, {} as any)
 
-    console.log("🔧 Criando aluno:", cleanData)
     const response = await api.post<Aluno>("/alunos", cleanData)
-    console.log("✅ Aluno criado:", response.data)
     return response.data
   },
 

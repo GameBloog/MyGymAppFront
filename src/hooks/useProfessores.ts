@@ -22,7 +22,6 @@ export const useProfessores = (): UseQueryResult<Professor[], Error> => {
       showToast.error("Erro ao carregar professores")
     },
     onSuccess: (data) => {
-      console.log("✅ Professores carregados:", data)
     },
   })
 }

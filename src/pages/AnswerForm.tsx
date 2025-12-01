@@ -81,16 +81,11 @@ export const AnswerForm: React.FC = () => {
   }
 
   useEffect(() => {
-    console.log("🔧 useEffect - Verificando professor logado")
-    console.log("isProfessor:", isProfessor)
-    console.log("isCreating:", isCreating)
-    console.log("professores:", professores)
+    
   }, [isProfessor, isCreating, professores, user])
 
   useEffect(() => {
-    console.log("🔧 useEffect - Preenchendo dados do aluno")
-    console.log("isEdit:", isEdit)
-    console.log("existingAluno:", existingAluno)
+
 
     if (isEdit && existingAluno) {
       console.log(
@@ -121,7 +116,7 @@ export const AnswerForm: React.FC = () => {
       setAlergias(existingAluno.alergias_alimentares?.join(", ") || "")
       setSuplementos(existingAluno.suplementos_consumidos?.join(", ") || "")
     }
-  }, [isEdit, existingAluno])
+  }, [isEdit, existingAluno]) 
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {}
@@ -175,9 +170,17 @@ export const AnswerForm: React.FC = () => {
       showToast.error("Por favor, corrija os erros no formulário")
       return
     }
-
+    if (isEdit && loadingAluno) {
+      showToast.warning("Aguarde o carregamento dos dados...")
+      return
+    }
     try {
       if (isEdit) {
+        if (isAluno && !existingAluno) {
+          showToast.error("Erro ao carregar dados do aluno")
+          return
+        }
+
         const dataToSend: UpdateAlunoDTO = {}
 
         if (formData.telefone.trim())
@@ -227,16 +230,20 @@ export const AnswerForm: React.FC = () => {
         if (suplementosArray.length > 0)
           dataToSend.suplementos_consumidos = suplementosArray
 
-        const alunoId = isAluno ? existingAluno!.id : id!
+        const alunoId = isAluno ? existingAluno?.id : id
 
-        console.log("🔧 Atualizando aluno:", alunoId, dataToSend)
+        if (!alunoId) {
+          showToast.error("ID do aluno não encontrado")
+          return
+        }
+
         await updateAluno.mutateAsync({ id: alunoId, data: dataToSend })
         showToast.success("✅ Dados atualizados com sucesso!")
 
         if (!isAluno) {
           setTimeout(() => {
             navigate(getBackRoute())
-          }, 300) 
+          }, 300)
         }
       } else {
         const dataToSend: CreateAlunoDTO = {
@@ -296,7 +303,6 @@ export const AnswerForm: React.FC = () => {
         if (suplementosArray.length > 0)
           dataToSend.suplementos_consumidos = suplementosArray
 
-        console.log("🔧 Dados a serem enviados:", dataToSend)
         await createAluno.mutateAsync(dataToSend)
         showToast.success("✅ Aluno cadastrado com sucesso!")
         resetForm()
