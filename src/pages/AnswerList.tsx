@@ -1,3 +1,4 @@
+// src/pages/AnswerList.tsx - ATUALIZADO COM BOTÃO DE EVOLUÇÃO
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import {
@@ -12,6 +13,7 @@ import {
   Loader2,
   AlertCircle,
   Mail,
+  TrendingUp,
 } from "lucide-react"
 import { Card, Badge, Input, Button } from "../components/ui"
 import { useAlunos, useDeleteAluno } from "../hooks/useAlunos"
@@ -37,6 +39,12 @@ export const AnswersList: React.FC = () => {
     if (user?.role === "ADMIN") return `/admin/alunos/${id}/edit`
     if (user?.role === "PROFESSOR") return `/professor/alunos/${id}/edit`
     return `/aluno/perfil`
+  }
+
+  const getEvolucaoRoute = (id: string) => {
+    if (user?.role === "ADMIN") return `/admin/alunos/${id}/evolucao`
+    if (user?.role === "PROFESSOR") return `/professor/alunos/${id}/evolucao`
+    return `/aluno/evolucao`
   }
 
   const canDelete = user?.role === "ADMIN" || user?.role === "PROFESSOR"
@@ -173,6 +181,13 @@ export const AnswersList: React.FC = () => {
                 {/* Botões de Ação */}
                 <div className="flex gap-2">
                   <button
+                    onClick={() => navigate(getEvolucaoRoute(aluno.id))}
+                    className="p-2 hover:bg-green-50 rounded-lg transition-colors"
+                    title="Ver Evolução"
+                  >
+                    <TrendingUp className="h-4 w-4 text-green-600" />
+                  </button>
+                  <button
                     onClick={() => navigate(getEditRoute(aluno.id))}
                     className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                     title="Editar"
@@ -238,6 +253,18 @@ export const AnswersList: React.FC = () => {
                 {aluno.pescocoCm && (
                   <Badge>Pescoço: {aluno.pescocoCm} cm</Badge>
                 )}
+              </div>
+
+              {/* Botão Ver Evolução */}
+              <div className="border-t pt-3">
+                <Button
+                  variant="secondary"
+                  icon={TrendingUp}
+                  onClick={() => navigate(getEvolucaoRoute(aluno.id))}
+                  className="w-full sm:w-auto"
+                >
+                  Ver Evolução
+                </Button>
               </div>
 
               {/* Informações Adicionais */}

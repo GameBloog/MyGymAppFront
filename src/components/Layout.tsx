@@ -1,6 +1,7 @@
+// src/components/Layout.tsx - ATUALIZADO
 import React, { type ReactNode } from "react"
-import { useNavigate } from "react-router-dom"
-import { Activity, LogOut } from "lucide-react"
+import { useNavigate, useLocation } from "react-router-dom"
+import { Activity, LogOut, TrendingUp, User } from "lucide-react"
 import { useAuth } from "../hooks/useAuth"
 import { Button } from "./ui"
 
@@ -11,6 +12,7 @@ interface LayoutProps {
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const handleLogout = () => {
     logout()
@@ -34,6 +36,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       </span>
     )
   }
+
+  const isAluno = user?.role === "ALUNO"
+  const showEvolucaoLink = isAluno && !location.pathname.includes("/evolucao")
+  const showPerfilLink = isAluno && location.pathname.includes("/evolucao")
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -65,6 +71,31 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                     {getRoleBadge()}
                   </div>
                 </div>
+
+                {/* Links de navegação para Aluno */}
+                {showEvolucaoLink && (
+                  <Button
+                    variant="secondary"
+                    icon={TrendingUp}
+                    onClick={() => navigate("/aluno/evolucao")}
+                    className="!p-2"
+                    title="Ver Minha Evolução"
+                  >
+                    <span className="hidden sm:inline">Evolução</span>
+                  </Button>
+                )}
+
+                {showPerfilLink && (
+                  <Button
+                    variant="secondary"
+                    icon={User}
+                    onClick={() => navigate("/aluno/perfil")}
+                    className="!p-2"
+                    title="Ver Meu Perfil"
+                  >
+                    <span className="hidden sm:inline">Perfil</span>
+                  </Button>
+                )}
 
                 <Button
                   variant="secondary"

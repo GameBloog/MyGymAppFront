@@ -1,3 +1,4 @@
+// src/App.tsx - ATUALIZADO COM PÁGINA DE ERRO
 import React, { useEffect } from "react"
 import {
   BrowserRouter,
@@ -5,10 +6,12 @@ import {
   Route,
   Navigate,
   useNavigate,
+  useSearchParams,
 } from "react-router-dom"
 import { AuthProvider } from "./context/AuthContext.tsx"
 import { AuthGuard } from "./components/AuthGuard"
 import { Layout } from "./components/Layout"
+import { ErrorPage } from "./components/ErrorBoundary"
 
 // Auth Pages
 import { LoginPage } from "./pages/LoginPage"
@@ -26,6 +29,7 @@ import { ProfessorDashboard } from "./pages/professor/ProfessorDashboard"
 // Shared Pages
 import { AnswersList } from "./pages/AnswerList"
 import { AnswerForm } from "./pages/AnswerForm"
+import { EvolucaoPage } from "./pages/EvolucaoPage"
 import { useAuth } from "./hooks/useAuth.ts"
 
 const RoleBasedRedirect: React.FC = () => {
@@ -55,11 +59,29 @@ const RoleBasedRedirect: React.FC = () => {
   return null
 }
 
+const ErrorPageWrapper: React.FC = () => {
+  const [searchParams] = useSearchParams()
+  const code = searchParams.get("code")
+  const message = searchParams.get("message")
+  const status = searchParams.get("status")
+
+  return (
+    <ErrorPage
+      error={{
+        code: code || undefined,
+        message: message || undefined,
+        status: status ? parseInt(status) : undefined,
+      }}
+    />
+  )
+}
+
 function AppRoutes() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/error" element={<ErrorPageWrapper />} />
       <Route path="/" element={<RoleBasedRedirect />} />
 
       {/* Admin Routes */}
@@ -74,6 +96,7 @@ function AppRoutes() {
                 <Route path="alunos/new" element={<AnswerForm />} />
                 <Route path="alunos/:id" element={<AnswersList />} />
                 <Route path="alunos/:id/edit" element={<AnswerForm />} />
+                <Route path="alunos/:id/evolucao" element={<EvolucaoPage />} />
                 <Route path="invite-codes" element={<InviteCodesPage />} />
                 <Route path="professores" element={<ProfessoresPage />} />
                 <Route path="professores/new" element={<ProfessorForm />} />
@@ -99,6 +122,7 @@ function AppRoutes() {
                 <Route path="alunos/new" element={<AnswerForm />} />
                 <Route path="alunos/:id" element={<AnswersList />} />
                 <Route path="alunos/:id/edit" element={<AnswerForm />} />
+                <Route path="alunos/:id/evolucao" element={<EvolucaoPage />} />
               </Routes>
             </Layout>
           </AuthGuard>
@@ -113,6 +137,7 @@ function AppRoutes() {
             <Layout>
               <Routes>
                 <Route path="perfil" element={<AnswerForm />} />
+                <Route path="evolucao" element={<EvolucaoPage />} />
               </Routes>
             </Layout>
           </AuthGuard>
@@ -123,22 +148,14 @@ function AppRoutes() {
       <Route
         path="/unauthorized"
         element={
-          <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-            <div className="text-center bg-white p-8 rounded-lg shadow-lg">
-              <h1 className="text-4xl font-bold text-red-600 mb-4">
-                ⛔ Acesso Negado
-              </h1>
-              <p className="text-gray-600 mb-6">
-                Você não tem permissão para acessar esta página.
-              </p>
-              <button
-                onClick={() => (window.location.href = "/")}
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Voltar ao Início
-              </button>
-            </div>
-          </div>
+          <ErrorPage
+            error={{
+              status: 403,
+              code: "FORBIDDEN",
+              message: "Você não tem permissão para acessar esta página.",
+            }}
+            showLogout={true}
+          />
         }
       />
 

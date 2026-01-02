@@ -14,7 +14,7 @@ import {
   type ApiError,
 } from "../types"
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 
   headers: {
@@ -41,12 +41,29 @@ api.interceptors.response.use(
     if (error.response) {
       const errorMessage = error.response.data.error || "Erro desconhecido"
 
-      if (error.response.status === 401) {
+      if (status === 401) {
         localStorage.removeItem("token")
         localStorage.removeItem("user")
-        window.location.href = "/login"
+
+        // Redirecionar para erro personalizado ao invés de login direto
+        const currentPath = window.location.pathname
+        if (
+          !currentPath.includes("/login") &&
+          !currentPath.includes("/error")
+        ) {
+          window.location.href = "/error?code=UNAUTHORIZED"
+        }
       }
 
+      // 404 - Não encontrado
+      if (status === 404) {
+        throw new Error("Recurso não encontrado")
+      }
+
+      // 403 - Sem permissão
+      if (status === 403) {
+        throw new Error("Você não tem permissão para acessar este recurso")
+      }
       if (error.response.data.details) {
         const details = error.response.data.details
           .map((d) => `${d.campo}: ${d.mensagem}`)
@@ -65,12 +82,27 @@ api.interceptors.response.use(
 
 export const authApi = {
   login: async (data: LoginDTO): Promise<LoginResponse> => {
-    const response = await api.post<LoginResponse>("/auth/login", data)
+    // Normalizar email para lowercase
+    const normalizedData = {
+      ...data,
+      email: data.email.toLowerCase().trim(),
+    }
+
+    const response = await api.post<LoginResponse>(
+      "/auth/login",
+      normalizedData
+    )
     return response.data
   },
 
   register: async (data: RegisterDTO): Promise<void> => {
-    await api.post("/auth/register", data)
+    // Normalizar email para lowercase
+    const normalizedData = {
+      ...data,
+      email: data.email.toLowerCase().trim(),
+    }
+
+    await api.post("/auth/register", normalizedData)
   },
 
   me: async (): Promise<User> => {
