@@ -1,4 +1,3 @@
-// src/components/ErrorBoundary.tsx
 import React from "react"
 import { useNavigate } from "react-router-dom"
 import { AlertCircle, RefreshCw, Home, LogOut } from "lucide-react"
@@ -33,7 +32,6 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({
     const status = error.status || 0
     const code = error.code || ""
 
-    // Erros de autenticação
     if (status === 401 || code === "UNAUTHORIZED") {
       return {
         title: "Sessão Expirada",
@@ -44,7 +42,6 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({
       }
     }
 
-    // Credenciais inválidas
     if (
       code === "INVALID_CREDENTIALS" ||
       error.message?.includes("credenciais")
@@ -58,7 +55,6 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({
       }
     }
 
-    // Não encontrado
     if (status === 404 || code === "NOT_FOUND") {
       return {
         title: "Não Encontrado",
@@ -68,7 +64,6 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({
       }
     }
 
-    // Sem permissão
     if (status === 403 || code === "FORBIDDEN") {
       return {
         title: "Sem Permissão",
@@ -78,7 +73,6 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({
       }
     }
 
-    // Erro do servidor
     if (status >= 500) {
       return {
         title: "Erro no Servidor",
@@ -89,7 +83,6 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({
       }
     }
 
-    // Erro de conexão
     if (
       error.message?.includes("Network") ||
       error.message?.includes("timeout")
@@ -103,7 +96,6 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({
       }
     }
 
-    // Erro genérico
     return {
       title: "Erro",
       message: error.message || "Ocorreu um erro inesperado.",

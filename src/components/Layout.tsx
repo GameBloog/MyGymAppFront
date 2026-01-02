@@ -1,4 +1,3 @@
-// src/components/Layout.tsx - ATUALIZADO
 import React, { type ReactNode } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { Activity, LogOut, TrendingUp, User } from "lucide-react"
@@ -53,9 +52,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <Activity className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">API Gym</h1>
+                <h1 className="text-2xl font-bold text-gray-900">G-FORCE Coach</h1>
                 {user && (
-                  <p className="text-xs text-gray-500">Sistema de Gestão</p>
+                  <p className="text-xs text-gray-500">Plataforma de gerenciamento de alunos e evolução física</p>
                 )}
               </div>
             </div>

@@ -1,4 +1,3 @@
-// src/pages/AnswerList.tsx - CORRIGIDO
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import {
@@ -49,7 +48,7 @@ export const AnswersList: React.FC = () => {
 
   const canDelete = user?.role === "ADMIN" || user?.role === "PROFESSOR"
   const canCreate = user?.role === "ADMIN" || user?.role === "PROFESSOR"
-  const canViewEvolucao = true // Todos podem ver evolução
+  const canViewEvolucao = true 
 
   const handleDelete = async (id: string) => {
     if (

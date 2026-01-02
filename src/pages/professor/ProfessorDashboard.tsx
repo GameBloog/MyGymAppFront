@@ -1,4 +1,3 @@
-// src/pages/professor/ProfessorDashboard.tsx - COM BOTÃO DE EVOLUÇÃO
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import {

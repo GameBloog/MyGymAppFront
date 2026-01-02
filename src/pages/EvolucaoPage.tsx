@@ -1,4 +1,3 @@
-// src/pages/EvolucaoPage.tsx
 import React, { useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import {
@@ -38,13 +37,11 @@ export const EvolucaoPage: React.FC = () => {
   const isAluno = user?.role === "ALUNO"
   const podeEditar = isAdmin || isProfessor
 
-  // Para aluno, precisamos buscar o registro de aluno pelo userId
   const { data: alunos } = useAlunos()
   const meuAlunoRegistro = isAluno
     ? alunos?.find((a) => a.userId === user?.id)
     : null
 
-  // Determinar qual alunoId usar
   const alunoId =
     isAluno && meuAlunoRegistro ? meuAlunoRegistro.id : alunoIdParam
 

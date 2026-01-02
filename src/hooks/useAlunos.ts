@@ -19,7 +19,6 @@ interface DeleteAlunoContext {
   previousAlunos?: Aluno[]
 }
 
-// Hook para listar TODOS os alunos
 export const useAlunos = (): UseQueryResult<Aluno[], Error> => {
   return useQuery<Aluno[], Error>("alunos", alunosApi.getAll, {
     staleTime: 30000,
@@ -30,18 +29,17 @@ export const useAlunos = (): UseQueryResult<Aluno[], Error> => {
   })
 }
 
-// Hook para buscar UM aluno específico por ID (FALTAVA ESTE)
 export const useAluno = (
   id: string,
   options?: UseQueryOptions<Aluno, Error>
 ): UseQueryResult<Aluno, Error> => {
   return useQuery<Aluno, Error>(["aluno", id], () => alunosApi.getById(id), {
-    enabled: !!id, // Só executa se tiver ID
+    enabled: !!id, 
     staleTime: 30000,
     cacheTime: 300000,
     retry: 2,
     refetchOnMount: true,
-    ...options, // Permite sobrescrever opções
+    ...options, 
   })
 }
 

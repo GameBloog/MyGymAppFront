@@ -1,4 +1,3 @@
-// src/components/GraficoEvolucao.tsx
 import React from "react"
 import { Loader2, AlertCircle, TrendingUp } from "lucide-react"
 import { Card } from "../components/ui"
@@ -74,13 +73,12 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
     )
   }
 
-  // Filtrar apenas registros com a métrica selecionada
   const dadosFiltrados = [...historico]
     .filter((item) => item[metrica] !== null && item[metrica] !== undefined)
     .sort(
       (a, b) =>
         new Date(a.dataRegistro).getTime() - new Date(b.dataRegistro).getTime()
-    ) // Ordem cronológica
+    ) 
 
   if (dadosFiltrados.length === 0) {
     return (
@@ -96,14 +94,12 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
     )
   }
 
-  // Calcular estatísticas
   const valores = dadosFiltrados.map((item) => item[metrica] as number)
   const valorMinimo = Math.min(...valores)
   const valorMaximo = Math.max(...valores)
   const valorMedio = valores.reduce((a, b) => a + b, 0) / valores.length
   const diferencaTotal = valores[valores.length - 1] - valores[0]
 
-  // Calcular altura das barras (normalizado entre 20% e 100%)
   const calcularAltura = (valor: number) => {
     if (valorMinimo === valorMaximo) return 100
     return ((valor - valorMinimo) / (valorMaximo - valorMinimo)) * 80 + 20
@@ -167,7 +163,6 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
           {dadosFiltrados.map((item, index) => {
             const altura = calcularAltura(item[metrica] as number)
             const valor = item[metrica] as number
-            // Calcular largura dinâmica: poucas barras = mais largas
             const barWidth =
               dadosFiltrados.length <= 3
                 ? "80px"

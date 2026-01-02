@@ -1,4 +1,3 @@
-// src/hooks/useHistorico.ts
 import {
   useQuery,
   useMutation,

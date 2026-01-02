@@ -1,4 +1,3 @@
-// src/App.tsx - COM ROTAS DE EVOLUÇÃO
 import React, { useEffect } from "react"
 import {
   BrowserRouter,

@@ -1,4 +1,3 @@
-// src/components/HistoricoForm.tsx
 import React, { useState } from "react"
 import { Activity, Plus, Calendar } from "lucide-react"
 import { Card, Input, Button, Textarea } from "../components/ui"

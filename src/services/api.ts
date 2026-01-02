@@ -38,15 +38,13 @@ api.interceptors.response.use(
     console.error("❌ API Error:", error.response?.data || error.message)
 
     if (error.response) {
-      const status = error.response.status // ✅ CORRIGIDO: definir status aqui
+      const status = error.response.status 
       const errorMessage = error.response.data?.error || "Erro desconhecido"
 
-      // 401 - Não autorizado
       if (status === 401) {
         localStorage.removeItem("token")
         localStorage.removeItem("user")
 
-        // Redirecionar para login ao invés de erro genérico
         const currentPath = window.location.pathname
         if (
           !currentPath.includes("/login") &&
@@ -58,17 +56,14 @@ api.interceptors.response.use(
         throw new Error("Sessão expirada. Faça login novamente.")
       }
 
-      // 404 - Não encontrado
       if (status === 404) {
         throw new Error("Recurso não encontrado")
       }
 
-      // 403 - Sem permissão
       if (status === 403) {
         throw new Error("Você não tem permissão para acessar este recurso")
       }
 
-      // Erros com detalhes de validação
       if (error.response.data?.details) {
         const details = error.response.data.details
           .map((d) => `${d.campo}: ${d.mensagem}`)
@@ -87,7 +82,6 @@ api.interceptors.response.use(
 
 export const authApi = {
   login: async (data: LoginDTO): Promise<LoginResponse> => {
-    // Normalizar email para lowercase
     const normalizedData = {
       ...data,
       email: data.email.toLowerCase().trim(),
@@ -101,7 +95,6 @@ export const authApi = {
   },
 
   register: async (data: RegisterDTO): Promise<void> => {
-    // Normalizar email para lowercase
     const normalizedData = {
       ...data,
       email: data.email.toLowerCase().trim(),

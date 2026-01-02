@@ -66,7 +66,7 @@ export const LoginPage: React.FC = () => {
         </div>
 
         <h1 className="text-3xl font-bold text-center text-gray-900 mb-2">
-          API Gym
+          G-FORCE Coach
         </h1>
         <p className="text-center text-gray-600 mb-8">
           Faça login para continuar
