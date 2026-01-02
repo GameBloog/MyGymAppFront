@@ -19,6 +19,7 @@ interface DeleteAlunoContext {
   previousAlunos?: Aluno[]
 }
 
+// Hook para listar TODOS os alunos
 export const useAlunos = (): UseQueryResult<Aluno[], Error> => {
   return useQuery<Aluno[], Error>("alunos", alunosApi.getAll, {
     staleTime: 30000,
@@ -26,22 +27,21 @@ export const useAlunos = (): UseQueryResult<Aluno[], Error> => {
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     retry: 2,
-    onSuccess: (data) => {
-    },
   })
 }
 
+// Hook para buscar UM aluno específico por ID (FALTAVA ESTE)
 export const useAluno = (
   id: string,
   options?: UseQueryOptions<Aluno, Error>
 ): UseQueryResult<Aluno, Error> => {
   return useQuery<Aluno, Error>(["aluno", id], () => alunosApi.getById(id), {
-    enabled: !!id,
+    enabled: !!id, // Só executa se tiver ID
     staleTime: 30000,
     cacheTime: 300000,
     retry: 2,
     refetchOnMount: true,
-    ...options,
+    ...options, // Permite sobrescrever opções
   })
 }
 
@@ -56,7 +56,6 @@ export const useCreateAluno = (): UseMutationResult<
     (data) => alunosApi.create(data),
     {
       onSuccess: (newAluno) => {
-
         queryClient.setQueryData<Aluno[]>("alunos", (old) => {
           if (!old) return [newAluno]
           return [newAluno, ...old]
@@ -89,7 +88,6 @@ export const useUpdateAluno = (): UseMutationResult<
     UpdateAlunoContext
   >(({ id, data }) => alunosApi.update(id, data), {
     onMutate: async ({ id, data }): Promise<UpdateAlunoContext> => {
-
       await queryClient.cancelQueries("alunos")
       await queryClient.cancelQueries(["aluno", id])
 
@@ -115,12 +113,10 @@ export const useUpdateAluno = (): UseMutationResult<
         })
       }
 
-
       return { previousAlunos, previousAluno }
     },
 
     onSuccess: (updatedAluno) => {
-
       queryClient.setQueryData<Aluno[]>("alunos", (old) => {
         if (!old) return [updatedAluno]
         return old.map((aluno) =>
@@ -132,7 +128,6 @@ export const useUpdateAluno = (): UseMutationResult<
 
       queryClient.invalidateQueries("alunos")
       queryClient.invalidateQueries(["aluno", updatedAluno.id])
-
 
       showToast.success("Dados atualizados com sucesso!")
     },
@@ -149,9 +144,6 @@ export const useUpdateAluno = (): UseMutationResult<
 
       showToast.error(error.message || "Erro ao atualizar aluno")
     },
-
-    onSettled: () => {
-    },
   })
 }
 
@@ -167,7 +159,6 @@ export const useDeleteAluno = (): UseMutationResult<
     (id) => alunosApi.delete(id),
     {
       onMutate: async (deletedId): Promise<DeleteAlunoContext> => {
-
         await queryClient.cancelQueries("alunos")
 
         const previousAlunos = queryClient.getQueryData<Aluno[]>("alunos")
@@ -181,7 +172,6 @@ export const useDeleteAluno = (): UseMutationResult<
       },
 
       onSuccess: (_, deletedId) => {
-
         queryClient.removeQueries(["aluno", deletedId])
         queryClient.invalidateQueries("alunos")
 

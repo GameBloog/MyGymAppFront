@@ -1,4 +1,4 @@
-// src/pages/AnswerList.tsx - ATUALIZADO COM BOTÃO DE EVOLUÇÃO
+// src/pages/AnswerList.tsx - CORRIGIDO
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import {
@@ -49,6 +49,7 @@ export const AnswersList: React.FC = () => {
 
   const canDelete = user?.role === "ADMIN" || user?.role === "PROFESSOR"
   const canCreate = user?.role === "ADMIN" || user?.role === "PROFESSOR"
+  const canViewEvolucao = true // Todos podem ver evolução
 
   const handleDelete = async (id: string) => {
     if (
@@ -180,13 +181,17 @@ export const AnswersList: React.FC = () => {
 
                 {/* Botões de Ação */}
                 <div className="flex gap-2">
-                  <button
-                    onClick={() => navigate(getEvolucaoRoute(aluno.id))}
-                    className="p-2 hover:bg-green-50 rounded-lg transition-colors"
-                    title="Ver Evolução"
-                  >
-                    <TrendingUp className="h-4 w-4 text-green-600" />
-                  </button>
+                  {/* Botão de Evolução - SEMPRE VISÍVEL */}
+                  {canViewEvolucao && (
+                    <button
+                      onClick={() => navigate(getEvolucaoRoute(aluno.id))}
+                      className="p-2 hover:bg-green-50 rounded-lg transition-colors"
+                      title="Ver Evolução"
+                    >
+                      <TrendingUp className="h-4 w-4 text-green-600" />
+                    </button>
+                  )}
+
                   <button
                     onClick={() => navigate(getEditRoute(aluno.id))}
                     className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -194,6 +199,7 @@ export const AnswersList: React.FC = () => {
                   >
                     <Edit className="h-4 w-4 text-gray-600" />
                   </button>
+
                   {canDelete && (
                     <button
                       onClick={() => handleDelete(aluno.id)}
@@ -255,7 +261,7 @@ export const AnswersList: React.FC = () => {
                 )}
               </div>
 
-              {/* Botão Ver Evolução */}
+              {/* Botão Ver Evolução em destaque */}
               <div className="border-t pt-3">
                 <Button
                   variant="secondary"
@@ -263,7 +269,7 @@ export const AnswersList: React.FC = () => {
                   onClick={() => navigate(getEvolucaoRoute(aluno.id))}
                   className="w-full sm:w-auto"
                 >
-                  Ver Evolução
+                  Ver Evolução Completa
                 </Button>
               </div>
 

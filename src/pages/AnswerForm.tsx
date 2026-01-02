@@ -14,6 +14,7 @@ import {
   Save,
   RotateCcw,
   UserCheck,
+  AlertCircle,
 } from "lucide-react"
 import { Card, Input, Button, Textarea } from "../components/ui"
 import { useCreateAluno, useUpdateAluno, useAluno } from "../hooks/useAlunos"
@@ -63,9 +64,9 @@ export const AnswerForm: React.FC = () => {
   )
 
   const { data: myAluno, isLoading: loadingMyAluno } = useMyAluno()
-
   const existingAluno = isAluno ? myAluno : editingAluno
   const loadingAluno = isAluno ? loadingMyAluno : loadingEditAluno
+  const alunoSemRegistro = isAluno && !loadingMyAluno && !myAluno
 
   const [formData, setFormData] = useState(initialFormState)
   const [alimentosDiario, setAlimentosDiario] = useState("")
@@ -80,13 +81,9 @@ export const AnswerForm: React.FC = () => {
     return "/aluno/perfil"
   }
 
-  useEffect(() => {
-    
-  }, [isProfessor, isCreating, professores, user])
+  useEffect(() => {}, [isProfessor, isCreating, professores, user])
 
   useEffect(() => {
-
-
     if (isEdit && existingAluno) {
       console.log(
         "✅ Preenchendo formulário com dados do aluno:",
@@ -116,7 +113,7 @@ export const AnswerForm: React.FC = () => {
       setAlergias(existingAluno.alergias_alimentares?.join(", ") || "")
       setSuplementos(existingAluno.suplementos_consumidos?.join(", ") || "")
     }
-  }, [isEdit, existingAluno]) 
+  }, [isEdit, existingAluno])
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {}
@@ -334,6 +331,29 @@ export const AnswerForm: React.FC = () => {
 
   const isLoading = createAluno.isLoading || updateAluno.isLoading
 
+if (alunoSemRegistro) {
+  return (
+    <div>
+      <Card className="bg-yellow-50 border-2 border-yellow-200">
+        <div className="flex items-start gap-3">
+          <AlertCircle className="h-6 w-6 text-yellow-600 flex-shrink-0 mt-1" />
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-yellow-900 mb-2">
+              Perfil Incompleto
+            </h3>
+            <p className="text-yellow-800 mb-4">
+              Seu cadastro de aluno ainda não foi completado. Entre em contato
+              com seu professor ou administrador para finalizar seu registro.
+            </p>
+            <p className="text-sm text-yellow-700">
+              <strong>Usuário:</strong> {user?.nome} ({user?.email})
+            </p>
+          </div>
+        </div>
+      </Card>
+    </div>
+  )
+}
   return (
     <div>
       <div className="flex items-center justify-between mb-6">

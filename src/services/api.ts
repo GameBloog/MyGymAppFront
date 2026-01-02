@@ -16,7 +16,6 @@ import {
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-
   headers: {
     "Content-Type": "application/json",
   },
@@ -39,20 +38,24 @@ api.interceptors.response.use(
     console.error("❌ API Error:", error.response?.data || error.message)
 
     if (error.response) {
-      const errorMessage = error.response.data.error || "Erro desconhecido"
+      const status = error.response.status // ✅ CORRIGIDO: definir status aqui
+      const errorMessage = error.response.data?.error || "Erro desconhecido"
 
+      // 401 - Não autorizado
       if (status === 401) {
         localStorage.removeItem("token")
         localStorage.removeItem("user")
 
-        // Redirecionar para erro personalizado ao invés de login direto
+        // Redirecionar para login ao invés de erro genérico
         const currentPath = window.location.pathname
         if (
           !currentPath.includes("/login") &&
-          !currentPath.includes("/error")
+          !currentPath.includes("/register")
         ) {
-          window.location.href = "/error?code=UNAUTHORIZED"
+          window.location.href = "/login"
         }
+
+        throw new Error("Sessão expirada. Faça login novamente.")
       }
 
       // 404 - Não encontrado
@@ -64,7 +67,9 @@ api.interceptors.response.use(
       if (status === 403) {
         throw new Error("Você não tem permissão para acessar este recurso")
       }
-      if (error.response.data.details) {
+
+      // Erros com detalhes de validação
+      if (error.response.data?.details) {
         const details = error.response.data.details
           .map((d) => `${d.campo}: ${d.mensagem}`)
           .join(", ")
