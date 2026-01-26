@@ -27,6 +27,7 @@ import { ProfessorDashboard } from "./pages/professor/ProfessorDashboard"
 import { AnswersList } from "./pages/AnswerList"
 import { AnswerForm } from "./pages/AnswerForm"
 import { useAuth } from "./hooks/useAuth.ts"
+import  RankingPage  from "./pages/Ranking"
 
 const RoleBasedRedirect: React.FC = () => {
   const { user } = useAuth()
@@ -70,6 +71,7 @@ function AppRoutes() {
             <Layout>
               <Routes>
                 <Route path="dashboard" element={<AdminDashboard />} />
+                <Route path="/ranking" element={<RankingPage />} />
                 <Route path="alunos" element={<AnswersList />} />
                 <Route path="alunos/new" element={<AnswerForm />} />
                 <Route path="alunos/:id" element={<AnswersList />} />

@@ -1,84 +1,61 @@
-import React, { useState, useMemo } from "react"
+import { useEffect, useState } from "react"
+import api from "../services/api"
 import { Trophy } from "lucide-react"
-import { Card, Button } from "../components/ui"
 
-type Player = {
+type Aluno = {
   id: string
   nome: string
-  pontos: number
+  pontuacao: number
 }
 
-export const RankingPage: React.FC = () => {
-  const [players] = useState<Player[]>([
-    { id: "1", nome: "Ana Silva", pontos: 1200 },
-    { id: "2", nome: "Pedro Santos", pontos: 1480 },
-    { id: "3", nome: "Lucas Ferreira", pontos: 980 },
-    { id: "4", nome: "Maria Souza", pontos: 750 },
-    { id: "5", nome: "João Almeida", pontos: 1600 },
-  ])
+export default function RankingPage() {
+  const [alunos, setAlunos] = useState<Aluno[]>([])
 
-  const [order, setOrder] = useState<"asc" | "desc">("desc")
+  useEffect(() => {
+    async function fetchRanking() {
+      try {
+        const response = await api.get("/ranking")
+        setAlunos(response.data)
+      } catch (error) {
+        console.error("Erro ao buscar ranking:", error)
+      }
+    }
 
-  const sortedPlayers = useMemo(() => {
-    return [...players].sort((a, b) =>
-      order === "desc" ? b.pontos - a.pontos : a.pontos - b.pontos
-    )
-  }, [players, order])
+    fetchRanking()
+  }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-2xl">
-        {/* Logo / Ícone */}
-        <div className="flex justify-center mb-6">
-          <div className="bg-yellow-500 p-4 rounded-2xl">
-            <Trophy className="h-12 w-12 text-white" />
-          </div>
-        </div>
+    <div className="p-8">
+      <div className="flex items-center gap-2 mb-6">
+        <Trophy className="h-8 w-8 text-yellow-500" />
+        <h1 className="text-3xl font-bold text-gray-900">Ranking de Alunos</h1>
+      </div>
 
-        <h1 className="text-3xl font-bold text-center text-gray-900 mb-2">
-          Ranking
-        </h1>
-        <p className="text-center text-gray-600 mb-6">
-          Veja a classificação dos jogadores
-        </p>
-
-        {/* Botão de ordenação */}
-        <div className="flex justify-end mb-4">
-          <Button
-            onClick={() => setOrder(order === "asc" ? "desc" : "asc")}
-            className="text-sm"
-          >
-            Ordenar: {order === "asc" ? "Asc ↑" : "Desc ↓"}
-          </Button>
-        </div>
-
-        {/* Tabela */}
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="p-3 text-left">Posição</th>
-                <th className="p-3 text-left">Jogador</th>
-                <th className="p-3 text-left">Pontos</th>
+      <div className="overflow-x-auto rounded-lg shadow">
+        <table className="min-w-full bg-white border border-gray-200">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Posição</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Nome</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Pontuação</th>
+            </tr>
+          </thead>
+          <tbody>
+            {alunos.map((aluno, index) => (
+              <tr
+                key={aluno.id}
+                className={`hover:bg-gray-50 ${
+                  index === 0 ? "bg-yellow-50 font-bold" : ""
+                }`}
+              >
+                <td className="px-6 py-4 text-sm text-gray-900">{index + 1}</td>
+                <td className="px-6 py-4 text-sm text-gray-900">{aluno.nome}</td>
+                <td className="px-6 py-4 text-sm text-gray-900">{aluno.pontuacao}</td>
               </tr>
-            </thead>
-            <tbody>
-              {sortedPlayers.map((player, index) => (
-                <tr
-                  key={player.id}
-                  className={`border-t ${
-                    index < 3 ? "bg-yellow-50 font-semibold" : ""
-                  }`}
-                >
-                  <td className="p-3">{index + 1}</td>
-                  <td className="p-3">{player.nome}</td>
-                  <td className="p-3">{player.pontos}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Card>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

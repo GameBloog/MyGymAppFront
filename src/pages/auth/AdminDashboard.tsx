@@ -7,6 +7,7 @@ import {
   BarChart3,
   Plus,
   UserCheck,
+  Trophy,
 } from "lucide-react"
 import { Card, Button } from "../../components/ui"
 import { useAlunos } from "../../hooks/useAlunos"
@@ -136,6 +137,19 @@ export const AdminDashboard: React.FC = () => {
               Gerenciar códigos para professores
             </p>
           </button>
+
+          <button
+              onClick={() => navigate("/admin/ranking")}
+              className="p-4 border-2 border-gray-200 rounded-lg hover:border-yellow-500 hover:bg-yellow-50 transition-colors text-left"
+            >
+              <Trophy className="h-6 w-6 text-yellow-600 mb-2" />
+              <h3 className="font-semibold text-gray-900">Ranking de Alunos</h3>
+              <p className="text-sm text-gray-600">
+                Visualizar pontuação e posição dos alunos
+              </p>
+          </button>
+
+
         </div>
       </Card>
 
