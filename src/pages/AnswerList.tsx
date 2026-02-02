@@ -166,7 +166,6 @@ export const AnswersList: React.FC = () => {
         {filteredAlunos.map((aluno) => (
           <Card key={aluno.id} className="hover:shadow-lg transition-shadow">
             <div className="flex flex-col gap-4">
-              {/* Header */}
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3 flex-1 min-w-0">
                   <div className="bg-blue-100 p-2 rounded-full flex-shrink-0">
@@ -186,7 +185,6 @@ export const AnswersList: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Ações - Ícones */}
                 <div className="flex gap-1 flex-shrink-0">
                   {canViewEvolucao && (
                     <button
@@ -229,7 +227,6 @@ export const AnswersList: React.FC = () => {
                 </div>
               </div>
 
-              {/* Informações de contato */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {aluno.user?.email && (
                   <div className="flex items-center gap-2 text-gray-600 min-w-0">
@@ -260,7 +257,6 @@ export const AnswersList: React.FC = () => {
                   )}
               </div>
 
-              {/* Badges de medidas */}
               <div className="flex flex-wrap gap-2">
                 {aluno.alturaCm && <Badge>Altura: {aluno.alturaCm} cm</Badge>}
                 {aluno.pesoKg && (
@@ -277,7 +273,6 @@ export const AnswersList: React.FC = () => {
                 )}
               </div>
 
-              {/* Botão Evolução */}
               <div className="border-t pt-3">
                 <Button
                   variant="secondary"
@@ -289,7 +284,6 @@ export const AnswersList: React.FC = () => {
                 </Button>
               </div>
 
-              {/* Informações nutricionais e de saúde */}
               {(aluno.alimentos_quer_diario?.length ||
                 aluno.alimentos_nao_comem?.length ||
                 aluno.alergias_alimentares?.length ||
@@ -368,7 +362,6 @@ export const AnswersList: React.FC = () => {
         ))}
       </div>
 
-      {/* Empty State */}
       {filteredAlunos.length === 0 && (
         <Card className="text-center py-12">
           <User className="h-12 w-12 text-gray-400 mx-auto mb-4" />

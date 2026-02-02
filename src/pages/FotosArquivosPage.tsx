@@ -3,12 +3,13 @@ import { useNavigate, useParams } from "react-router-dom"
 import {
   ArrowLeft,
   Image as ImageIcon,
-  FileText,
   Plus,
   Trash2,
   Loader2,
   Download,
   AlertCircle,
+  Dumbbell,
+  Utensils,
 } from "lucide-react"
 import { Card, Button } from "../components/ui"
 import { ModalEnviarFoto } from "../components/ModalEnviarFoto"
@@ -39,7 +40,6 @@ export const FotosArquivosPage: React.FC = () => {
   const isAdmin = user?.role === "ADMIN"
   const isProfessor = user?.role === "PROFESSOR"
 
-  const podeEnviarFoto = isAluno
   const podeEnviarArquivo = isAdmin || isProfessor
   const podeDeletarFoto = isAluno || isAdmin
   const podeDeletarArquivo = isAdmin || isProfessor
@@ -221,49 +221,46 @@ export const FotosArquivosPage: React.FC = () => {
                 : `Fotos e Arquivos - ${aluno.user?.nome}`}
             </h1>
             <p className="text-gray-600 mt-1">
-              {fotoHook.fotos.length} foto(s) • {arquivoHook.arquivos.length}{" "}
-              arquivo(s)
+              {fotoHook.fotos.length} foto(s) • {arquivoHook.treinos.length}{" "}
+              treino(s) • {arquivoHook.dietas.length} dieta(s)
             </p>
           </div>
         </div>
       </div>
 
-      {/* Seção de Fotos */}
-      <Card className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold flex items-center gap-2">
-            <ImageIcon className="h-5 w-5" />
-            Fotos de Shape
-          </h2>
-          {podeEnviarFoto && (
+      {isAluno && (
+        <Card className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold flex items-center gap-2">
+              <ImageIcon className="h-5 w-5" />
+              Minhas Fotos de Shape
+            </h2>
             <Button
               icon={Plus}
               onClick={() => setShowModalFoto(true)}
               disabled={fotoHook.loading}
             >
-              Nova Foto
+              Enviar Foto
             </Button>
-          )}
-        </div>
-
-        {fotoHook.loading && fotoHook.fotos.length === 0 ? (
-          <div className="text-center py-8">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto" />
           </div>
-        ) : fotoHook.fotos.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {fotoHook.fotos.map((foto) => (
-              <div
-                key={foto.id}
-                className="relative group rounded-lg overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-colors"
-              >
-                <img
-                  src={foto.url}
-                  alt={foto.descricao || "Foto de shape"}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all flex items-center justify-center">
-                  {podeDeletarFoto && (
+
+          {fotoHook.loading && fotoHook.fotos.length === 0 ? (
+            <div className="text-center py-8">
+              <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto" />
+            </div>
+          ) : fotoHook.fotos.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {fotoHook.fotos.map((foto) => (
+                <div
+                  key={foto.id}
+                  className="relative group rounded-lg overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-colors"
+                >
+                  <img
+                    src={foto.url}
+                    alt={foto.descricao || "Foto de shape"}
+                    className="w-full h-48 object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all flex items-center justify-center">
                     <button
                       onClick={() => handleDeleteFoto(foto.id)}
                       className="opacity-0 group-hover:opacity-100 p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
@@ -271,49 +268,107 @@ export const FotosArquivosPage: React.FC = () => {
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
-                  )}
-                </div>
-                <div className="p-2 bg-gray-50">
-                  <p className="text-xs text-gray-600">
-                    {format(new Date(foto.createdAt), "dd/MM/yyyy HH:mm", {
-                      locale: ptBR,
-                    })}
-                  </p>
-                  {foto.descricao && (
-                    <p className="text-sm text-gray-900 mt-1">
-                      {foto.descricao}
+                  </div>
+                  <div className="p-2 bg-gray-50">
+                    <p className="text-xs text-gray-600">
+                      {format(new Date(foto.createdAt), "dd/MM/yyyy HH:mm", {
+                        locale: ptBR,
+                      })}
                     </p>
-                  )}
+                    {foto.descricao && (
+                      <p className="text-sm text-gray-900 mt-1">
+                        {foto.descricao}
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-            <ImageIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Nenhuma foto enviada ainda
-            </h3>
-            <p className="text-gray-600 mb-4">
-              {podeEnviarFoto
-                ? "Envie fotos para acompanhar sua evolução física"
-                : "Este aluno ainda não enviou fotos"}
-            </p>
-            {podeEnviarFoto && (
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+              <ImageIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Nenhuma foto enviada ainda
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Envie fotos para acompanhar sua evolução física
+              </p>
               <Button icon={Plus} onClick={() => setShowModalFoto(true)}>
                 Enviar Primeira Foto
               </Button>
-            )}
-          </div>
-        )}
-      </Card>
+            </div>
+          )}
+        </Card>
+      )}
 
-      {/* Seção de Treinos */}
+      {!isAluno && (
+        <Card className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold flex items-center gap-2">
+              <ImageIcon className="h-5 w-5" />
+              Fotos de Shape do Aluno
+            </h2>
+          </div>
+
+          {fotoHook.loading && fotoHook.fotos.length === 0 ? (
+            <div className="text-center py-8">
+              <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto" />
+            </div>
+          ) : fotoHook.fotos.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {fotoHook.fotos.map((foto) => (
+                <div
+                  key={foto.id}
+                  className="relative group rounded-lg overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-colors"
+                >
+                  <img
+                    src={foto.url}
+                    alt={foto.descricao || "Foto de shape"}
+                    className="w-full h-48 object-cover"
+                  />
+                  {podeDeletarFoto && (
+                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all flex items-center justify-center">
+                      <button
+                        onClick={() => handleDeleteFoto(foto.id)}
+                        className="opacity-0 group-hover:opacity-100 p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
+                        title="Excluir"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  )}
+                  <div className="p-2 bg-gray-50">
+                    <p className="text-xs text-gray-600">
+                      {format(new Date(foto.createdAt), "dd/MM/yyyy HH:mm", {
+                        locale: ptBR,
+                      })}
+                    </p>
+                    {foto.descricao && (
+                      <p className="text-sm text-gray-900 mt-1">
+                        {foto.descricao}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+              <ImageIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Nenhuma foto disponível
+              </h3>
+              <p className="text-gray-600">O aluno ainda não enviou fotos</p>
+            </div>
+          )}
+        </Card>
+      )}
+
       <Card className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            Treinos
+            <Dumbbell className="h-5 w-5" />
+            {isAluno ? "Meus Treinos" : "Treinos do Aluno"}
           </h2>
           {podeEnviarArquivo && (
             <Button
@@ -321,7 +376,7 @@ export const FotosArquivosPage: React.FC = () => {
               onClick={() => setShowModalArquivo(true)}
               disabled={arquivoHook.loading}
             >
-              Novo Treino
+              Enviar Treino
             </Button>
           )}
         </div>
@@ -373,7 +428,7 @@ export const FotosArquivosPage: React.FC = () => {
           </div>
         ) : (
           <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-            <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <Dumbbell className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
               Nenhum treino disponível
             </h3>
@@ -391,12 +446,11 @@ export const FotosArquivosPage: React.FC = () => {
         )}
       </Card>
 
-      {/* Seção de Dietas */}
       <Card>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            Dietas
+            <Utensils className="h-5 w-5" />
+            {isAluno ? "Minhas Dietas" : "Dietas do Aluno"}
           </h2>
           {podeEnviarArquivo && (
             <Button
@@ -404,7 +458,7 @@ export const FotosArquivosPage: React.FC = () => {
               onClick={() => setShowModalArquivo(true)}
               disabled={arquivoHook.loading}
             >
-              Nova Dieta
+              Enviar Dieta
             </Button>
           )}
         </div>
@@ -456,7 +510,7 @@ export const FotosArquivosPage: React.FC = () => {
           </div>
         ) : (
           <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-            <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <Utensils className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
               Nenhuma dieta disponível
             </h3>

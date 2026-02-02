@@ -50,7 +50,7 @@ export interface Professor {
   userId: string
   telefone?: string | null
   especialidade?: string | null
-  totalAlunos?: number // ← ADICIONADO
+  totalAlunos?: number 
   createdAt: string
   updatedAt: string
   user?: User

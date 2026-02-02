@@ -158,7 +158,6 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
         </div>
       </div>
 
-      {/* Gráfico com altura aumentada */}
       <div className="relative h-96 md:h-[32rem] border-l-2 border-b-2 border-gray-300 pl-2">
         <div className="flex items-end justify-center h-full pb-2 gap-2 md:gap-4">
           {dadosFiltrados.map((item, index) => {
@@ -186,7 +185,6 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
                     locale: ptBR,
                   })}: ${valor.toFixed(1)}`}
                 >
-                  {/* Tooltip */}
                   <div className="hidden md:block opacity-0 group-hover:opacity-100 transition-opacity absolute -top-10 left-1/2 transform -translate-x-1/2 z-10">
                     <div className="bg-gray-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
                       {valor.toFixed(1)}
@@ -195,7 +193,6 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
                   </div>
                 </div>
 
-                {/* Data */}
                 {(dadosFiltrados.length <= 10 ||
                   index % Math.ceil(dadosFiltrados.length / 10) === 0) && (
                   <p className="text-[10px] text-gray-600 mt-1 whitespace-nowrap">
@@ -209,7 +206,6 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
           })}
         </div>
 
-        {/* Linha de média */}
         <div
           className="absolute left-0 right-0 border-t-2 border-dashed border-green-400 pointer-events-none"
           style={{
