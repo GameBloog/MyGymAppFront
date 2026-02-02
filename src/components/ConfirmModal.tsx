@@ -59,7 +59,6 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
         className="bg-white rounded-lg shadow-xl w-full max-w-md transform transition-all animate-scale-in overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
         <div className="flex items-start justify-between p-6 border-b">
           <div className="flex items-center gap-3">
             <div
@@ -78,12 +77,10 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
           </button>
         </div>
 
-        {/* Body */}
         <div className="p-6">
           <p className="text-gray-700 whitespace-pre-line">{message}</p>
         </div>
 
-        {/* Footer */}
         <div className="flex flex-col-reverse sm:flex-row gap-3 p-6 border-t bg-gray-50">
           <Button
             variant="secondary"

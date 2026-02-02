@@ -1,118 +1,111 @@
-import React, { type ReactNode } from "react"
+import React from "react"
 import { useNavigate, useLocation } from "react-router-dom"
-import { Activity, LogOut, TrendingUp, User } from "lucide-react"
+import { LogOut, TrendingUp, User, Camera } from "lucide-react" // ← ADICIONE Camera AQUI
+import { Button } from "./ui/Button"
 import { useAuth } from "../hooks/useAuth"
-import { Button } from "./ui"
 
-interface LayoutProps {
-  children: ReactNode
-}
-
-export const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const { user, logout } = useAuth()
+export const Layout: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const navigate = useNavigate()
   const location = useLocation()
+  const { user, logout } = useAuth()
 
   const handleLogout = () => {
     logout()
     navigate("/login")
   }
 
-  const getRoleBadge = () => {
-    const badges = {
-      ADMIN: { text: "Administrador", color: "bg-purple-100 text-purple-800" },
-      PROFESSOR: { text: "Professor", color: "bg-blue-100 text-blue-800" },
-      ALUNO: { text: "Aluno", color: "bg-green-100 text-green-800" },
-    }
-
-    const badge = user ? badges[user.role] : badges.ALUNO
-
-    return (
-      <span
-        className={`px-2 py-1 rounded-full text-xs font-medium ${badge.color}`}
-      >
-        {badge.text}
-      </span>
-    )
-  }
-
   const isAluno = user?.role === "ALUNO"
+
   const showEvolucaoLink = isAluno && !location.pathname.includes("/evolucao")
-  const showPerfilLink = isAluno && location.pathname.includes("/evolucao")
+
+  const showPerfilLink = isAluno && !location.pathname.includes("/perfil")
+
+  const showFotosLink =
+    isAluno && !location.pathname.includes("/fotos-arquivos")
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* Navigation */}
-      <nav className="bg-white shadow-md mb-8">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <div className="flex items-center gap-3">
-              <div className="bg-blue-600 p-2 rounded-lg">
-                <Activity className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">G-FORCE Coach</h1>
-                {user && (
-                  <p className="text-xs text-gray-500">Plataforma de gerenciamento de alunos e evolução física</p>
-                )}
-              </div>
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white shadow-sm border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <h1 className="text-xl font-bold text-gray-900">
+                Academia Sistema
+              </h1>
+              {user && (
+                <span className="ml-4 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
+                  {user.role === "ADMIN" && "Administrador"}
+                  {user.role === "PROFESSOR" && "Professor"}
+                  {user.role === "ALUNO" && "Aluno"}
+                </span>
+              )}
             </div>
 
-            {/* User Info */}
-            {user && (
-              <div className="flex items-center gap-4">
-                <div className="text-right hidden sm:block">
-                  <p className="text-sm font-medium text-gray-900">
-                    {user.nome}
-                  </p>
-                  <div className="flex items-center gap-2 justify-end">
-                    {getRoleBadge()}
-                  </div>
-                </div>
-
-                {/* Links de navegação para Aluno */}
-                {showEvolucaoLink && (
-                  <Button
-                    variant="secondary"
-                    icon={TrendingUp}
-                    onClick={() => navigate("/aluno/evolucao")}
-                    className="!p-2"
-                    title="Ver Minha Evolução"
-                  >
-                    <span className="hidden sm:inline">Evolução</span>
-                  </Button>
-                )}
-
-                {showPerfilLink && (
-                  <Button
-                    variant="secondary"
-                    icon={User}
-                    onClick={() => navigate("/aluno/perfil")}
-                    className="!p-2"
-                    title="Ver Meu Perfil"
-                  >
-                    <span className="hidden sm:inline">Perfil</span>
-                  </Button>
-                )}
-
+            <div className="flex items-center gap-2">
+              {showPerfilLink && (
                 <Button
                   variant="secondary"
-                  icon={LogOut}
-                  onClick={handleLogout}
+                  icon={User}
+                  onClick={() => navigate("/aluno/perfil")}
                   className="!p-2"
-                  title="Sair"
+                  title="Ver Perfil"
                 >
-                  <span className="hidden sm:inline">Sair</span>
+                  <span className="hidden sm:inline">Perfil</span>
                 </Button>
-              </div>
-            )}
+              )}
+
+              {showEvolucaoLink && (
+                <Button
+                  variant="secondary"
+                  icon={TrendingUp}
+                  onClick={() => navigate("/aluno/evolucao")}
+                  className="!p-2"
+                  title="Ver Evolução"
+                >
+                  <span className="hidden sm:inline">Evolução</span>
+                </Button>
+              )}
+
+     
+              {showFotosLink && (
+                <Button
+                  variant="secondary"
+                  icon={Camera}
+                  onClick={() => navigate("/aluno/fotos-arquivos")}
+                  className="!p-2"
+                  title="Ver Fotos e Arquivos"
+                >
+                  <span className="hidden sm:inline">Fotos</span>
+                </Button>
+              )}
+
+              <Button
+                variant="secondary"
+                icon={LogOut}
+                onClick={handleLogout}
+                className="!p-2"
+                title="Sair"
+              >
+                <span className="hidden sm:inline">Sair</span>
+              </Button>
+            </div>
           </div>
         </div>
-      </nav>
+      </header>
 
-      {/* Content */}
-      <div className="container mx-auto px-4 pb-8">{children}</div>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {children}
+      </main>
+
+      <footer className="bg-white border-t border-gray-200 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <p className="text-center text-sm text-gray-500">
+            © 2026 G-Force Coach. Todos os direitos reservados.
+          </p>
+        </div>
+      </footer>
     </div>
   )
 }

@@ -73,7 +73,6 @@ export const AdminDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat) => (
           <Card
@@ -98,7 +97,6 @@ export const AdminDashboard: React.FC = () => {
         ))}
       </div>
 
-      {/* Quick Actions */}
       <Card>
         <h2 className="text-xl font-semibold mb-4">Ações Rápidas</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -139,7 +137,6 @@ export const AdminDashboard: React.FC = () => {
         </div>
       </Card>
 
-      {/* Últimos Alunos */}
       {alunos && alunos.length > 0 && (
         <Card className="mt-6">
           <div className="flex justify-between items-center mb-4">

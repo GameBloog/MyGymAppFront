@@ -113,7 +113,6 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
           Evolução de {nomesMetricas[metrica]}
         </h2>
 
-        {/* Estatísticas */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
           <div className="bg-blue-50 p-3 rounded-lg">
             <p className="text-xs text-gray-600 mb-1">Valor Atual</p>
@@ -141,7 +140,6 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
           </div>
         </div>
 
-        {/* Diferença Total */}
         <div className="mt-4 p-3 bg-gray-50 rounded-lg">
           <p className="text-sm">
             <span className="font-medium">Evolução total:</span>{" "}
@@ -157,7 +155,6 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
         </div>
       </div>
 
-      {/* Gráfico de Barras Simples */}
       <div className="relative h-64 border-l-2 border-b-2 border-gray-300 pl-2">
         <div className="flex items-end justify-center h-full pb-2 gap-2 md:gap-4">
           {dadosFiltrados.map((item, index) => {
@@ -178,7 +175,6 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
                 className="flex flex-col items-center justify-end group relative"
                 style={{ width: barWidth, minWidth: "30px" }}
               >
-                {/* Barra */}
                 <div
                   className="w-full bg-blue-500 hover:bg-blue-600 transition-colors rounded-t cursor-pointer relative"
                   style={{ height: `${altura}%`, minHeight: "4px" }}
@@ -186,7 +182,6 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
                     locale: ptBR,
                   })}: ${valor.toFixed(1)}`}
                 >
-                  {/* Valor no topo da barra (visível no hover em telas grandes) */}
                   <div className="hidden md:block opacity-0 group-hover:opacity-100 transition-opacity absolute -top-8 left-1/2 transform -translate-x-1/2 z-10">
                     <div className="bg-gray-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
                       {valor.toFixed(1)}
@@ -195,7 +190,6 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
                   </div>
                 </div>
 
-                {/* Data (mostrar apenas algumas labels) */}
                 {(dadosFiltrados.length <= 10 ||
                   index % Math.ceil(dadosFiltrados.length / 10) === 0) && (
                   <p className="text-[10px] text-gray-600 mt-1 whitespace-nowrap">
@@ -209,7 +203,6 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
           })}
         </div>
 
-        {/* Linha da média */}
         <div
           className="absolute left-0 right-0 border-t-2 border-dashed border-green-400 pointer-events-none"
           style={{
@@ -222,7 +215,6 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
         </div>
       </div>
 
-      {/* Legenda */}
       <div className="mt-4 text-xs text-gray-500">
         <p>
           📊 Total de registros: {dadosFiltrados.length} | Período:{" "}

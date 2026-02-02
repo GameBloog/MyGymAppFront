@@ -89,7 +89,6 @@ export const InviteCodesPage: React.FC = () => {
 
   return (
     <div>
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           <button
@@ -114,7 +113,6 @@ export const InviteCodesPage: React.FC = () => {
         </Button>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <Card>
           <div className="flex items-center justify-between">
@@ -153,7 +151,6 @@ export const InviteCodesPage: React.FC = () => {
         </Card>
       </div>
 
-      {/* Lista de Códigos */}
       <div className="space-y-4">
         {inviteCodes && inviteCodes.length > 0 ? (
           inviteCodes.map((code) => (
@@ -236,7 +233,6 @@ export const InviteCodesPage: React.FC = () => {
         )}
       </div>
 
-      {/* Modal de Criação */}
       {showModal && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
@@ -249,7 +245,6 @@ export const InviteCodesPage: React.FC = () => {
             <h2 className="text-2xl font-bold mb-6">Gerar Código de Convite</h2>
 
             <div className="space-y-6">
-              {/* Tipo de Código */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">
                   Tipo de Usuário
@@ -307,7 +302,6 @@ export const InviteCodesPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Validade */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">
                   Validade do Código
@@ -342,7 +336,6 @@ export const InviteCodesPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Actions */}
             <div className="flex gap-3 mt-8">
               <Button
                 onClick={handleCreateCode}

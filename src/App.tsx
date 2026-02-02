@@ -28,6 +28,7 @@ import { AnswersList } from "./pages/AnswerList"
 import { AnswerForm } from "./pages/AnswerForm"
 import { EvolucaoPage } from "./pages/EvolucaoPage"
 import { useAuth } from "./hooks/useAuth.ts"
+import { FotosArquivosPage } from "./pages/FotosArquivosPage.tsx"
 
 const RoleBasedRedirect: React.FC = () => {
   const { user } = useAuth()
@@ -63,7 +64,6 @@ function AppRoutes() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/" element={<RoleBasedRedirect />} />
 
-      {/* Admin Routes */}
       <Route
         path="/admin/*"
         element={
@@ -75,6 +75,10 @@ function AppRoutes() {
                 <Route path="alunos/new" element={<AnswerForm />} />
                 <Route path="alunos/:id/edit" element={<AnswerForm />} />
                 <Route path="alunos/:id/evolucao" element={<EvolucaoPage />} />
+                <Route
+                  path="alunos/:id/fotos-arquivos"
+                  element={<FotosArquivosPage />}
+                />
                 <Route path="invite-codes" element={<InviteCodesPage />} />
                 <Route path="professores" element={<ProfessoresPage />} />
                 <Route path="professores/new" element={<ProfessorForm />} />
@@ -88,7 +92,6 @@ function AppRoutes() {
         }
       />
 
-      {/* Professor Routes */}
       <Route
         path="/professor/*"
         element={
@@ -100,13 +103,16 @@ function AppRoutes() {
                 <Route path="alunos/new" element={<AnswerForm />} />
                 <Route path="alunos/:id/edit" element={<AnswerForm />} />
                 <Route path="alunos/:id/evolucao" element={<EvolucaoPage />} />
+                <Route
+                  path="alunos/:id/fotos-arquivos"
+                  element={<FotosArquivosPage />}
+                />
               </Routes>
             </Layout>
           </AuthGuard>
         }
       />
 
-      {/* Aluno Routes */}
       <Route
         path="/aluno/*"
         element={
@@ -115,13 +121,13 @@ function AppRoutes() {
               <Routes>
                 <Route path="perfil" element={<AnswerForm />} />
                 <Route path="evolucao" element={<EvolucaoPage />} />
+                <Route path="fotos-arquivos" element={<FotosArquivosPage />} />
               </Routes>
             </Layout>
           </AuthGuard>
         }
       />
 
-      {/* Unauthorized */}
       <Route
         path="/unauthorized"
         element={

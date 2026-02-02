@@ -384,7 +384,6 @@ if (alunoSemRegistro) {
         )}
       </div>
 
-      {/* Dados de Acesso - APENAS para criação */}
       {isCreating && (
         <Card className="mb-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
@@ -491,7 +490,6 @@ if (alunoSemRegistro) {
         </Card>
       )}
 
-      {/* Dados Pessoais - Para edição */}
       {isEdit && (
         <Card className="mb-6">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
@@ -525,7 +523,6 @@ if (alunoSemRegistro) {
         </Card>
       )}
 
-      {/* Medidas Corporais */}
       <Card className="mb-6">
         <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
           <Activity className="h-5 w-5" />
@@ -599,7 +596,6 @@ if (alunoSemRegistro) {
         </div>
       </Card>
 
-      {/* Informações Nutricionais */}
       <Card className="mb-6">
         <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
           <Heart className="h-5 w-5" />
@@ -664,7 +660,6 @@ if (alunoSemRegistro) {
         </div>
       </Card>
 
-      {/* Actions */}
       <div className="flex flex-col sm:flex-row gap-4">
         <Button
           onClick={handleSubmit}

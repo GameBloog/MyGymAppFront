@@ -109,7 +109,6 @@ export const RegisterPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
-        {/* Logo */}
         <div className="flex justify-center mb-8">
           <div className="bg-blue-600 p-4 rounded-2xl">
             <Activity className="h-12 w-12 text-white" />
@@ -123,7 +122,6 @@ export const RegisterPage: React.FC = () => {
           Preencha os dados para se registrar
         </p>
 
-        {/* Toggle Professor */}
         <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
           <label className="flex items-center cursor-pointer">
             <input
@@ -138,7 +136,6 @@ export const RegisterPage: React.FC = () => {
           </label>
         </div>
 
-        {/* Form */}
         <div className="space-y-4">
           <Input
             label="Nome Completo *"
@@ -191,7 +188,6 @@ export const RegisterPage: React.FC = () => {
             error={errors.confirmPassword}
           />
 
-          {/* Campos extras para Professor */}
           {isProfessor && (
             <>
               <div className="border-t pt-4">
@@ -249,7 +245,6 @@ export const RegisterPage: React.FC = () => {
           </Button>
         </div>
 
-        {/* Footer */}
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             Já tem uma conta?{" "}

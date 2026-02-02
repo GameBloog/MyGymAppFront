@@ -131,7 +131,6 @@ export const ProfessorForm: React.FC = () => {
 
   return (
     <div>
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           <button
@@ -147,7 +146,6 @@ export const ProfessorForm: React.FC = () => {
         </div>
       </div>
 
-      {/* Formulário */}
       <Card className="mb-6">
         <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
           <User className="h-5 w-5" />
@@ -240,7 +238,6 @@ export const ProfessorForm: React.FC = () => {
         </div>
       </Card>
 
-      {/* Actions */}
       <div className="flex flex-col sm:flex-row gap-4">
         <Button
           onClick={handleSubmit}

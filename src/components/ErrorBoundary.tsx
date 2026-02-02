@@ -116,18 +116,14 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <Card className="max-w-md w-full">
         <div className="text-center">
-          {/* Ícone/Emoji */}
           <div className="text-6xl mb-4">{errorInfo.icon}</div>
 
-          {/* Título */}
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
             {errorInfo.title}
           </h1>
 
-          {/* Mensagem */}
           <p className="text-gray-600 mb-6">{errorInfo.message}</p>
 
-          {/* Detalhes técnicos (opcional) */}
           {error?.code && (
             <div className="mb-6 p-3 bg-gray-100 rounded-lg">
               <p className="text-xs text-gray-500 font-mono">
@@ -137,9 +133,7 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({
             </div>
           )}
 
-          {/* Ações */}
           <div className="flex flex-col gap-3">
-            {/* Botão de Retry */}
             {(errorInfo.showRetry || onRetry) && (
               <Button
                 icon={RefreshCw}
@@ -150,7 +144,6 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({
               </Button>
             )}
 
-            {/* Botão de Login */}
             {errorInfo.showLogin && (
               <Button
                 icon={LogOut}
@@ -161,7 +154,6 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({
               </Button>
             )}
 
-            {/* Botão Voltar ao Início */}
             <Button
               variant="secondary"
               icon={Home}
@@ -171,7 +163,6 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({
               Voltar ao Início
             </Button>
 
-            {/* Botão de Logout */}
             {showLogout && !errorInfo.showLogin && (
               <Button
                 variant="secondary"

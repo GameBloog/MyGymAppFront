@@ -57,7 +57,6 @@ export const ProfessorDashboard: React.FC = () => {
         </Button>
       </div>
 
-      {/* Search */}
       {alunos && alunos.length > 0 && (
         <Card className="mb-6">
           <Input
@@ -69,7 +68,6 @@ export const ProfessorDashboard: React.FC = () => {
         </Card>
       )}
 
-      {/* Lista de Alunos */}
       {filteredAlunos.length > 0 ? (
         <div className="grid gap-4">
           {filteredAlunos.map((aluno) => (
@@ -95,7 +93,6 @@ export const ProfessorDashboard: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Ações Rápidas */}
                 <div className="flex gap-2">
                   <button
                     onClick={() =>
@@ -109,7 +106,6 @@ export const ProfessorDashboard: React.FC = () => {
                 </div>
               </div>
 
-              {/* Info adicional */}
               <div className="grid grid-cols-2 gap-3 mb-4">
                 {aluno.telefone && (
                   <div className="flex items-center gap-2 text-gray-600">
@@ -133,7 +129,6 @@ export const ProfessorDashboard: React.FC = () => {
                 )}
               </div>
 
-              {/* Badges */}
               <div className="flex flex-wrap gap-2 mb-4">
                 {aluno.pesoKg && <Badge>Peso: {aluno.pesoKg} kg</Badge>}
                 {aluno.alturaCm && (
@@ -141,7 +136,6 @@ export const ProfessorDashboard: React.FC = () => {
                 )}
               </div>
 
-              {/* Botões de Ação */}
               <div className="flex gap-3 border-t pt-3">
                 <Button
                   variant="secondary"

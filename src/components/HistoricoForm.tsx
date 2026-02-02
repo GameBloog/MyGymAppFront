@@ -79,7 +79,6 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
       </h2>
 
       <div className="space-y-4">
-        {/* Data do Registro */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Data do Registro
@@ -102,7 +101,6 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
           </p>
         </div>
 
-        {/* Medidas Corporais Principais */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           <Input
             label="Peso (kg)"
@@ -159,7 +157,6 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
           />
         </div>
 
-        {/* Medidas de Membros */}
         <div className="border-t pt-4">
           <h3 className="text-sm font-medium text-gray-700 mb-3">
             Medidas de Membros
@@ -208,7 +205,6 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
           </div>
         </div>
 
-        {/* Composição Corporal */}
         <div className="border-t pt-4">
           <h3 className="text-sm font-medium text-gray-700 mb-3">
             Composição Corporal
@@ -239,7 +235,6 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
           </div>
         </div>
 
-        {/* Observações */}
         <Textarea
           label="Observações"
           rows={3}
@@ -251,7 +246,6 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
         />
       </div>
 
-      {/* Actions */}
       <div className="flex gap-3 mt-6">
         <Button
           onClick={handleSubmit}

@@ -78,7 +78,6 @@ export const ProfessoresPage: React.FC = () => {
 
   return (
     <div>
-      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div className="flex items-center gap-4">
           <button
@@ -103,7 +102,6 @@ export const ProfessoresPage: React.FC = () => {
         </Button>
       </div>
 
-      {/* Lista */}
       <div className="grid gap-4">
         {professores && professores.length > 0 ? (
           professores.map((professor) => (
@@ -112,7 +110,6 @@ export const ProfessoresPage: React.FC = () => {
               className="hover:shadow-lg transition-shadow"
             >
               <div className="flex flex-col gap-4">
-                {/* Header do Card */}
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3 flex-1">
                     <div className="bg-blue-100 p-2 rounded-full">
@@ -134,7 +131,6 @@ export const ProfessoresPage: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Botões de Ação */}
                   <div className="flex gap-2">
                     <button
                       onClick={() =>
@@ -161,7 +157,6 @@ export const ProfessoresPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Informações Principais */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {professor.user?.email && (
                     <div className="flex items-center gap-2 text-gray-600">
@@ -192,7 +187,6 @@ export const ProfessoresPage: React.FC = () => {
                   )}
                 </div>
 
-                {/* Badges */}
                 <div className="flex flex-wrap gap-2">
                   {professor.totalAlunos !== undefined && (
                     <Badge

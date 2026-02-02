@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { Camera } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import {
   Search,
@@ -46,14 +47,20 @@ export const AnswersList: React.FC = () => {
     return `/aluno/evolucao`
   }
 
+  const getFotosRoute = (id: string) => {
+    if (user?.role === "ADMIN") return `/admin/alunos/${id}/fotos`
+    if (user?.role === "PROFESSOR") return `/professor/alunos/${id}/fotos`
+    return `/aluno/fotos`
+  }
+
   const canDelete = user?.role === "ADMIN" || user?.role === "PROFESSOR"
   const canCreate = user?.role === "ADMIN" || user?.role === "PROFESSOR"
-  const canViewEvolucao = true 
+  const canViewEvolucao = true
 
   const handleDelete = async (id: string) => {
     if (
       window.confirm(
-        "Deseja realmente excluir este aluno? Esta ação não pode ser desfeita."
+        "Deseja realmente excluir este aluno? Esta ação não pode ser desfeita.",
       )
     ) {
       const toastId = showToast.loading("Excluindo aluno...")
@@ -121,7 +128,6 @@ export const AnswersList: React.FC = () => {
 
   return (
     <div>
-      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">
@@ -132,7 +138,6 @@ export const AnswersList: React.FC = () => {
             cadastrado(s)
           </p>
         </div>
-
         {canCreate && (
           <Button icon={Plus} onClick={() => navigate(getNewRoute())}>
             Novo Aluno
@@ -140,7 +145,6 @@ export const AnswersList: React.FC = () => {
         )}
       </div>
 
-      {/* Search */}
       {alunos && alunos.length > 1 && (
         <Card className="mb-6">
           <Input
@@ -152,12 +156,10 @@ export const AnswersList: React.FC = () => {
         </Card>
       )}
 
-      {/* Lista */}
       <div className="grid gap-4">
         {filteredAlunos.map((aluno) => (
           <Card key={aluno.id} className="hover:shadow-lg transition-shadow">
             <div className="flex flex-col gap-4">
-              {/* Header do Card */}
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3 flex-1">
                   <div className="bg-blue-100 p-2 rounded-full">
@@ -172,15 +174,13 @@ export const AnswersList: React.FC = () => {
                       {format(
                         new Date(aluno.createdAt),
                         "dd/MM/yyyy 'às' HH:mm",
-                        { locale: ptBR }
+                        { locale: ptBR },
                       )}
                     </p>
                   </div>
                 </div>
 
-                {/* Botões de Ação */}
                 <div className="flex gap-2">
-                  {/* Botão de Evolução - SEMPRE VISÍVEL */}
                   {canViewEvolucao && (
                     <button
                       onClick={() => navigate(getEvolucaoRoute(aluno.id))}
@@ -190,6 +190,14 @@ export const AnswersList: React.FC = () => {
                       <TrendingUp className="h-4 w-4 text-green-600" />
                     </button>
                   )}
+
+                  <button
+                    onClick={() => navigate(getFotosRoute(aluno.id))}
+                    className="p-2 hover:bg-purple-50 rounded-lg transition-colors"
+                    title="Ver Fotos e Arquivos"
+                  >
+                    <Camera className="h-4 w-4 text-purple-600" />
+                  </button>
 
                   <button
                     onClick={() => navigate(getEditRoute(aluno.id))}
@@ -212,7 +220,6 @@ export const AnswersList: React.FC = () => {
                 </div>
               </div>
 
-              {/* Informações Principais */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {aluno.user?.email && (
                   <div className="flex items-center gap-2 text-gray-600">
@@ -243,7 +250,6 @@ export const AnswersList: React.FC = () => {
                   )}
               </div>
 
-              {/* Badges de Medidas */}
               <div className="flex flex-wrap gap-2">
                 {aluno.alturaCm && <Badge>Altura: {aluno.alturaCm} cm</Badge>}
                 {aluno.pesoKg && (
@@ -260,7 +266,6 @@ export const AnswersList: React.FC = () => {
                 )}
               </div>
 
-              {/* Botão Ver Evolução em destaque */}
               <div className="border-t pt-3">
                 <Button
                   variant="secondary"
@@ -272,7 +277,6 @@ export const AnswersList: React.FC = () => {
                 </Button>
               </div>
 
-              {/* Informações Adicionais */}
               {(aluno.alimentos_quer_diario?.length ||
                 aluno.alimentos_nao_comem?.length ||
                 aluno.alergias_alimentares?.length ||
@@ -351,7 +355,6 @@ export const AnswersList: React.FC = () => {
         ))}
       </div>
 
-      {/* Empty State */}
       {filteredAlunos.length === 0 && (
         <Card className="text-center py-12">
           <User className="h-12 w-12 text-gray-400 mx-auto mb-4" />

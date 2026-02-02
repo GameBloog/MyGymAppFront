@@ -113,7 +113,6 @@ export const EvolucaoPage: React.FC = () => {
 
   return (
     <div>
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           <button
@@ -145,7 +144,6 @@ export const EvolucaoPage: React.FC = () => {
         )}
       </div>
 
-      {/* Formulário (se visível) */}
       {podeEditar && showForm && (
         <div className="mb-6">
           <HistoricoForm
@@ -158,7 +156,6 @@ export const EvolucaoPage: React.FC = () => {
         </div>
       )}
 
-      {/* Seletor de Métrica */}
       <Card className="mb-6">
         <label className="block text-sm font-medium text-gray-700 mb-3">
           Selecione a métrica para visualizar:
@@ -183,12 +180,10 @@ export const EvolucaoPage: React.FC = () => {
         </select>
       </Card>
 
-      {/* Gráfico */}
       <div className="mb-6">
         <GraficoEvolucao alunoId={alunoId || ""} metrica={metricaSelecionada} />
       </div>
 
-      {/* Tabela de Histórico */}
       <Card>
         <h2 className="text-xl font-semibold mb-4">Histórico Completo</h2>
 
@@ -300,7 +295,6 @@ export const EvolucaoPage: React.FC = () => {
         )}
       </Card>
 
-      {/* Modal de Confirmação */}
       <ConfirmModal
         isOpen={confirmDelete.isOpen}
         title="Excluir Registro"

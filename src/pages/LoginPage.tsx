@@ -58,7 +58,6 @@ export const LoginPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
-        {/* Logo */}
         <div className="flex justify-center mb-8">
           <div className="bg-blue-600 p-4 rounded-2xl">
             <Activity className="h-12 w-12 text-white" />
@@ -72,7 +71,6 @@ export const LoginPage: React.FC = () => {
           Faça login para continuar
         </p>
 
-        {/* Form */}
         <div className="space-y-4">
           <Input
             label="Email"
@@ -114,7 +112,6 @@ export const LoginPage: React.FC = () => {
           </Button>
         </div>
 
-        {/* Footer */}
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             Não tem uma conta?{" "}
