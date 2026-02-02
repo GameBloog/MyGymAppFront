@@ -8,6 +8,7 @@ import {
   Trash2,
   Loader2,
   Download,
+  AlertCircle,
 } from "lucide-react"
 import { Card, Button } from "../components/ui"
 import { ModalEnviarFoto } from "../components/ModalEnviarFoto"
@@ -77,8 +78,10 @@ export const FotosArquivosPage: React.FC = () => {
       await fotoHook.upload(file, descricao)
       showToast.success("Foto enviada com sucesso!")
       fotoHook.fetchFotos(alunoId!)
-    } catch (error: any) {
-      showToast.error(error.message || "Erro ao enviar foto")
+    } catch (error) {
+      if (error instanceof Error) {
+        showToast.error(error.message)
+      }
       throw error
     }
   }
@@ -94,8 +97,10 @@ export const FotosArquivosPage: React.FC = () => {
       await arquivoHook.upload(params)
       showToast.success("Arquivo enviado com sucesso!")
       arquivoHook.fetchArquivos(alunoId!)
-    } catch (error: any) {
-      showToast.error(error.message || "Erro ao enviar arquivo")
+    } catch (error) {
+      if (error instanceof Error) {
+        showToast.error(error.message)
+      }
       throw error
     }
   }
@@ -118,8 +123,10 @@ export const FotosArquivosPage: React.FC = () => {
         showToast.success("Arquivo excluído com sucesso!")
       }
       setConfirmDelete({ isOpen: false, id: "", tipo: "foto" })
-    } catch (error: any) {
-      showToast.error(error.message || "Erro ao excluir")
+    } catch (error) {
+      if (error instanceof Error) {
+        showToast.error(error.message)
+      }
     }
   }
 
@@ -135,11 +142,65 @@ export const FotosArquivosPage: React.FC = () => {
   if (!aluno) {
     return (
       <Card className="bg-red-50 border-2 border-red-200">
-        <p className="text-red-800">Aluno não encontrado</p>
-        <Button onClick={() => navigate(getBackRoute())} variant="secondary">
-          Voltar
-        </Button>
+        <div className="flex items-start gap-3">
+          <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-1" />
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-red-900 mb-2">
+              Aluno não encontrado
+            </h3>
+            <Button
+              onClick={() => navigate(getBackRoute())}
+              variant="secondary"
+            >
+              Voltar
+            </Button>
+          </div>
+        </div>
       </Card>
+    )
+  }
+
+  if (fotoHook.error || arquivoHook.error) {
+    return (
+      <div>
+        <div className="flex items-center gap-4 mb-6">
+          <button
+            onClick={() => navigate(getBackRoute())}
+            className="p-2 hover:bg-white rounded-lg transition-colors"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Erro ao carregar dados
+          </h1>
+        </div>
+        <Card className="bg-red-50 border-2 border-red-200">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-1" />
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-red-900 mb-2">
+                Erro ao carregar
+              </h3>
+              <p className="text-red-800">
+                {fotoHook.error || arquivoHook.error}
+              </p>
+              <div className="mt-4">
+                <Button
+                  onClick={() => {
+                    if (alunoId && token) {
+                      fotoHook.fetchFotos(alunoId)
+                      arquivoHook.fetchArquivos(alunoId)
+                    }
+                  }}
+                  variant="secondary"
+                >
+                  Tentar Novamente
+                </Button>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
     )
   }
 
@@ -167,6 +228,7 @@ export const FotosArquivosPage: React.FC = () => {
         </div>
       </div>
 
+      {/* Seção de Fotos */}
       <Card className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold flex items-center gap-2">
@@ -227,9 +289,16 @@ export const FotosArquivosPage: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
+          <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
             <ImageIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600 mb-4">Nenhuma foto enviada ainda</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              Nenhuma foto enviada ainda
+            </h3>
+            <p className="text-gray-600 mb-4">
+              {podeEnviarFoto
+                ? "Envie fotos para acompanhar sua evolução física"
+                : "Este aluno ainda não enviou fotos"}
+            </p>
             {podeEnviarFoto && (
               <Button icon={Plus} onClick={() => setShowModalFoto(true)}>
                 Enviar Primeira Foto
@@ -239,6 +308,7 @@ export const FotosArquivosPage: React.FC = () => {
         )}
       </Card>
 
+      {/* Seção de Treinos */}
       <Card className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold flex items-center gap-2">
@@ -248,9 +318,7 @@ export const FotosArquivosPage: React.FC = () => {
           {podeEnviarArquivo && (
             <Button
               icon={Plus}
-              onClick={() => {
-                setShowModalArquivo(true)
-              }}
+              onClick={() => setShowModalArquivo(true)}
               disabled={arquivoHook.loading}
             >
               Novo Treino
@@ -304,13 +372,26 @@ export const FotosArquivosPage: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-8">
-            <FileText className="h-10 w-10 text-gray-400 mx-auto mb-3" />
-            <p className="text-gray-600">Nenhum treino disponível</p>
+          <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+            <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              Nenhum treino disponível
+            </h3>
+            <p className="text-gray-600 mb-4">
+              {podeEnviarArquivo
+                ? "Envie o plano de treino para o aluno"
+                : "Seu professor ainda não enviou nenhum treino"}
+            </p>
+            {podeEnviarArquivo && (
+              <Button icon={Plus} onClick={() => setShowModalArquivo(true)}>
+                Enviar Primeiro Treino
+              </Button>
+            )}
           </div>
         )}
       </Card>
 
+      {/* Seção de Dietas */}
       <Card>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold flex items-center gap-2">
@@ -374,9 +455,21 @@ export const FotosArquivosPage: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-8">
-            <FileText className="h-10 w-10 text-gray-400 mx-auto mb-3" />
-            <p className="text-gray-600">Nenhuma dieta disponível</p>
+          <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+            <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              Nenhuma dieta disponível
+            </h3>
+            <p className="text-gray-600 mb-4">
+              {podeEnviarArquivo
+                ? "Envie o plano de dieta para o aluno"
+                : "Seu professor ainda não enviou nenhuma dieta"}
+            </p>
+            {podeEnviarArquivo && (
+              <Button icon={Plus} onClick={() => setShowModalArquivo(true)}>
+                Enviar Primeira Dieta
+              </Button>
+            )}
           </div>
         )}
       </Card>

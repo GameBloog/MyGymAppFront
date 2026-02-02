@@ -9,6 +9,8 @@ import {
   Calendar,
   Phone,
   TrendingUp,
+  Eye,
+  Camera,
 } from "lucide-react"
 import { Card, Button, Input, Badge } from "../../components/ui"
 import { useAlunos } from "../../hooks/useAlunos"
@@ -103,6 +105,15 @@ export const ProfessorDashboard: React.FC = () => {
                   >
                     <TrendingUp className="h-5 w-5 text-green-600" />
                   </button>
+                  <button
+                    onClick={() =>
+                      navigate(`/professor/alunos/${aluno.id}/fotos-arquivos`)
+                    }
+                    className="p-2 hover:bg-purple-50 rounded-lg transition-colors"
+                    title="Ver Fotos e Arquivos"
+                  >
+                    <Camera className="h-5 w-5 text-purple-600" />
+                  </button>
                 </div>
               </div>
 
@@ -136,23 +147,34 @@ export const ProfessorDashboard: React.FC = () => {
                 )}
               </div>
 
-              <div className="flex gap-3 border-t pt-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 border-t pt-3">
+                <Button
+                  variant="secondary"
+                  icon={Eye}
+                  onClick={() => navigate(`/professor/alunos/${aluno.id}/edit`)}
+                  className="w-full"
+                >
+                  Ver Perfil
+                </Button>
                 <Button
                   variant="secondary"
                   icon={TrendingUp}
                   onClick={() =>
                     navigate(`/professor/alunos/${aluno.id}/evolucao`)
                   }
-                  className="flex-1"
+                  className="w-full"
                 >
-                  Ver Evolução
+                  Evolução
                 </Button>
                 <Button
                   variant="secondary"
-                  onClick={() => navigate(`/professor/alunos/${aluno.id}/edit`)}
-                  className="flex-1"
+                  icon={Camera}
+                  onClick={() =>
+                    navigate(`/professor/alunos/${aluno.id}/fotos-arquivos`)
+                  }
+                  className="w-full"
                 >
-                  Editar Perfil
+                  Fotos
                 </Button>
               </div>
             </Card>

@@ -48,19 +48,20 @@ export const AnswersList: React.FC = () => {
   }
 
   const getFotosRoute = (id: string) => {
-    if (user?.role === "ADMIN") return `/admin/alunos/${id}/fotos`
-    if (user?.role === "PROFESSOR") return `/professor/alunos/${id}/fotos`
-    return `/aluno/fotos`
+    if (user?.role === "ADMIN") return `/admin/alunos/${id}/fotos-arquivos`
+    if (user?.role === "PROFESSOR")
+      return `/professor/alunos/${id}/fotos-arquivos`
+    return `/aluno/fotos-arquivos`
   }
 
   const canDelete = user?.role === "ADMIN" || user?.role === "PROFESSOR"
   const canCreate = user?.role === "ADMIN" || user?.role === "PROFESSOR"
   const canViewEvolucao = true
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string, nome: string) => {
     if (
       window.confirm(
-        "Deseja realmente excluir este aluno? Esta ação não pode ser desfeita.",
+        `Deseja realmente excluir o aluno ${nome}?\n\nEsta ação não pode ser desfeita.`,
       )
     ) {
       const toastId = showToast.loading("Excluindo aluno...")
@@ -69,9 +70,13 @@ export const AnswersList: React.FC = () => {
         await deleteAluno.mutateAsync(id)
         showToast.dismiss(toastId)
         showToast.success("Aluno excluído com sucesso!")
-      } catch (error: any) {
+      } catch (error) {
         showToast.dismiss(toastId)
-        showToast.error(error.message || "Erro ao excluir aluno")
+        if (error instanceof Error) {
+          showToast.error(error.message)
+        } else {
+          showToast.error("Erro ao excluir aluno")
+        }
       }
     }
   }
@@ -110,7 +115,7 @@ export const AnswersList: React.FC = () => {
               Erro ao carregar alunos
             </h3>
             <p className="text-red-800 mb-4">{error.message}</p>
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <Button onClick={() => refetch()} variant="secondary">
                 Tentar Novamente
               </Button>
@@ -140,7 +145,8 @@ export const AnswersList: React.FC = () => {
         </div>
         {canCreate && (
           <Button icon={Plus} onClick={() => navigate(getNewRoute())}>
-            Novo Aluno
+            <span className="hidden sm:inline">Novo Aluno</span>
+            <span className="sm:hidden">Novo</span>
           </Button>
         )}
       </div>
@@ -149,7 +155,7 @@ export const AnswersList: React.FC = () => {
         <Card className="mb-6">
           <Input
             icon={Search}
-            placeholder="Buscar aluno por nome, email ou telefone..."
+            placeholder="Buscar aluno..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -160,17 +166,17 @@ export const AnswersList: React.FC = () => {
         {filteredAlunos.map((aluno) => (
           <Card key={aluno.id} className="hover:shadow-lg transition-shadow">
             <div className="flex flex-col gap-4">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3 flex-1">
-                  <div className="bg-blue-100 p-2 rounded-full">
+              {/* Header */}
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                  <div className="bg-blue-100 p-2 rounded-full flex-shrink-0">
                     <User className="h-5 w-5 text-blue-600" />
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-lg font-semibold text-gray-900 truncate">
                       {aluno.user?.nome || `Aluno #${aluno.id.slice(0, 8)}`}
                     </h3>
-                    <p className="text-sm text-gray-500">
-                      Cadastrado em{" "}
+                    <p className="text-sm text-gray-500 truncate">
                       {format(
                         new Date(aluno.createdAt),
                         "dd/MM/yyyy 'às' HH:mm",
@@ -180,7 +186,8 @@ export const AnswersList: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-2">
+                {/* Ações - Ícones */}
+                <div className="flex gap-1 flex-shrink-0">
                   {canViewEvolucao && (
                     <button
                       onClick={() => navigate(getEvolucaoRoute(aluno.id))}
@@ -209,7 +216,9 @@ export const AnswersList: React.FC = () => {
 
                   {canDelete && (
                     <button
-                      onClick={() => handleDelete(aluno.id)}
+                      onClick={() =>
+                        handleDelete(aluno.id, aluno.user?.nome || "este aluno")
+                      }
                       disabled={deleteAluno.isLoading}
                       className="p-2 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
                       title="Excluir"
@@ -220,11 +229,12 @@ export const AnswersList: React.FC = () => {
                 </div>
               </div>
 
+              {/* Informações de contato */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {aluno.user?.email && (
-                  <div className="flex items-center gap-2 text-gray-600">
+                  <div className="flex items-center gap-2 text-gray-600 min-w-0">
                     <Mail className="h-4 w-4 flex-shrink-0" />
-                    <span className="text-sm">{aluno.user.email}</span>
+                    <span className="text-sm truncate">{aluno.user.email}</span>
                   </div>
                 )}
                 {aluno.telefone && (
@@ -250,6 +260,7 @@ export const AnswersList: React.FC = () => {
                   )}
               </div>
 
+              {/* Badges de medidas */}
               <div className="flex flex-wrap gap-2">
                 {aluno.alturaCm && <Badge>Altura: {aluno.alturaCm} cm</Badge>}
                 {aluno.pesoKg && (
@@ -266,17 +277,19 @@ export const AnswersList: React.FC = () => {
                 )}
               </div>
 
+              {/* Botão Evolução */}
               <div className="border-t pt-3">
                 <Button
                   variant="secondary"
                   icon={TrendingUp}
                   onClick={() => navigate(getEvolucaoRoute(aluno.id))}
-                  className="w-full sm:w-auto"
+                  className="w-full"
                 >
                   Ver Evolução Completa
                 </Button>
               </div>
 
+              {/* Informações nutricionais e de saúde */}
               {(aluno.alimentos_quer_diario?.length ||
                 aluno.alimentos_nao_comem?.length ||
                 aluno.alergias_alimentares?.length ||
@@ -355,6 +368,7 @@ export const AnswersList: React.FC = () => {
         ))}
       </div>
 
+      {/* Empty State */}
       {filteredAlunos.length === 0 && (
         <Card className="text-center py-12">
           <User className="h-12 w-12 text-gray-400 mx-auto mb-4" />
@@ -366,12 +380,11 @@ export const AnswersList: React.FC = () => {
               ? "Tente ajustar sua busca"
               : "Cadastre o primeiro aluno para começar"}
           </p>
-          {!searchTerm && canCreate && (
+          {!searchTerm && canCreate ? (
             <Button icon={Plus} onClick={() => navigate(getNewRoute())}>
               Cadastrar Primeiro Aluno
             </Button>
-          )}
-          {searchTerm && (
+          ) : (
             <Button variant="secondary" onClick={() => setSearchTerm("")}>
               Limpar Busca
             </Button>

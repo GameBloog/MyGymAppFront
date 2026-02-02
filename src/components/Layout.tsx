@@ -32,7 +32,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <h1 className="text-xl font-bold text-gray-900">
-                Academia Sistema
+                G-Force Coach
               </h1>
               {user && (
                 <span className="ml-4 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">

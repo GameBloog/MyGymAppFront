@@ -23,25 +23,45 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const storedUser = localStorage.getItem("user")
 
     if (storedToken && storedUser) {
-      setToken(storedToken)
-      setUser(JSON.parse(storedUser))
+      try {
+        setToken(storedToken)
+        setUser(JSON.parse(storedUser))
+      } catch (error) {
+        console.error("Erro ao carregar dados do usuário:", error)
+        localStorage.removeItem("token")
+        localStorage.removeItem("user")
+      }
     }
 
     setIsLoading(false)
   }, [])
 
   const login = async (data: LoginDTO) => {
-    const response: LoginResponse = await authApi.login(data)
-    setToken(response.token)
-    setUser(response.user)
-    localStorage.setItem("token", response.token)
-    localStorage.setItem("user", JSON.stringify(response.user))
-    showToast.success(`Bem-vindo(a), ${response.user.nome}!`)
+    try {
+      const response: LoginResponse = await authApi.login(data)
+      setToken(response.token)
+      setUser(response.user)
+      localStorage.setItem("token", response.token)
+      localStorage.setItem("user", JSON.stringify(response.user))
+      showToast.success(`Bem-vindo(a), ${response.user.nome}!`)
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error
+      }
+      throw new Error("Erro ao fazer login")
+    }
   }
 
   const register = async (data: RegisterDTO) => {
-    await authApi.register(data)
-    showToast.success("Conta criada com sucesso!")
+    try {
+      await authApi.register(data)
+      showToast.success("Conta criada com sucesso!")
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error
+      }
+      throw new Error("Erro ao criar conta")
+    }
   }
 
   const logout = () => {

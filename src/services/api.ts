@@ -38,7 +38,7 @@ api.interceptors.response.use(
     console.error("❌ API Error:", error.response?.data || error.message)
 
     if (error.response) {
-      const status = error.response.status 
+      const status = error.response.status
       const errorMessage = error.response.data?.error || "Erro desconhecido"
 
       if (status === 401) {
@@ -77,30 +77,59 @@ api.interceptors.response.use(
     } else {
       throw new Error(error.message)
     }
-  }
+  },
 )
 
 export const authApi = {
   login: async (data: LoginDTO): Promise<LoginResponse> => {
-    const normalizedData = {
-      ...data,
-      email: data.email.toLowerCase().trim(),
-    }
+    try {
+      const normalizedData = {
+        ...data,
+        email: data.email.toLowerCase().trim(),
+      }
 
-    const response = await api.post<LoginResponse>(
-      "/auth/login",
-      normalizedData
-    )
-    return response.data
+      const response = await api.post<LoginResponse>(
+        "/auth/login",
+        normalizedData,
+      )
+      return response.data
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message.includes("401")) {
+          throw new Error("Email ou senha incorretos")
+        }
+        if (error.message.includes("404")) {
+          throw new Error("Usuário não encontrado")
+        }
+        throw error
+      }
+      throw new Error("Erro ao fazer login")
+    }
   },
 
   register: async (data: RegisterDTO): Promise<void> => {
-    const normalizedData = {
-      ...data,
-      email: data.email.toLowerCase().trim(),
-    }
+    try {
+      const normalizedData = {
+        ...data,
+        email: data.email.toLowerCase().trim(),
+      }
 
-    await api.post("/auth/register", normalizedData)
+      await api.post("/auth/register", normalizedData)
+    } catch (error) {
+      if (error instanceof Error) {
+        if (
+          error.message.includes("409") ||
+          error.message.includes("já existe")
+        ) {
+          throw new Error("Este email já está cadastrado")
+        }
+        if (error.message.includes("código de convite")) {
+          throw new Error("Código de convite inválido ou expirado")
+        }
+        throw error
+      }
+      throw new Error("Erro ao criar conta")
+    }
   },
 
   me: async (): Promise<User> => {
@@ -139,7 +168,7 @@ export const professoresApi = {
 
   update: async (
     id: string,
-    data: Partial<CreateProfessorDTO>
+    data: Partial<CreateProfessorDTO>,
   ): Promise<Professor> => {
     const response = await api.put<Professor>(`/professores/${id}`, data)
     return response.data
@@ -162,30 +191,36 @@ export const alunosApi = {
   },
 
   create: async (data: CreateAlunoDTO): Promise<Aluno> => {
-    const cleanData = Object.entries(data).reduce((acc, [key, value]) => {
-      if (value !== undefined && value !== "" && value !== null) {
-        if (Array.isArray(value) && value.length === 0) {
-          return acc
+    const cleanData = Object.entries(data).reduce(
+      (acc, [key, value]) => {
+        if (value !== undefined && value !== "" && value !== null) {
+          if (Array.isArray(value) && value.length === 0) {
+            return acc
+          }
+          acc[key] = value
         }
-        acc[key] = value
-      }
-      return acc
-    }, {} as any)
+        return acc
+      },
+      {} as Record<string, unknown>,
+    )
 
     const response = await api.post<Aluno>("/alunos", cleanData)
     return response.data
   },
 
   update: async (id: string, data: UpdateAlunoDTO): Promise<Aluno> => {
-    const cleanData = Object.entries(data).reduce((acc, [key, value]) => {
-      if (value !== undefined && value !== "" && value !== null) {
-        if (Array.isArray(value) && value.length === 0) {
-          return acc
+    const cleanData = Object.entries(data).reduce(
+      (acc, [key, value]) => {
+        if (value !== undefined && value !== "" && value !== null) {
+          if (Array.isArray(value) && value.length === 0) {
+            return acc
+          }
+          acc[key] = value
         }
-        acc[key] = value
-      }
-      return acc
-    }, {} as any)
+        return acc
+      },
+      {} as Record<string, unknown>,
+    )
 
     if (Object.keys(cleanData).length === 0) {
       throw new Error("Nenhum campo foi enviado para atualização")

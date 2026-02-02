@@ -31,15 +31,15 @@ export const useAlunos = (): UseQueryResult<Aluno[], Error> => {
 
 export const useAluno = (
   id: string,
-  options?: UseQueryOptions<Aluno, Error>
+  options?: UseQueryOptions<Aluno, Error>,
 ): UseQueryResult<Aluno, Error> => {
   return useQuery<Aluno, Error>(["aluno", id], () => alunosApi.getById(id), {
-    enabled: !!id, 
+    enabled: !!id,
     staleTime: 30000,
     cacheTime: 300000,
     retry: 2,
     refetchOnMount: true,
-    ...options, 
+    ...options,
   })
 }
 
@@ -63,11 +63,11 @@ export const useCreateAluno = (): UseMutationResult<
 
         showToast.success("Aluno criado com sucesso!")
       },
-      onError: (error: any) => {
+      onError: (error: Error) => {
         console.error("❌ Erro ao criar aluno:", error)
         showToast.error(error.message || "Erro ao criar aluno")
       },
-    }
+    },
   )
 }
 
@@ -118,7 +118,7 @@ export const useUpdateAluno = (): UseMutationResult<
       queryClient.setQueryData<Aluno[]>("alunos", (old) => {
         if (!old) return [updatedAluno]
         return old.map((aluno) =>
-          aluno.id === updatedAluno.id ? updatedAluno : aluno
+          aluno.id === updatedAluno.id ? updatedAluno : aluno,
         )
       })
 
@@ -130,7 +130,7 @@ export const useUpdateAluno = (): UseMutationResult<
       showToast.success("Dados atualizados com sucesso!")
     },
 
-    onError: (error: any, variables, context) => {
+    onError: (error: Error, variables, context) => {
       console.error("❌ Erro ao atualizar aluno:", error)
 
       if (context?.previousAlunos) {
@@ -176,7 +176,7 @@ export const useDeleteAluno = (): UseMutationResult<
         showToast.success("Aluno excluído com sucesso!")
       },
 
-      onError: (error: any, deletedId, context) => {
+      onError: (error: Error, _deletedId, context) => {
         console.error("❌ Erro ao deletar aluno:", error)
 
         if (context?.previousAlunos) {
@@ -185,6 +185,6 @@ export const useDeleteAluno = (): UseMutationResult<
 
         showToast.error(error.message || "Erro ao excluir aluno")
       },
-    }
+    },
   )
 }

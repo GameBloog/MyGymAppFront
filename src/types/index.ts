@@ -50,6 +50,7 @@ export interface Professor {
   userId: string
   telefone?: string | null
   especialidade?: string | null
+  totalAlunos?: number // ← ADICIONADO
   createdAt: string
   updatedAt: string
   user?: User
@@ -92,7 +93,7 @@ export interface CreateAlunoDTO {
   email: string
   password: string
 
-  professorId?: string 
+  professorId?: string
 
   telefone?: string
   alturaCm?: number

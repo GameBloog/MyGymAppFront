@@ -77,8 +77,8 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
     .filter((item) => item[metrica] !== null && item[metrica] !== undefined)
     .sort(
       (a, b) =>
-        new Date(a.dataRegistro).getTime() - new Date(b.dataRegistro).getTime()
-    ) 
+        new Date(a.dataRegistro).getTime() - new Date(b.dataRegistro).getTime(),
+    )
 
   if (dadosFiltrados.length === 0) {
     return (
@@ -101,8 +101,11 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
   const diferencaTotal = valores[valores.length - 1] - valores[0]
 
   const calcularAltura = (valor: number) => {
-    if (valorMinimo === valorMaximo) return 100
-    return ((valor - valorMinimo) / (valorMaximo - valorMinimo)) * 80 + 20
+    if (valorMinimo === valorMaximo) return 50
+    const range = valorMaximo - valorMinimo
+    const minHeight = 15
+    const maxHeight = 85
+    return minHeight + ((valor - valorMinimo) / range) * (maxHeight - minHeight)
   }
 
   return (
@@ -155,7 +158,8 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
         </div>
       </div>
 
-      <div className="relative h-64 border-l-2 border-b-2 border-gray-300 pl-2">
+      {/* Gráfico com altura aumentada */}
+      <div className="relative h-96 md:h-[32rem] border-l-2 border-b-2 border-gray-300 pl-2">
         <div className="flex items-end justify-center h-full pb-2 gap-2 md:gap-4">
           {dadosFiltrados.map((item, index) => {
             const altura = calcularAltura(item[metrica] as number)
@@ -164,10 +168,10 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
               dadosFiltrados.length <= 3
                 ? "80px"
                 : dadosFiltrados.length <= 5
-                ? "60px"
-                : dadosFiltrados.length <= 10
-                ? "40px"
-                : "30px"
+                  ? "60px"
+                  : dadosFiltrados.length <= 10
+                    ? "40px"
+                    : "30px"
 
             return (
               <div
@@ -177,12 +181,13 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
               >
                 <div
                   className="w-full bg-blue-500 hover:bg-blue-600 transition-colors rounded-t cursor-pointer relative"
-                  style={{ height: `${altura}%`, minHeight: "4px" }}
+                  style={{ height: `${altura}%`, minHeight: "10px" }}
                   title={`${format(new Date(item.dataRegistro), "dd/MM/yyyy", {
                     locale: ptBR,
                   })}: ${valor.toFixed(1)}`}
                 >
-                  <div className="hidden md:block opacity-0 group-hover:opacity-100 transition-opacity absolute -top-8 left-1/2 transform -translate-x-1/2 z-10">
+                  {/* Tooltip */}
+                  <div className="hidden md:block opacity-0 group-hover:opacity-100 transition-opacity absolute -top-10 left-1/2 transform -translate-x-1/2 z-10">
                     <div className="bg-gray-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
                       {valor.toFixed(1)}
                       <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
@@ -190,6 +195,7 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
                   </div>
                 </div>
 
+                {/* Data */}
                 {(dadosFiltrados.length <= 10 ||
                   index % Math.ceil(dadosFiltrados.length / 10) === 0) && (
                   <p className="text-[10px] text-gray-600 mt-1 whitespace-nowrap">
@@ -203,6 +209,7 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
           })}
         </div>
 
+        {/* Linha de média */}
         <div
           className="absolute left-0 right-0 border-t-2 border-dashed border-green-400 pointer-events-none"
           style={{
@@ -225,7 +232,7 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
           {format(
             new Date(dadosFiltrados[dadosFiltrados.length - 1].dataRegistro),
             "dd/MM/yyyy",
-            { locale: ptBR }
+            { locale: ptBR },
           )}
         </p>
       </div>

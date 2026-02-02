@@ -17,18 +17,16 @@ export const useProfessores = (): UseQueryResult<Professor[], Error> => {
     refetchOnMount: true,
     refetchOnWindowFocus: false,
     retry: 2,
-    onError: (error) => {
+    onError: (error: Error) => {
       console.error("❌ Erro ao buscar professores:", error)
       showToast.error("Erro ao carregar professores")
-    },
-    onSuccess: (data) => {
     },
   })
 }
 
 export const useProfessor = (
   id: string,
-  options?: UseQueryOptions<Professor, Error>
+  options?: UseQueryOptions<Professor, Error>,
 ): UseQueryResult<Professor, Error> => {
   return useQuery<Professor, Error>(
     ["professor", id],
@@ -38,12 +36,12 @@ export const useProfessor = (
       staleTime: 60000,
       cacheTime: 300000,
       retry: 2,
-      onError: (error) => {
+      onError: (error: Error) => {
         console.error("❌ Erro ao buscar professor:", error)
         showToast.error("Erro ao carregar professor")
       },
       ...options,
-    }
+    },
   )
 }
 
@@ -66,11 +64,11 @@ export const useCreateProfessor = (): UseMutationResult<
         queryClient.invalidateQueries("professores")
         showToast.success("Professor criado com sucesso!")
       },
-      onError: (error: any) => {
+      onError: (error: Error) => {
         console.error("❌ Erro ao criar professor:", error)
         showToast.error(error.message || "Erro ao criar professor")
       },
-    }
+    },
   )
 }
 
@@ -90,19 +88,19 @@ export const useUpdateProfessor = (): UseMutationResult<
       queryClient.setQueryData<Professor[]>("professores", (old) => {
         if (!old) return [updatedProfessor]
         return old.map((prof) =>
-          prof.id === updatedProfessor.id ? updatedProfessor : prof
+          prof.id === updatedProfessor.id ? updatedProfessor : prof,
         )
       })
 
       queryClient.setQueryData(
         ["professor", updatedProfessor.id],
-        updatedProfessor
+        updatedProfessor,
       )
       queryClient.invalidateQueries("professores")
       queryClient.invalidateQueries(["professor", updatedProfessor.id])
       showToast.success("Professor atualizado com sucesso!")
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       console.error("❌ Erro ao atualizar professor:", error)
       showToast.error(error.message || "Erro ao atualizar professor")
     },
@@ -127,7 +125,7 @@ export const useDeleteProfessor = (): UseMutationResult<
       queryClient.invalidateQueries("professores")
       showToast.success("Professor excluído com sucesso!")
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       console.error("❌ Erro ao deletar professor:", error)
       showToast.error(error.message || "Erro ao excluir professor")
     },

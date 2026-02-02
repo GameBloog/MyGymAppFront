@@ -1,9 +1,10 @@
 import React, { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
-import { Activity, Mail, Lock } from "lucide-react"
+import { Activity, Mail, Lock, AlertCircle } from "lucide-react"
 import { Card, Input, Button } from "../components/ui"
 import { useAuth } from "../hooks/useAuth"
 import { type LoginDTO } from "../types"
+import { showToast } from "../utils/toast"
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate()
@@ -16,6 +17,7 @@ export const LoginPage: React.FC = () => {
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [generalError, setGeneralError] = useState<string>("")
 
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {}
@@ -35,15 +37,22 @@ export const LoginPage: React.FC = () => {
   }
 
   const handleSubmit = async () => {
+    setGeneralError("")
+
     if (!validate()) return
 
     setIsLoading(true)
     try {
       await login(formData)
-
       navigate("/")
     } catch (error) {
-      console.log(error)
+      if (error instanceof Error) {
+        setGeneralError(error.message)
+        showToast.error(error.message)
+      } else {
+        setGeneralError("Erro ao fazer login. Tente novamente.")
+        showToast.error("Erro ao fazer login")
+      }
     } finally {
       setIsLoading(false)
     }
@@ -71,6 +80,18 @@ export const LoginPage: React.FC = () => {
           Faça login para continuar
         </p>
 
+        {generalError && (
+          <div className="mb-4 p-4 bg-red-50 border-2 border-red-200 rounded-lg flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-medium text-red-900">
+                Erro ao fazer login
+              </p>
+              <p className="text-sm text-red-700 mt-1">{generalError}</p>
+            </div>
+          </div>
+        )}
+
         <div className="space-y-4">
           <Input
             label="Email"
@@ -80,6 +101,7 @@ export const LoginPage: React.FC = () => {
             onChange={(e) => {
               setFormData({ ...formData, email: e.target.value })
               setErrors({ ...errors, email: "" })
+              setGeneralError("")
             }}
             onKeyPress={handleKeyPress}
             placeholder="seu@email.com"
@@ -95,6 +117,7 @@ export const LoginPage: React.FC = () => {
             onChange={(e) => {
               setFormData({ ...formData, password: e.target.value })
               setErrors({ ...errors, password: "" })
+              setGeneralError("")
             }}
             onKeyPress={handleKeyPress}
             placeholder="••••••••"

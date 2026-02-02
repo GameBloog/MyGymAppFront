@@ -8,52 +8,61 @@ import { api } from "./api"
 
 export const historicoApi = {
   criar: async (data: CreateHistoricoDTO): Promise<HistoricoEvolucao> => {
-    const cleanData = Object.entries(data).reduce((acc, [key, value]) => {
-      if (value !== undefined && value !== "" && value !== null) {
-        acc[key] = value
-      }
-      return acc
-    }, {} as any)
+    const cleanData = Object.entries(data).reduce(
+      (acc, [key, value]) => {
+        if (value !== undefined && value !== "" && value !== null) {
+          acc[key] = value
+        }
+        return acc
+      },
+      {} as Record<string, unknown>,
+    )
 
     const response = await api.post<HistoricoEvolucao>(
       `/alunos/${data.alunoId}/historico`,
-      cleanData
+      cleanData,
     )
     return response.data
   },
 
   listar: async (
     alunoId: string,
-    filtros?: HistoricoFiltros
+    filtros?: HistoricoFiltros,
   ): Promise<HistoricoEvolucao[]> => {
     const params = new URLSearchParams()
     if (filtros?.dataInicio) params.append("dataInicio", filtros.dataInicio)
     if (filtros?.dataFim) params.append("dataFim", filtros.dataFim)
     if (filtros?.limite) params.append("limite", filtros.limite.toString())
 
-    const response = await api.get<HistoricoEvolucao[]>(
-      `/alunos/${alunoId}/historico?${params}`
-    )
+    const queryString = params.toString()
+    const url = queryString
+      ? `/alunos/${alunoId}/historico?${queryString}`
+      : `/alunos/${alunoId}/historico`
+
+    const response = await api.get<HistoricoEvolucao[]>(url)
     return response.data
   },
 
   buscarUltimo: async (alunoId: string): Promise<HistoricoEvolucao> => {
     const response = await api.get<HistoricoEvolucao>(
-      `/alunos/${alunoId}/historico/latest`
+      `/alunos/${alunoId}/historico/latest`,
     )
     return response.data
   },
 
   atualizar: async (
     id: string,
-    data: UpdateHistoricoDTO
+    data: UpdateHistoricoDTO,
   ): Promise<HistoricoEvolucao> => {
-    const cleanData = Object.entries(data).reduce((acc, [key, value]) => {
-      if (value !== undefined && value !== "" && value !== null) {
-        acc[key] = value
-      }
-      return acc
-    }, {} as any)
+    const cleanData = Object.entries(data).reduce(
+      (acc, [key, value]) => {
+        if (value !== undefined && value !== "" && value !== null) {
+          acc[key] = value
+        }
+        return acc
+      },
+      {} as Record<string, unknown>,
+    )
 
     if (Object.keys(cleanData).length === 0) {
       throw new Error("Nenhum campo foi enviado para atualização")
@@ -61,7 +70,7 @@ export const historicoApi = {
 
     const response = await api.put<HistoricoEvolucao>(
       `/historico/${id}`,
-      cleanData
+      cleanData,
     )
     return response.data
   },
