@@ -8,7 +8,11 @@ import {
 } from "react-router-dom"
 import { AuthProvider } from "./context/AuthContext.tsx"
 import { AuthGuard } from "./components/AuthGuard"
+import { TokenValidator } from "./components/TokkenValidator.tsx"
 import { Layout } from "./components/Layout"
+
+// Landing Page
+import LandingPage from "./pages/LandingPage"
 
 // Auth Pages
 import { LoginPage } from "./pages/LoginPage"
@@ -50,7 +54,7 @@ const RoleBasedRedirect: React.FC = () => {
           navigate("/login", { replace: true })
       }
     } else {
-      navigate("/login", { replace: true })
+      navigate("/landing", { replace: true })
     }
   }, [user, navigate])
 
@@ -59,99 +63,124 @@ const RoleBasedRedirect: React.FC = () => {
 
 function AppRoutes() {
   return (
-    <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="/" element={<RoleBasedRedirect />} />
+    <>
+      {/* Verifica token periodicamente */}
+      <TokenValidator />
 
-      <Route
-        path="/admin/*"
-        element={
-          <AuthGuard allowedRoles={["ADMIN"]}>
-            <Layout>
-              <Routes>
-                <Route path="dashboard" element={<AdminDashboard />} />
-                <Route path="alunos" element={<AnswersList />} />
-                <Route path="alunos/new" element={<AnswerForm />} />
-                <Route path="alunos/:id/edit" element={<AnswerForm />} />
-                <Route path="alunos/:id/evolucao" element={<EvolucaoPage />} />
-                <Route
-                  path="alunos/:id/fotos-arquivos"
-                  element={<FotosArquivosPage />}
-                />
-                <Route path="invite-codes" element={<InviteCodesPage />} />
-                <Route path="professores" element={<ProfessoresPage />} />
-                <Route path="professores/new" element={<ProfessorForm />} />
-                <Route
-                  path="professores/:id/edit"
-                  element={<ProfessorForm />}
-                />
-              </Routes>
-            </Layout>
-          </AuthGuard>
-        }
-      />
+      <Routes>
+        {/* Landing pública */}
+        <Route path="/landing" element={<LandingPage />} />
 
-      <Route
-        path="/professor/*"
-        element={
-          <AuthGuard allowedRoles={["PROFESSOR"]}>
-            <Layout>
-              <Routes>
-                <Route path="dashboard" element={<ProfessorDashboard />} />
-                <Route path="alunos" element={<AnswersList />} />
-                <Route path="alunos/new" element={<AnswerForm />} />
-                <Route path="alunos/:id/edit" element={<AnswerForm />} />
-                <Route path="alunos/:id/evolucao" element={<EvolucaoPage />} />
-                <Route
-                  path="alunos/:id/fotos-arquivos"
-                  element={<FotosArquivosPage />}
-                />
-              </Routes>
-            </Layout>
-          </AuthGuard>
-        }
-      />
+        {/* Auth */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
-      <Route
-        path="/aluno/*"
-        element={
-          <AuthGuard allowedRoles={["ALUNO"]}>
-            <Layout>
-              <Routes>
-                <Route path="perfil" element={<AnswerForm />} />
-                <Route path="evolucao" element={<EvolucaoPage />} />
-                <Route path="fotos-arquivos" element={<FotosArquivosPage />} />
-              </Routes>
-            </Layout>
-          </AuthGuard>
-        }
-      />
+        {/* Root redirect */}
+        <Route path="/" element={<RoleBasedRedirect />} />
 
-      <Route
-        path="/unauthorized"
-        element={
-          <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-            <div className="text-center bg-white p-8 rounded-lg shadow-lg">
-              <h1 className="text-4xl font-bold text-red-600 mb-4">
-                ⛔ Acesso Negado
-              </h1>
-              <p className="text-gray-600 mb-6">
-                Você não tem permissão para acessar esta página.
-              </p>
-              <button
-                onClick={() => (window.location.href = "/")}
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Voltar ao Início
-              </button>
+        {/* ADMIN */}
+        <Route
+          path="/admin/*"
+          element={
+            <AuthGuard allowedRoles={["ADMIN"]}>
+              <Layout>
+                <Routes>
+                  <Route path="dashboard" element={<AdminDashboard />} />
+                  <Route path="alunos" element={<AnswersList />} />
+                  <Route path="alunos/new" element={<AnswerForm />} />
+                  <Route path="alunos/:id/edit" element={<AnswerForm />} />
+                  <Route
+                    path="alunos/:id/evolucao"
+                    element={<EvolucaoPage />}
+                  />
+                  <Route
+                    path="alunos/:id/fotos-arquivos"
+                    element={<FotosArquivosPage />}
+                  />
+                  <Route path="invite-codes" element={<InviteCodesPage />} />
+                  <Route path="professores" element={<ProfessoresPage />} />
+                  <Route path="professores/new" element={<ProfessorForm />} />
+                  <Route
+                    path="professores/:id/edit"
+                    element={<ProfessorForm />}
+                  />
+                </Routes>
+              </Layout>
+            </AuthGuard>
+          }
+        />
+
+        {/* PROFESSOR */}
+        <Route
+          path="/professor/*"
+          element={
+            <AuthGuard allowedRoles={["PROFESSOR"]}>
+              <Layout>
+                <Routes>
+                  <Route path="dashboard" element={<ProfessorDashboard />} />
+                  <Route path="alunos" element={<AnswersList />} />
+                  <Route path="alunos/new" element={<AnswerForm />} />
+                  <Route path="alunos/:id/edit" element={<AnswerForm />} />
+                  <Route
+                    path="alunos/:id/evolucao"
+                    element={<EvolucaoPage />}
+                  />
+                  <Route
+                    path="alunos/:id/fotos-arquivos"
+                    element={<FotosArquivosPage />}
+                  />
+                </Routes>
+              </Layout>
+            </AuthGuard>
+          }
+        />
+
+        {/* ALUNO */}
+        <Route
+          path="/aluno/*"
+          element={
+            <AuthGuard allowedRoles={["ALUNO"]}>
+              <Layout>
+                <Routes>
+                  <Route path="perfil" element={<AnswerForm />} />
+                  <Route path="evolucao" element={<EvolucaoPage />} />
+                  <Route
+                    path="fotos-arquivos"
+                    element={<FotosArquivosPage />}
+                  />
+                </Routes>
+              </Layout>
+            </AuthGuard>
+          }
+        />
+
+        {/* Unauthorized */}
+        <Route
+          path="/unauthorized"
+          element={
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+              <div className="text-center bg-white p-8 rounded-lg shadow-lg">
+                <h1 className="text-4xl font-bold text-red-600 mb-4">
+                  ⛔ Acesso Negado
+                </h1>
+                <p className="text-gray-600 mb-6">
+                  Você não tem permissão para acessar esta página.
+                </p>
+                <button
+                  onClick={() => (window.location.href = "/")}
+                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Voltar ao Início
+                </button>
+              </div>
             </div>
-          </div>
-        }
-      />
+          }
+        />
 
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        {/* Fallback geral */}
+        <Route path="*" element={<Navigate to="/landing" replace />} />
+      </Routes>
+    </>
   )
 }
 
