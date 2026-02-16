@@ -22,61 +22,85 @@ export const api = axios.create({
   timeout: 10000,
 })
 
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token")
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+let isRedirecting = false
+
+const clearAuth = () => {
+  localStorage.removeItem("token")
+  localStorage.removeItem("user")
+}
+
+const redirectToLogin = () => {
+  if (isRedirecting) return
+  isRedirecting = true
+
+  clearAuth()
+
+  const currentPath = window.location.pathname
+  if (!currentPath.includes("/login") && !currentPath.includes("/register")) {
+    window.location.href = "/login"
   }
-  return config
-})
+
+  setTimeout(() => {
+    isRedirecting = false
+  }, 1000)
+}
+
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token")
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+  },
+  (error) => {
+    console.error("❌ Request Error:", error)
+    return Promise.reject(error)
+  },
+)
 
 api.interceptors.response.use(
-  (response) => {
-    return response
-  },
+  (response) => response,
   (error: AxiosError<ApiError>) => {
-    console.error("❌ API Error:", error.response?.data || error.message)
+    console.error("❌ API Error:", {
+      status: error.response?.status,
+      data: error.response?.data,
+      url: error.config?.url,
+    })
 
-    if (error.response) {
-      const status = error.response.status
-      const errorMessage = error.response.data?.error || "Erro desconhecido"
-
-      if (status === 401) {
-        localStorage.removeItem("token")
-        localStorage.removeItem("user")
-
-        const currentPath = window.location.pathname
-        if (
-          !currentPath.includes("/login") &&
-          !currentPath.includes("/register")
-        ) {
-          window.location.href = "/login"
-        }
-
-        throw new Error("Sessão expirada. Faça login novamente.")
-      }
-
-      if (status === 404) {
-        throw new Error("Recurso não encontrado")
-      }
-
-      if (status === 403) {
-        throw new Error("Você não tem permissão para acessar este recurso")
-      }
-
-      if (error.response.data?.details) {
-        const details = error.response.data.details
-          .map((d) => `${d.campo}: ${d.mensagem}`)
-          .join(", ")
-        throw new Error(`${errorMessage} - ${details}`)
-      }
-
-      throw new Error(errorMessage)
-    } else if (error.request) {
-      throw new Error("Servidor não respondeu. Verifique sua conexão.")
-    } else {
-      throw new Error(error.message)
+    if (!error.response) {
+      return Promise.reject(
+        new Error("Servidor não respondeu. Verifique sua conexão."),
+      )
     }
+
+    const status = error.response.status
+    const errorMessage = error.response.data?.error || "Erro desconhecido"
+
+    if (status === 401) {
+      console.log("🔒 Token inválido/expirado - redirecionando para login")
+      redirectToLogin()
+      return Promise.reject(new Error("Sessão expirada. Faça login novamente."))
+    }
+
+    if (status === 403) {
+      return Promise.reject(
+        new Error("Você não tem permissão para acessar este recurso"),
+      )
+    }
+
+    if (status === 404) {
+      return Promise.reject(new Error("Recurso não encontrado"))
+    }
+
+    if (error.response.data?.details) {
+      const details = error.response.data.details
+        .map((d) => `${d.campo}: ${d.mensagem}`)
+        .join(", ")
+      return Promise.reject(new Error(`${errorMessage} - ${details}`))
+    }
+
+    return Promise.reject(new Error(errorMessage))
   },
 )
 
@@ -135,6 +159,16 @@ export const authApi = {
   me: async (): Promise<User> => {
     const response = await api.get<User>("/auth/me")
     return response.data
+  },
+
+  checkToken: async (): Promise<boolean> => {
+    try {
+      await api.get("/auth/me")
+      return true
+    } catch (error) {
+      console.log(error)
+      return false
+    }
   },
 }
 
