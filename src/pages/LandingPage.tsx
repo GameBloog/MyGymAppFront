@@ -25,7 +25,7 @@ const LandingPage = () => {
 
   const handleWhatsAppClick = () => {
     window.open(
-      "https://wa.me/5511999999999?text=Olá! Quero saber mais sobre a G-Force",
+      "https://wa.me/5511953693554?text=Olá! Quero saber mais sobre a G-Force",
       "_blank",
     )
   }
