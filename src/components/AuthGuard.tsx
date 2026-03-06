@@ -14,7 +14,7 @@ interface AuthGuardProps {
 export const AuthGuard: React.FC<AuthGuardProps> = ({
   children,
   allowedRoles,
-  redirectTo = "/login",
+  redirectTo = "/landing",
 }) => {
   const { isAuthenticated, isLoading, user, logout } = useAuth()
   const navigate = useNavigate()

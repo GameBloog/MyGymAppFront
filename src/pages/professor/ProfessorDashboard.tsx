@@ -11,6 +11,8 @@ import {
   TrendingUp,
   Eye,
   Camera,
+  Dumbbell,
+  UtensilsCrossed,
 } from "lucide-react"
 import { Card, Button, Input, Badge } from "../../components/ui"
 import { useAlunos } from "../../hooks/useAlunos"
@@ -114,6 +116,20 @@ export const ProfessorDashboard: React.FC = () => {
                   >
                     <Camera className="h-5 w-5 text-purple-600" />
                   </button>
+                  <button
+                    onClick={() => navigate(`/professor/alunos/${aluno.id}/treino`)}
+                    className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                    title="Editar Treino"
+                  >
+                    <Dumbbell className="h-5 w-5 text-blue-700" />
+                  </button>
+                  <button
+                    onClick={() => navigate(`/professor/alunos/${aluno.id}/dieta`)}
+                    className="p-2 hover:bg-orange-50 rounded-lg transition-colors"
+                    title="Editar Dieta"
+                  >
+                    <UtensilsCrossed className="h-5 w-5 text-orange-700" />
+                  </button>
                 </div>
               </div>
 
@@ -147,7 +163,7 @@ export const ProfessorDashboard: React.FC = () => {
                 )}
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 border-t pt-3">
+              <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 border-t pt-3">
                 <Button
                   variant="secondary"
                   icon={Eye}
@@ -175,6 +191,22 @@ export const ProfessorDashboard: React.FC = () => {
                   className="w-full"
                 >
                   Fotos
+                </Button>
+                <Button
+                  variant="secondary"
+                  icon={Dumbbell}
+                  onClick={() => navigate(`/professor/alunos/${aluno.id}/treino`)}
+                  className="w-full"
+                >
+                  Treino
+                </Button>
+                <Button
+                  variant="secondary"
+                  icon={UtensilsCrossed}
+                  onClick={() => navigate(`/professor/alunos/${aluno.id}/dieta`)}
+                  className="w-full"
+                >
+                  Dieta
                 </Button>
               </div>
             </Card>

@@ -28,6 +28,7 @@ const initialFormState = {
   nome: "",
   email: "",
   password: "",
+  sexoBiologico: "",
   telefone: "",
   professorId: "",
   alturaCm: "",
@@ -39,7 +40,19 @@ const initialFormState = {
   dias_treino_semana: "",
   dores_articulares: "",
   frequencia_horarios_refeicoes: "",
+  objetivos_atuais: "",
 }
+
+const measurementInstructionLinks = [
+  {
+    label: "Video 1: como tirar medidas",
+    href: "https://www.youtube.com/watch?v=jGgLl9kifA0",
+  },
+  {
+    label: "Video 2: postura e pontos de referência",
+    href: "https://www.youtube.com/watch?v=qHCtSaETaXc",
+  },
+]
 
 export const AnswerForm: React.FC = () => {
   const navigate = useNavigate()
@@ -73,12 +86,14 @@ export const AnswerForm: React.FC = () => {
   const [alimentosNaoCome, setAlimentosNaoCome] = useState("")
   const [alergias, setAlergias] = useState("")
   const [suplementos, setSuplementos] = useState("")
+  const [tomaRemedio, setTomaRemedio] = useState<boolean | null>(null)
+  const [remediosUso, setRemediosUso] = useState("")
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const getBackRoute = () => {
     if (isAdmin) return "/admin/alunos"
     if (isProfessor) return "/professor/dashboard"
-    return "/aluno/perfil"
+    return "/aluno/dashboard"
   }
 
   useEffect(() => {}, [isProfessor, isCreating, professores, user])
@@ -95,6 +110,7 @@ export const AnswerForm: React.FC = () => {
         email: "",
         password: "",
         professorId: existingAluno.professorId || "",
+        sexoBiologico: existingAluno.sexoBiologico || "",
         telefone: existingAluno.telefone || "",
         alturaCm: existingAluno.alturaCm?.toString() || "",
         pesoKg: existingAluno.pesoKg?.toString() || "",
@@ -106,12 +122,15 @@ export const AnswerForm: React.FC = () => {
         dores_articulares: existingAluno.dores_articulares || "",
         frequencia_horarios_refeicoes:
           existingAluno.frequencia_horarios_refeicoes || "",
+        objetivos_atuais: existingAluno.objetivos_atuais || "",
       })
 
       setAlimentosDiario(existingAluno.alimentos_quer_diario?.join(", ") || "")
       setAlimentosNaoCome(existingAluno.alimentos_nao_comem?.join(", ") || "")
       setAlergias(existingAluno.alergias_alimentares?.join(", ") || "")
       setSuplementos(existingAluno.suplementos_consumidos?.join(", ") || "")
+      setTomaRemedio(existingAluno.toma_remedio ?? null)
+      setRemediosUso(existingAluno.remedios_uso || "")
     }
   }, [isEdit, existingAluno])
 
@@ -149,6 +168,11 @@ export const AnswerForm: React.FC = () => {
       }
     }
 
+    if (tomaRemedio === true && !remediosUso.trim()) {
+      newErrors.remedios_uso =
+        "Informe quais remédios utiliza quando esta opção estiver ativa"
+    }
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -159,6 +183,8 @@ export const AnswerForm: React.FC = () => {
     setAlimentosNaoCome("")
     setAlergias("")
     setSuplementos("")
+    setTomaRemedio(null)
+    setRemediosUso("")
     setErrors({})
   }
 
@@ -182,6 +208,10 @@ export const AnswerForm: React.FC = () => {
 
         if (formData.telefone.trim())
           dataToSend.telefone = formData.telefone.trim()
+        if (formData.sexoBiologico)
+          dataToSend.sexoBiologico = formData.sexoBiologico as
+            | "MASCULINO"
+            | "FEMININO"
         if (formData.alturaCm) dataToSend.alturaCm = Number(formData.alturaCm)
         if (formData.pesoKg) dataToSend.pesoKg = Number(formData.pesoKg)
         if (formData.idade) dataToSend.idade = Number(formData.idade)
@@ -198,6 +228,11 @@ export const AnswerForm: React.FC = () => {
         if (formData.frequencia_horarios_refeicoes.trim())
           dataToSend.frequencia_horarios_refeicoes =
             formData.frequencia_horarios_refeicoes.trim()
+        if (formData.objetivos_atuais.trim())
+          dataToSend.objetivos_atuais = formData.objetivos_atuais.trim()
+        if (tomaRemedio !== null) dataToSend.toma_remedio = tomaRemedio
+        if (tomaRemedio === true && remediosUso.trim())
+          dataToSend.remedios_uso = remediosUso.trim()
 
         const alimentosDiarioArray = alimentosDiario
           .split(",")
@@ -255,6 +290,10 @@ export const AnswerForm: React.FC = () => {
 
         if (formData.telefone.trim())
           dataToSend.telefone = formData.telefone.trim()
+        if (formData.sexoBiologico)
+          dataToSend.sexoBiologico = formData.sexoBiologico as
+            | "MASCULINO"
+            | "FEMININO"
         if (formData.alturaCm) dataToSend.alturaCm = Number(formData.alturaCm)
         if (formData.pesoKg) dataToSend.pesoKg = Number(formData.pesoKg)
         if (formData.idade) dataToSend.idade = Number(formData.idade)
@@ -271,6 +310,11 @@ export const AnswerForm: React.FC = () => {
         if (formData.frequencia_horarios_refeicoes.trim())
           dataToSend.frequencia_horarios_refeicoes =
             formData.frequencia_horarios_refeicoes.trim()
+        if (formData.objetivos_atuais.trim())
+          dataToSend.objetivos_atuais = formData.objetivos_atuais.trim()
+        if (tomaRemedio !== null) dataToSend.toma_remedio = tomaRemedio
+        if (tomaRemedio === true && remediosUso.trim())
+          dataToSend.remedios_uso = remediosUso.trim()
 
         const alimentosDiarioArray = alimentosDiario
           .split(",")
@@ -305,9 +349,13 @@ export const AnswerForm: React.FC = () => {
         resetForm()
         navigate(getBackRoute())
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("❌ Erro ao salvar aluno:", error)
-      showToast.error(error.message || "Erro ao salvar aluno")
+      if (error instanceof Error) {
+        showToast.error(error.message || "Erro ao salvar aluno")
+      } else {
+        showToast.error("Erro ao salvar aluno")
+      }
     }
   }
 
@@ -439,6 +487,22 @@ if (alunoSemRegistro) {
               }
               placeholder="(11) 98765-4321"
             />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Sexo biológico (para cálculos)
+              </label>
+              <select
+                value={formData.sexoBiologico}
+                onChange={(e) =>
+                  setFormData({ ...formData, sexoBiologico: e.target.value })
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+              >
+                <option value="">Não informado</option>
+                <option value="MASCULINO">Masculino</option>
+                <option value="FEMININO">Feminino</option>
+              </select>
+            </div>
           </div>
 
           {isAdmin && (
@@ -519,6 +583,22 @@ if (alunoSemRegistro) {
               min="1"
               max="120"
             />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Sexo biológico (para cálculos)
+              </label>
+              <select
+                value={formData.sexoBiologico}
+                onChange={(e) =>
+                  setFormData({ ...formData, sexoBiologico: e.target.value })
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+              >
+                <option value="">Não informado</option>
+                <option value="MASCULINO">Masculino</option>
+                <option value="FEMININO">Feminino</option>
+              </select>
+            </div>
           </div>
         </Card>
       )}
@@ -528,6 +608,29 @@ if (alunoSemRegistro) {
           <Activity className="h-5 w-5" />
           Medidas Corporais
         </h2>
+
+        <div className="mb-4 p-4 rounded-lg border border-blue-200 bg-blue-50">
+          <p className="text-sm font-medium text-blue-900">
+            Instruções para tirar medidas
+          </p>
+          <p className="text-sm text-blue-800 mt-1">
+            Assista os vídeos antes de enviar suas medidas. Você pode trocar os
+            links pelos vídeos finais depois.
+          </p>
+          <div className="mt-3 flex flex-col gap-2">
+            {measurementInstructionLinks.map((video) => (
+              <a
+                key={video.href}
+                href={video.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-medium text-blue-700 hover:text-blue-900 underline"
+              >
+                {video.label}
+              </a>
+            ))}
+          </div>
+        </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           <Input
@@ -634,6 +737,79 @@ if (alunoSemRegistro) {
             onChange={(e) => setSuplementos(e.target.value)}
             placeholder="Ex: whey protein, creatina (separados por vírgula)"
           />
+
+          <Textarea
+            label="Objetivos atuais"
+            rows={2}
+            value={formData.objetivos_atuais}
+            onChange={(e) =>
+              setFormData({ ...formData, objetivos_atuais: e.target.value })
+            }
+            placeholder="Ex: ganhar massa magra, melhorar condicionamento"
+          />
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Toma remédio atualmente?
+            </label>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <label className="flex items-center gap-2 text-sm text-gray-700">
+                <input
+                  type="radio"
+                  name="toma-remedio"
+                  checked={tomaRemedio === true}
+                  onChange={() => {
+                    setTomaRemedio(true)
+                    setErrors({ ...errors, remedios_uso: "" })
+                  }}
+                />
+                Sim
+              </label>
+              <label className="flex items-center gap-2 text-sm text-gray-700">
+                <input
+                  type="radio"
+                  name="toma-remedio"
+                  checked={tomaRemedio === false}
+                  onChange={() => {
+                    setTomaRemedio(false)
+                    setRemediosUso("")
+                    setErrors({ ...errors, remedios_uso: "" })
+                  }}
+                />
+                Não
+              </label>
+              <label className="flex items-center gap-2 text-sm text-gray-700">
+                <input
+                  type="radio"
+                  name="toma-remedio"
+                  checked={tomaRemedio === null}
+                  onChange={() => {
+                    setTomaRemedio(null)
+                    setRemediosUso("")
+                    setErrors({ ...errors, remedios_uso: "" })
+                  }}
+                />
+                Prefiro não informar
+              </label>
+            </div>
+            <p className="mt-2 text-xs text-gray-500">
+              Esta informação é visível para o professor responsável.
+            </p>
+          </div>
+
+          {tomaRemedio === true && (
+            <Textarea
+              label="Se sim, quais remédios?"
+              rows={2}
+              value={remediosUso}
+              onChange={(e) => {
+                setRemediosUso(e.target.value)
+                setErrors({ ...errors, remedios_uso: "" })
+              }}
+              error={errors.remedios_uso}
+              placeholder="Descreva os remédios de uso atual"
+            />
+          )}
 
           <Textarea
             label="Dores articulares"

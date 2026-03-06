@@ -70,7 +70,7 @@ export const FotosArquivosPage: React.FC = () => {
   const getBackRoute = () => {
     if (isAdmin) return "/admin/alunos"
     if (isProfessor) return "/professor/dashboard"
-    return "/aluno/perfil"
+    return "/aluno/dashboard"
   }
 
   const handleUploadFoto = async (file: File, descricao?: string) => {

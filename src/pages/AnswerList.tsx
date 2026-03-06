@@ -14,6 +14,8 @@ import {
   AlertCircle,
   Mail,
   TrendingUp,
+  Dumbbell,
+  UtensilsCrossed,
 } from "lucide-react"
 import { Card, Badge, Input, Button } from "../components/ui"
 import { useAlunos, useDeleteAluno } from "../hooks/useAlunos"
@@ -52,6 +54,18 @@ export const AnswersList: React.FC = () => {
     if (user?.role === "PROFESSOR")
       return `/professor/alunos/${id}/fotos-arquivos`
     return `/aluno/fotos-arquivos`
+  }
+
+  const getTreinoRoute = (id: string) => {
+    if (user?.role === "ADMIN") return `/admin/alunos/${id}/treino`
+    if (user?.role === "PROFESSOR") return `/professor/alunos/${id}/treino`
+    return "/aluno/treino"
+  }
+
+  const getDietaRoute = (id: string) => {
+    if (user?.role === "ADMIN") return `/admin/alunos/${id}/dieta`
+    if (user?.role === "PROFESSOR") return `/professor/alunos/${id}/dieta`
+    return "/aluno/dieta"
   }
 
   const canDelete = user?.role === "ADMIN" || user?.role === "PROFESSOR"
@@ -212,6 +226,21 @@ export const AnswersList: React.FC = () => {
                     <Edit className="h-4 w-4 text-gray-600" />
                   </button>
 
+                  <button
+                    onClick={() => navigate(getTreinoRoute(aluno.id))}
+                    className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                    title="Treino"
+                  >
+                    <Dumbbell className="h-4 w-4 text-blue-700" />
+                  </button>
+                  <button
+                    onClick={() => navigate(getDietaRoute(aluno.id))}
+                    className="p-2 hover:bg-orange-50 rounded-lg transition-colors"
+                    title="Dieta"
+                  >
+                    <UtensilsCrossed className="h-4 w-4 text-orange-700" />
+                  </button>
+
                   {canDelete && (
                     <button
                       onClick={() =>
@@ -273,14 +302,30 @@ export const AnswersList: React.FC = () => {
                 )}
               </div>
 
-              <div className="border-t pt-3">
+              <div className="border-t pt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <Button
                   variant="secondary"
                   icon={TrendingUp}
                   onClick={() => navigate(getEvolucaoRoute(aluno.id))}
-                  className="w-full"
+                  className="w-full justify-center"
                 >
                   Ver Evolução Completa
+                </Button>
+                <Button
+                  variant="secondary"
+                  icon={Dumbbell}
+                  onClick={() => navigate(getTreinoRoute(aluno.id))}
+                  className="w-full justify-center"
+                >
+                  Editor de Treino
+                </Button>
+                <Button
+                  variant="secondary"
+                  icon={UtensilsCrossed}
+                  onClick={() => navigate(getDietaRoute(aluno.id))}
+                  className="w-full justify-center"
+                >
+                  Editor de Dieta
                 </Button>
               </div>
 
@@ -289,7 +334,10 @@ export const AnswersList: React.FC = () => {
                 aluno.alergias_alimentares?.length ||
                 aluno.suplementos_consumidos?.length ||
                 aluno.dores_articulares ||
-                aluno.frequencia_horarios_refeicoes) && (
+                aluno.frequencia_horarios_refeicoes ||
+                aluno.objetivos_atuais ||
+                (aluno.toma_remedio !== null &&
+                  aluno.toma_remedio !== undefined)) && (
                 <div className="border-t pt-4 space-y-2 text-sm">
                   {aluno.alimentos_quer_diario &&
                     aluno.alimentos_quer_diario.length > 0 && (
@@ -353,6 +401,35 @@ export const AnswersList: React.FC = () => {
                       <span className="text-gray-600">
                         {aluno.frequencia_horarios_refeicoes}
                       </span>
+                    </div>
+                  )}
+                  {aluno.objetivos_atuais && (
+                    <div>
+                      <span className="font-medium text-gray-700">
+                        Objetivos atuais:{" "}
+                      </span>
+                      <span className="text-gray-600">
+                        {aluno.objetivos_atuais}
+                      </span>
+                    </div>
+                  )}
+                  {aluno.toma_remedio !== null &&
+                    aluno.toma_remedio !== undefined && (
+                      <div>
+                        <span className="font-medium text-gray-700">
+                          Toma remédio:{" "}
+                        </span>
+                        <span className="text-gray-600">
+                          {aluno.toma_remedio ? "Sim" : "Não"}
+                        </span>
+                      </div>
+                    )}
+                  {aluno.remedios_uso && (
+                    <div>
+                      <span className="font-medium text-gray-700">
+                        Quais remédios:{" "}
+                      </span>
+                      <span className="text-gray-600">{aluno.remedios_uso}</span>
                     </div>
                   )}
                 </div>

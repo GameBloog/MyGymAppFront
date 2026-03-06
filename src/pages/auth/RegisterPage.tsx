@@ -12,6 +12,7 @@ import {
 import { Card, Input, Button } from "../../components/ui"
 import { useAuth } from "../../hooks/useAuth"
 import { type RegisterDTO } from "../../types"
+import { getStoredLeadSlug } from "../../utils/leadTracking"
 
 export const RegisterPage: React.FC = () => {
   const navigate = useNavigate()
@@ -75,6 +76,11 @@ export const RegisterPage: React.FC = () => {
         email: formData.email.trim(),
         password: formData.password,
         role: isProfessor ? "PROFESSOR" : "ALUNO",
+      }
+
+      const storedLeadSlug = getStoredLeadSlug()
+      if (storedLeadSlug) {
+        dataToSend.leadSlug = storedLeadSlug
       }
 
       if (isProfessor) {

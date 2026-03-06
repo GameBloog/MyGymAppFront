@@ -29,8 +29,7 @@ export const useMyAluno = (): UseQueryResult<Aluno, Error> => {
       onError: (error) => {
         console.error("❌ Erro ao buscar dados do aluno:", error)
       },
-      onSuccess: (data) => {
-      },
+      onSuccess: () => {},
     }
   )
 }

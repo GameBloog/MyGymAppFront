@@ -6,12 +6,21 @@ import {
   type RegisterDTO,
   type InviteCode,
   type CreateInviteCodeDTO,
+  type LeadLink,
+  type CreateLeadLinkDTO,
+  type UpdateLeadLinkDTO,
+  type TrackLeadClickDTO,
+  type LeadLinksListResponse,
+  type LeadAnalytics,
   type Professor,
   type CreateProfessorDTO,
   type Aluno,
   type CreateAlunoDTO,
   type UpdateAlunoDTO,
   type ApiError,
+  type UserAnswer,
+  type CreateUserAnswerDTO,
+  type UpdateUserAnswerDTO,
 } from "../types"
 
 export const api = axios.create({
@@ -29,15 +38,19 @@ const clearAuth = () => {
   localStorage.removeItem("user")
 }
 
-const redirectToLogin = () => {
+const redirectToPublicEntry = () => {
   if (isRedirecting) return
   isRedirecting = true
 
   clearAuth()
 
   const currentPath = window.location.pathname
-  if (!currentPath.includes("/login") && !currentPath.includes("/register")) {
-    window.location.href = "/login"
+  if (
+    !currentPath.includes("/landing") &&
+    !currentPath.includes("/login") &&
+    !currentPath.includes("/register")
+  ) {
+    window.location.href = "/landing"
   }
 
   setTimeout(() => {
@@ -78,8 +91,8 @@ api.interceptors.response.use(
     const errorMessage = error.response.data?.error || "Erro desconhecido"
 
     if (status === 401) {
-      console.log("🔒 Token inválido/expirado - redirecionando para login")
-      redirectToLogin()
+      console.log("🔒 Token inválido/expirado - redirecionando para landing")
+      redirectToPublicEntry()
       return Promise.reject(new Error("Sessão expirada. Faça login novamente."))
     }
 
@@ -184,6 +197,39 @@ export const inviteCodesApi = {
   },
 }
 
+export const leadLinksApi = {
+  create: async (data: CreateLeadLinkDTO): Promise<LeadLink> => {
+    const response = await api.post<LeadLink>("/lead-links", data)
+    return response.data
+  },
+
+  getAll: async (range = 30): Promise<LeadLinksListResponse> => {
+    const response = await api.get<LeadLinksListResponse>(
+      `/lead-links?range=${range}`,
+    )
+    return response.data
+  },
+
+  update: async (id: string, data: UpdateLeadLinkDTO): Promise<LeadLink> => {
+    const response = await api.patch<LeadLink>(`/lead-links/${id}`, data)
+    return response.data
+  },
+
+  getAnalytics: async (range = 30): Promise<LeadAnalytics> => {
+    const response = await api.get<LeadAnalytics>(
+      `/lead-links/analytics?range=${range}`,
+    )
+    return response.data
+  },
+
+  trackClick: async (
+    data: TrackLeadClickDTO,
+  ): Promise<{ tracked: boolean }> => {
+    const response = await api.post<{ tracked: boolean }>("/lead-links/click", data)
+    return response.data
+  },
+}
+
 export const professoresApi = {
   getAll: async (): Promise<Professor[]> => {
     const response = await api.get<Professor[]>("/professores")
@@ -210,6 +256,37 @@ export const professoresApi = {
 
   delete: async (id: string): Promise<void> => {
     await api.delete(`/professores/${id}`)
+  },
+}
+
+export const answersApi = {
+  getAll: async (): Promise<UserAnswer[]> => {
+    const response = await api.get<UserAnswer[]>("/answers")
+    return response.data
+  },
+
+  getById: async (id: string): Promise<UserAnswer> => {
+    const response = await api.get<UserAnswer>(`/answers/${id}`)
+    return response.data
+  },
+
+  create: async (data: CreateUserAnswerDTO): Promise<UserAnswer> => {
+    const response = await api.post<UserAnswer>("/answers", data)
+    return response.data
+  },
+
+  update: async (id: string, data: UpdateUserAnswerDTO): Promise<UserAnswer> => {
+    const response = await api.put<UserAnswer>(`/answers/${id}`, data)
+    return response.data
+  },
+
+  delete: async (id: string): Promise<void> => {
+    await api.delete(`/answers/${id}`)
+  },
+
+  healthCheck: async (): Promise<{ status: string }> => {
+    const response = await api.get<{ status: string }>("/health")
+    return response.data
   },
 }
 

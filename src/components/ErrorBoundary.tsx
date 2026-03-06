@@ -1,6 +1,6 @@
 import React from "react"
 import { useNavigate } from "react-router-dom"
-import { AlertCircle, RefreshCw, Home, LogOut } from "lucide-react"
+import { RefreshCw, Home, LogOut } from "lucide-react"
 import { Button, Card } from "./ui"
 
 interface ErrorPageProps {
