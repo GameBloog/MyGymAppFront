@@ -70,7 +70,7 @@ const LandingPage = () => {
   const openWhatsApp = (message: string) => {
     const encodedMessage = encodeURIComponent(message)
     window.open(
-      `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`,
+      "https://wa.me/5511953693554?text=Olá! Quero saber mais sobre a G-Force",
       "_blank",
       "noopener,noreferrer",
     )
