@@ -82,7 +82,7 @@ const LandingPage = () => {
 
   const handleShirtWhatsAppClick = () => {
     openWhatsApp(
-      "Estou interessado nas camisas da G-Force. Pode me passar os detalhes?",
+      "Estou interessado nas camisas da G-Force!. Pode me passar os detalhes?",
     )
   }
 
