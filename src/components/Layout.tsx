@@ -1,6 +1,14 @@
 import React from "react"
 import { useNavigate, useLocation } from "react-router-dom"
-import { LogOut, TrendingUp, User, Camera } from "lucide-react"
+import {
+  LogOut,
+  TrendingUp,
+  User,
+  Camera,
+  Dumbbell,
+  UtensilsCrossed,
+  Home,
+} from "lucide-react"
 import { Button } from "./ui/Button"
 import { useAuth } from "../hooks/useAuth"
 
@@ -19,7 +27,10 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
   const isAluno = user?.role === "ALUNO"
 
   const showEvolucaoLink = isAluno && !location.pathname.includes("/evolucao")
+  const showDashboardLink = isAluno && !location.pathname.includes("/dashboard")
   const showPerfilLink = isAluno && !location.pathname.includes("/perfil")
+  const showTreinoLink = isAluno && !location.pathname.includes("/treino")
+  const showDietaLink = isAluno && !location.pathname.includes("/dieta")
   const showFotosLink =
     isAluno && !location.pathname.includes("/fotos-arquivos")
 
@@ -40,6 +51,18 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
             </div>
 
             <div className="flex items-center gap-2">
+              {showDashboardLink && (
+                <Button
+                  variant="secondary"
+                  icon={Home}
+                  onClick={() => navigate("/aluno/dashboard")}
+                  className="!p-2"
+                  title="Abrir Dashboard"
+                >
+                  <span className="hidden sm:inline">Dashboard</span>
+                </Button>
+              )}
+
               {showPerfilLink && (
                 <Button
                   variant="secondary"
@@ -61,6 +84,30 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
                   title="Ver Evolução"
                 >
                   <span className="hidden sm:inline">Evolução</span>
+                </Button>
+              )}
+
+              {showTreinoLink && (
+                <Button
+                  variant="secondary"
+                  icon={Dumbbell}
+                  onClick={() => navigate("/aluno/treino")}
+                  className="!p-2"
+                  title="Ver Treino"
+                >
+                  <span className="hidden sm:inline">Treino</span>
+                </Button>
+              )}
+
+              {showDietaLink && (
+                <Button
+                  variant="secondary"
+                  icon={UtensilsCrossed}
+                  onClick={() => navigate("/aluno/dieta")}
+                  className="!p-2"
+                  title="Ver Dieta"
+                >
+                  <span className="hidden sm:inline">Dieta</span>
                 </Button>
               )}
 

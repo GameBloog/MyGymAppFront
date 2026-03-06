@@ -94,7 +94,7 @@ export const useUpdateHistorico = (): UseMutationResult<
     Error,
     { id: string; alunoId: string; data: UpdateHistoricoDTO }
   >(({ id, data }) => historicoApi.atualizar(id, data), {
-    onSuccess: (updatedHistorico, variables) => {
+    onSuccess: (_updatedHistorico, variables) => {
       queryClient.invalidateQueries(["historico", variables.alunoId])
       queryClient.invalidateQueries(["historico-ultimo", variables.alunoId])
       showToast.success("Registro atualizado com sucesso!")

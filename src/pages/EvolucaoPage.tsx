@@ -61,7 +61,7 @@ export const EvolucaoPage: React.FC = () => {
   const getBackRoute = () => {
     if (isAdmin) return "/admin/alunos"
     if (isProfessor) return "/professor/dashboard"
-    return "/aluno/perfil"
+    return "/aluno/dashboard"
   }
 
   const handleDelete = async (id: string) => {

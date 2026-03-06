@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   Activity,
   Check,
@@ -11,11 +11,55 @@ import {
   TrendingUp,
   Target,
   Award,
+  ShoppingBag,
 } from "lucide-react"
 import { useNavigate } from "react-router-dom"
+import { leadLinksApi } from "../services/api"
+import {
+  normalizeLeadSlug,
+  saveLeadSlug,
+  shouldTrackLeadOnThisLoad,
+} from "../utils/leadTracking"
+
+const WHATSAPP_NUMBER = "5511953693554"
 
 const LandingPage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const leadParam = params.get("lead")
+
+    if (!leadParam) {
+      return
+    }
+
+    const leadSlug = normalizeLeadSlug(leadParam)
+    if (!leadSlug) {
+      return
+    }
+
+    saveLeadSlug(leadSlug)
+
+    if (!shouldTrackLeadOnThisLoad(leadSlug)) {
+      return
+    }
+
+    leadLinksApi
+      .trackClick({
+        leadSlug,
+        referrer: document.referrer || undefined,
+        path: window.location.pathname,
+        utmSource: params.get("utm_source") || undefined,
+        utmMedium: params.get("utm_medium") || undefined,
+        utmCampaign: params.get("utm_campaign") || undefined,
+        utmContent: params.get("utm_content") || undefined,
+        utmTerm: params.get("utm_term") || undefined,
+      })
+      .catch((error) => {
+        console.error("[lead] Falha ao rastrear clique:", error)
+      })
+  }, [])
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id)
@@ -23,10 +67,22 @@ const LandingPage = () => {
     setMobileMenuOpen(false)
   }
 
-  const handleWhatsAppClick = () => {
+  const openWhatsApp = (message: string) => {
+    const encodedMessage = encodeURIComponent(message)
     window.open(
       "https://wa.me/5511953693554?text=Olá! Quero saber mais sobre a G-Force",
       "_blank",
+      "noopener,noreferrer",
+    )
+  }
+
+  const handleWhatsAppClick = () => {
+    openWhatsApp("Olá! Quero saber mais sobre a G-Force")
+  }
+
+  const handleShirtWhatsAppClick = () => {
+    openWhatsApp(
+      "Estou interessado nas camisas da G-Force. Pode me passar os detalhes?",
     )
   }
 
@@ -74,6 +130,12 @@ const LandingPage = () => {
                 className="text-gray-700 hover:text-blue-600 transition-colors"
               >
                 Depoimentos
+              </button>
+              <button
+                onClick={() => scrollToSection("camisetas")}
+                className="text-gray-700 hover:text-blue-600 transition-colors"
+              >
+                Camisetas
               </button>
               <button
                 onClick={handleLoginClick}
@@ -130,6 +192,12 @@ const LandingPage = () => {
                 className="block w-full text-left px-4 py-2 hover:bg-gray-50 rounded-lg"
               >
                 Depoimentos
+              </button>
+              <button
+                onClick={() => scrollToSection("camisetas")}
+                className="block w-full text-left px-4 py-2 hover:bg-gray-50 rounded-lg"
+              >
+                Camisetas
               </button>
               <button
                 onClick={handleLoginClick}
@@ -607,6 +675,46 @@ const LandingPage = () => {
                 <p className="text-sm text-gray-600">Membro desde 2024</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Camisetas */}
+      <section id="camisetas" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-10 items-center">
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
+                <ShoppingBag className="h-4 w-4" />
+                Loja G-Force
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+                Camisetas oficiais da comunidade
+              </h2>
+              <p className="text-lg text-gray-600">
+                Garanta a sua camiseta da G-Force. Clique no botão abaixo e
+                fale direto no WhatsApp para receber valores e disponibilidade.
+              </p>
+              <button
+                onClick={handleShirtWhatsAppClick}
+                className="inline-flex items-center gap-2 px-7 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+              >
+                <MessageCircle className="h-5 w-5" />
+                Tenho interesse nas camisetas
+              </button>
+            </div>
+
+            <div className="rounded-2xl border-2 border-dashed border-gray-300 bg-gradient-to-br from-gray-50 to-gray-100 min-h-[320px] flex items-center justify-center p-8">
+              <div className="text-center">
+                <ShoppingBag className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                <p className="text-gray-600 font-medium">
+                  Espaço reservado para foto das camisetas
+                </p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Você pode substituir este bloco por uma imagem do produto
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>

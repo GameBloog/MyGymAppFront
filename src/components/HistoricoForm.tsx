@@ -1,8 +1,14 @@
-import React, { useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Activity, Plus, Calendar } from "lucide-react"
 import { Card, Input, Button, Textarea } from "../components/ui"
 import { useCreateHistorico } from "../hooks/useHistorico"
 import { type CreateHistoricoDTO } from "../types/historico"
+import { useAluno } from "../hooks/useAlunos"
+import {
+  calculateLeanMassKg,
+  calculateNavyBodyFat,
+} from "../utils/bodyComposition"
+import type { SexoBiologico } from "../types"
 
 interface HistoricoFormProps {
   alunoId: string
@@ -30,7 +36,80 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
   onSuccess,
 }) => {
   const [formData, setFormData] = useState(initialFormState)
+  const [sexoCalculo, setSexoCalculo] = useState<SexoBiologico | "">("")
+  const [autoCalcularComposicao, setAutoCalcularComposicao] = useState(true)
   const createHistorico = useCreateHistorico()
+  const { data: aluno } = useAluno(alunoId, { enabled: !!alunoId })
+
+  useEffect(() => {
+    if (!sexoCalculo && aluno?.sexoBiologico) {
+      setSexoCalculo(aluno.sexoBiologico)
+    }
+  }, [aluno, sexoCalculo])
+
+  const composicaoCalculada = useMemo(() => {
+    if (!sexoCalculo) return null
+
+    const alturaCm = Number(formData.alturaCm || aluno?.alturaCm || 0)
+    const cinturaCm = Number(formData.cinturaCm || aluno?.cinturaCm || 0)
+    const pescocoCm = Number(formData.pescocoCm || aluno?.pescocoCm || 0)
+    const quadrilCm = Number(formData.quadrilCm || aluno?.quadrilCm || 0)
+    const pesoKg = Number(formData.pesoKg || aluno?.pesoKg || 0)
+
+    const percentual = calculateNavyBodyFat({
+      sexoBiologico: sexoCalculo,
+      alturaCm,
+      cinturaCm,
+      pescocoCm,
+      quadrilCm,
+    })
+
+    const massaMagra = calculateLeanMassKg(pesoKg, percentual)
+
+    return {
+      percentual,
+      massaMagra,
+    }
+  }, [
+    aluno?.alturaCm,
+    aluno?.cinturaCm,
+    aluno?.pescocoCm,
+    aluno?.quadrilCm,
+    aluno?.pesoKg,
+    formData.alturaCm,
+    formData.cinturaCm,
+    formData.pescocoCm,
+    formData.quadrilCm,
+    formData.pesoKg,
+    sexoCalculo,
+  ])
+
+  useEffect(() => {
+    if (!autoCalcularComposicao || !composicaoCalculada) return
+
+    const percentualString =
+      composicaoCalculada.percentual !== null && composicaoCalculada.percentual !== undefined
+        ? String(composicaoCalculada.percentual)
+        : ""
+    const massaString =
+      composicaoCalculada.massaMagra !== null && composicaoCalculada.massaMagra !== undefined
+        ? String(composicaoCalculada.massaMagra)
+        : ""
+
+    setFormData((prev) => {
+      if (
+        prev.percentualGordura === percentualString &&
+        prev.massaMuscularKg === massaString
+      ) {
+        return prev
+      }
+      return {
+        ...prev,
+        percentualGordura: percentualString,
+        massaMuscularKg: massaString,
+      }
+    })
+  }, [autoCalcularComposicao, composicaoCalculada])
 
   const handleSubmit = async () => {
     try {
@@ -157,6 +236,43 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
           />
         </div>
 
+        <div className="mt-2 p-3 rounded-lg border border-blue-200 bg-blue-50">
+          <p className="text-sm font-medium text-blue-900">
+            Cálculo automático de composição corporal (Navy)
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Sexo biológico
+              </label>
+              <select
+                value={sexoCalculo}
+                onChange={(e) =>
+                  setSexoCalculo(e.target.value as SexoBiologico | "")
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Selecione</option>
+                <option value="MASCULINO">Masculino</option>
+                <option value="FEMININO">Feminino</option>
+              </select>
+            </div>
+            <div className="flex items-end">
+              <label className="flex items-center gap-2 text-sm text-gray-700">
+                <input
+                  type="checkbox"
+                  checked={autoCalcularComposicao}
+                  onChange={(e) => setAutoCalcularComposicao(e.target.checked)}
+                />
+                Preencher automaticamente
+              </label>
+            </div>
+            <div className="text-xs text-blue-800 flex items-end">
+              Preencha altura, cintura e pescoço. Para mulheres, inclua quadril.
+            </div>
+          </div>
+        </div>
+
         <div className="border-t pt-4">
           <h3 className="text-sm font-medium text-gray-700 mb-3">
             Medidas de Membros
@@ -221,6 +337,7 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
               placeholder="15.5"
               min="0"
               max="100"
+              readOnly={autoCalcularComposicao}
             />
             <Input
               label="Massa Muscular (kg)"
@@ -231,6 +348,7 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
                 setFormData({ ...formData, massaMuscularKg: e.target.value })
               }
               placeholder="60.0"
+              readOnly={autoCalcularComposicao}
             />
           </div>
         </div>

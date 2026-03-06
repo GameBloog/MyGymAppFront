@@ -21,11 +21,14 @@ import { RegisterPage } from "./pages/auth/RegisterPage"
 // Admin Pages
 import { AdminDashboard } from "./pages/auth/AdminDashboard"
 import { InviteCodesPage } from "./pages/admin/InviteCodesPage"
+import { LeadLinksPage } from "./pages/admin/LeadLinksPage"
 import { ProfessoresPage } from "./pages/admin/ProfessoresPage"
 import { ProfessorForm } from "./pages/admin/ProfessorForm"
 
 // Professor Pages
 import { ProfessorDashboard } from "./pages/professor/ProfessorDashboard"
+import { PlanoTreinoEditorPage } from "./pages/professor/PlanoTreinoEditorPage"
+import { PlanoDietaEditorPage } from "./pages/professor/PlanoDietaEditorPage"
 
 // Shared Pages
 import { AnswersList } from "./pages/AnswerList"
@@ -33,6 +36,9 @@ import { AnswerForm } from "./pages/AnswerForm"
 import { EvolucaoPage } from "./pages/EvolucaoPage"
 import { useAuth } from "./hooks/useAuth.ts"
 import { FotosArquivosPage } from "./pages/FotosArquivosPage.tsx"
+import { MeuTreinoPage } from "./pages/aluno/MeuTreinoPage"
+import { MinhaDietaPage } from "./pages/aluno/MinhaDietaPage"
+import { AlunoDashboardPage } from "./pages/aluno/AlunoDashboardPage"
 
 const RoleBasedRedirect: React.FC = () => {
   const { user } = useAuth()
@@ -48,7 +54,7 @@ const RoleBasedRedirect: React.FC = () => {
           navigate("/professor/dashboard", { replace: true })
           break
         case "ALUNO":
-          navigate("/aluno/perfil", { replace: true })
+          navigate("/aluno/dashboard", { replace: true })
           break
         default:
           navigate("/login", { replace: true })
@@ -97,13 +103,23 @@ function AppRoutes() {
                     path="alunos/:id/fotos-arquivos"
                     element={<FotosArquivosPage />}
                   />
+                  <Route
+                    path="alunos/:id/treino"
+                    element={<PlanoTreinoEditorPage />}
+                  />
+                  <Route
+                    path="alunos/:id/dieta"
+                    element={<PlanoDietaEditorPage />}
+                  />
                   <Route path="invite-codes" element={<InviteCodesPage />} />
+                  <Route path="lead-links" element={<LeadLinksPage />} />
                   <Route path="professores" element={<ProfessoresPage />} />
                   <Route path="professores/new" element={<ProfessorForm />} />
                   <Route
                     path="professores/:id/edit"
                     element={<ProfessorForm />}
                   />
+                  <Route path="*" element={<Navigate to="dashboard" replace />} />
                 </Routes>
               </Layout>
             </AuthGuard>
@@ -129,6 +145,15 @@ function AppRoutes() {
                     path="alunos/:id/fotos-arquivos"
                     element={<FotosArquivosPage />}
                   />
+                  <Route
+                    path="alunos/:id/treino"
+                    element={<PlanoTreinoEditorPage />}
+                  />
+                  <Route
+                    path="alunos/:id/dieta"
+                    element={<PlanoDietaEditorPage />}
+                  />
+                  <Route path="*" element={<Navigate to="dashboard" replace />} />
                 </Routes>
               </Layout>
             </AuthGuard>
@@ -142,12 +167,16 @@ function AppRoutes() {
             <AuthGuard allowedRoles={["ALUNO"]}>
               <Layout>
                 <Routes>
+                  <Route path="dashboard" element={<AlunoDashboardPage />} />
                   <Route path="perfil" element={<AnswerForm />} />
+                  <Route path="treino" element={<MeuTreinoPage />} />
+                  <Route path="dieta" element={<MinhaDietaPage />} />
                   <Route path="evolucao" element={<EvolucaoPage />} />
                   <Route
                     path="fotos-arquivos"
                     element={<FotosArquivosPage />}
                   />
+                  <Route path="*" element={<Navigate to="dashboard" replace />} />
                 </Routes>
               </Layout>
             </AuthGuard>
