@@ -134,18 +134,18 @@ export const FotosArquivosPage: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
         <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
-        <p className="text-gray-600">Carregando...</p>
+        <p className="text-zinc-300">Carregando...</p>
       </div>
     )
   }
 
   if (!aluno) {
     return (
-      <Card className="bg-red-50 border-2 border-red-200">
+      <Card className="bg-red-950/40 border-2 border-red-500/30">
         <div className="flex items-start gap-3">
-          <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-1" />
+          <AlertCircle className="h-6 w-6 text-red-300 flex-shrink-0 mt-1" />
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-red-900 mb-2">
+            <h3 className="text-lg font-semibold text-white mb-2">
               Aluno não encontrado
             </h3>
             <Button
@@ -166,22 +166,22 @@ export const FotosArquivosPage: React.FC = () => {
         <div className="flex items-center gap-4 mb-6">
           <button
             onClick={() => navigate(getBackRoute())}
-            className="p-2 hover:bg-white rounded-lg transition-colors"
+            className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-white">
             Erro ao carregar dados
           </h1>
         </div>
-        <Card className="bg-red-50 border-2 border-red-200">
+        <Card className="bg-red-950/40 border-2 border-red-500/30">
           <div className="flex items-start gap-3">
-            <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-1" />
+            <AlertCircle className="h-6 w-6 text-red-300 flex-shrink-0 mt-1" />
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-red-900 mb-2">
+              <h3 className="text-lg font-semibold text-white mb-2">
                 Erro ao carregar
               </h3>
-              <p className="text-red-800">
+              <p className="text-zinc-100">
                 {fotoHook.error || arquivoHook.error}
               </p>
               <div className="mt-4">
@@ -210,17 +210,17 @@ export const FotosArquivosPage: React.FC = () => {
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate(getBackRoute())}
-            className="p-2 hover:bg-white rounded-lg transition-colors"
+            className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-white">
               {isAluno
                 ? "Minhas Fotos e Arquivos"
                 : `Fotos e Arquivos - ${aluno.user?.nome}`}
             </h1>
-            <p className="text-gray-600 mt-1">
+            <p className="text-zinc-300 mt-1">
               {fotoHook.fotos.length} foto(s) • {arquivoHook.treinos.length}{" "}
               treino(s) • {arquivoHook.dietas.length} dieta(s)
             </p>
@@ -253,7 +253,7 @@ export const FotosArquivosPage: React.FC = () => {
               {fotoHook.fotos.map((foto) => (
                 <div
                   key={foto.id}
-                  className="relative group rounded-lg overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-colors"
+                  className="relative group rounded-lg overflow-hidden border-2 border-zinc-700 hover:border-blue-500 transition-colors"
                 >
                   <img
                     src={foto.url}
@@ -269,14 +269,14 @@ export const FotosArquivosPage: React.FC = () => {
                       <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
-                  <div className="p-2 bg-gray-50">
-                    <p className="text-xs text-gray-600">
+                  <div className="p-2 bg-zinc-900">
+                    <p className="text-xs text-zinc-300">
                       {format(new Date(foto.createdAt), "dd/MM/yyyy HH:mm", {
                         locale: ptBR,
                       })}
                     </p>
                     {foto.descricao && (
-                      <p className="text-sm text-gray-900 mt-1">
+                      <p className="text-sm text-white mt-1">
                         {foto.descricao}
                       </p>
                     )}
@@ -285,12 +285,12 @@ export const FotosArquivosPage: React.FC = () => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-              <ImageIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <div className="text-center py-12 bg-zinc-900 rounded-lg border-2 border-dashed border-zinc-700">
+              <ImageIcon className="h-12 w-12 text-zinc-500 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-white mb-2">
                 Nenhuma foto enviada ainda
               </h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-zinc-300 mb-4">
                 Envie fotos para acompanhar sua evolução física
               </p>
               <Button icon={Plus} onClick={() => setShowModalFoto(true)}>
@@ -319,7 +319,7 @@ export const FotosArquivosPage: React.FC = () => {
               {fotoHook.fotos.map((foto) => (
                 <div
                   key={foto.id}
-                  className="relative group rounded-lg overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-colors"
+                  className="relative group rounded-lg overflow-hidden border-2 border-zinc-700 hover:border-blue-500 transition-colors"
                 >
                   <img
                     src={foto.url}
@@ -337,14 +337,14 @@ export const FotosArquivosPage: React.FC = () => {
                       </button>
                     </div>
                   )}
-                  <div className="p-2 bg-gray-50">
-                    <p className="text-xs text-gray-600">
+                  <div className="p-2 bg-zinc-900">
+                    <p className="text-xs text-zinc-300">
                       {format(new Date(foto.createdAt), "dd/MM/yyyy HH:mm", {
                         locale: ptBR,
                       })}
                     </p>
                     {foto.descricao && (
-                      <p className="text-sm text-gray-900 mt-1">
+                      <p className="text-sm text-white mt-1">
                         {foto.descricao}
                       </p>
                     )}
@@ -353,12 +353,12 @@ export const FotosArquivosPage: React.FC = () => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-              <ImageIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <div className="text-center py-12 bg-zinc-900 rounded-lg border-2 border-dashed border-zinc-700">
+              <ImageIcon className="h-12 w-12 text-zinc-500 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-white mb-2">
                 Nenhuma foto disponível
               </h3>
-              <p className="text-gray-600">O aluno ainda não enviou fotos</p>
+              <p className="text-zinc-300">O aluno ainda não enviou fotos</p>
             </div>
           )}
         </Card>
@@ -386,18 +386,18 @@ export const FotosArquivosPage: React.FC = () => {
             {arquivoHook.treinos.map((arquivo) => (
               <div
                 key={arquivo.id}
-                className="flex items-start justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                className="flex items-start justify-between p-4 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-colors"
               >
                 <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900">
+                  <h3 className="font-semibold text-white">
                     {arquivo.titulo}
                   </h3>
                   {arquivo.descricao && (
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-zinc-300 mt-1">
                       {arquivo.descricao}
                     </p>
                   )}
-                  <p className="text-xs text-gray-500 mt-2">
+                  <p className="text-xs text-zinc-400 mt-2">
                     {format(new Date(arquivo.createdAt), "dd/MM/yyyy HH:mm", {
                       locale: ptBR,
                     })}
@@ -408,18 +408,18 @@ export const FotosArquivosPage: React.FC = () => {
                     href={arquivo.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 hover:bg-blue-100 rounded-lg transition-colors"
+                    className="p-2 hover:bg-blue-950/30 rounded-lg transition-colors"
                     title="Abrir PDF"
                   >
-                    <Download className="h-4 w-4 text-blue-600" />
+                    <Download className="h-4 w-4 text-blue-300" />
                   </a>
                   {podeDeletarArquivo && (
                     <button
                       onClick={() => handleDeleteArquivo(arquivo.id)}
-                      className="p-2 hover:bg-red-100 rounded-lg transition-colors"
+                      className="p-2 hover:bg-red-950/30 rounded-lg transition-colors"
                       title="Excluir"
                     >
-                      <Trash2 className="h-4 w-4 text-red-600" />
+                      <Trash2 className="h-4 w-4 text-red-300" />
                     </button>
                   )}
                 </div>
@@ -427,12 +427,12 @@ export const FotosArquivosPage: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-            <Dumbbell className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <div className="text-center py-12 bg-zinc-900 rounded-lg border-2 border-dashed border-zinc-700">
+            <Dumbbell className="h-12 w-12 text-zinc-500 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-white mb-2">
               Nenhum treino disponível
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-zinc-300 mb-4">
               {podeEnviarArquivo
                 ? "Envie o plano de treino para o aluno"
                 : "Seu professor ainda não enviou nenhum treino"}
@@ -468,18 +468,18 @@ export const FotosArquivosPage: React.FC = () => {
             {arquivoHook.dietas.map((arquivo) => (
               <div
                 key={arquivo.id}
-                className="flex items-start justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                className="flex items-start justify-between p-4 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-colors"
               >
                 <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900">
+                  <h3 className="font-semibold text-white">
                     {arquivo.titulo}
                   </h3>
                   {arquivo.descricao && (
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-zinc-300 mt-1">
                       {arquivo.descricao}
                     </p>
                   )}
-                  <p className="text-xs text-gray-500 mt-2">
+                  <p className="text-xs text-zinc-400 mt-2">
                     {format(new Date(arquivo.createdAt), "dd/MM/yyyy HH:mm", {
                       locale: ptBR,
                     })}
@@ -490,18 +490,18 @@ export const FotosArquivosPage: React.FC = () => {
                     href={arquivo.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 hover:bg-blue-100 rounded-lg transition-colors"
+                    className="p-2 hover:bg-blue-950/30 rounded-lg transition-colors"
                     title="Abrir PDF"
                   >
-                    <Download className="h-4 w-4 text-blue-600" />
+                    <Download className="h-4 w-4 text-blue-300" />
                   </a>
                   {podeDeletarArquivo && (
                     <button
                       onClick={() => handleDeleteArquivo(arquivo.id)}
-                      className="p-2 hover:bg-red-100 rounded-lg transition-colors"
+                      className="p-2 hover:bg-red-950/30 rounded-lg transition-colors"
                       title="Excluir"
                     >
-                      <Trash2 className="h-4 w-4 text-red-600" />
+                      <Trash2 className="h-4 w-4 text-red-300" />
                     </button>
                   )}
                 </div>
@@ -509,12 +509,12 @@ export const FotosArquivosPage: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-            <Utensils className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <div className="text-center py-12 bg-zinc-900 rounded-lg border-2 border-dashed border-zinc-700">
+            <Utensils className="h-12 w-12 text-zinc-500 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-white mb-2">
               Nenhuma dieta disponível
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-zinc-300 mb-4">
               {podeEnviarArquivo
                 ? "Envie o plano de dieta para o aluno"
                 : "Seu professor ainda não enviou nenhuma dieta"}

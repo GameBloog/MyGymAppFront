@@ -69,24 +69,24 @@ export const ModalEnviarFoto: React.FC<ModalEnviarFotoProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+      className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50"
       onClick={handleClose}
     >
       <div
-        className="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden"
+        className="bg-zinc-950 border border-zinc-800 rounded-lg shadow-xl w-full max-w-md overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+        <div className="flex items-center justify-between p-6 border-b border-zinc-800">
+          <h2 className="text-xl font-bold text-white flex items-center gap-2">
             <ImageIcon className="h-5 w-5" />
             Nova Foto de Shape
           </h2>
           <button
             onClick={handleClose}
             disabled={isLoading}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
           >
-            <X className="h-5 w-5 text-gray-500" />
+            <X className="h-5 w-5 text-zinc-400" />
           </button>
         </div>
 
@@ -95,8 +95,8 @@ export const ModalEnviarFoto: React.FC<ModalEnviarFotoProps> = ({
             <label
               className={`flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-8 cursor-pointer transition-colors ${
                 preview
-                  ? "border-green-500 bg-green-50"
-                  : "border-gray-300 hover:border-blue-500 hover:bg-blue-50"
+                  ? "border-emerald-500 bg-emerald-950/30"
+                  : "border-zinc-700 hover:border-blue-500 hover:bg-blue-950/30"
               }`}
             >
               <input
@@ -114,18 +114,18 @@ export const ModalEnviarFoto: React.FC<ModalEnviarFotoProps> = ({
                     alt="Preview"
                     className="max-h-48 rounded-lg mb-3"
                   />
-                  <p className="text-sm text-gray-600">{file?.name}</p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-sm text-zinc-200">{file?.name}</p>
+                  <p className="text-xs text-zinc-400 mt-1">
                     Clique para trocar
                   </p>
                 </div>
               ) : (
                 <div className="text-center">
-                  <Upload className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-                  <p className="text-gray-700 font-medium mb-1">
+                  <Upload className="h-12 w-12 text-zinc-400 mx-auto mb-3" />
+                  <p className="text-zinc-200 font-medium mb-1">
                     Arraste aqui ou clique
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-zinc-400">
                     JPG, PNG, WebP • Máximo 2MB
                   </p>
                 </div>
@@ -149,7 +149,7 @@ export const ModalEnviarFoto: React.FC<ModalEnviarFotoProps> = ({
           />
         </div>
 
-        <div className="flex gap-3 p-6 border-t bg-gray-50">
+        <div className="flex gap-3 p-6 border-t border-zinc-800 bg-zinc-900">
           <Button
             variant="secondary"
             onClick={handleClose}

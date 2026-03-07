@@ -285,7 +285,7 @@ export const MeuTreinoPage: React.FC = () => {
 
     if (pontosComCarga.length === 0) {
       return (
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-zinc-400">
           Sem cargas registradas ainda para este exercício.
         </p>
       )
@@ -299,20 +299,20 @@ export const MeuTreinoPage: React.FC = () => {
           const percentual = maxCarga > 0 ? ((point.cargaReal || 0) / maxCarga) * 100 : 0
           return (
             <div key={`${point.data}-${point.cargaReal}`} className="space-y-1">
-              <div className="flex justify-between text-xs text-gray-600">
+              <div className="flex justify-between text-xs text-zinc-300">
                 <span>
                   {format(new Date(point.data), "dd/MM/yyyy", { locale: ptBR })}
                 </span>
                 <span className="font-semibold">{point.cargaReal} kg</span>
               </div>
-              <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div className="h-2 bg-zinc-700 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-blue-600 rounded-full"
                   style={{ width: `${percentual}%` }}
                 />
               </div>
               {point.repeticoesReal && (
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-zinc-400">
                   Repetições: {point.repeticoesReal}
                 </p>
               )}
@@ -327,15 +327,15 @@ export const MeuTreinoPage: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
         <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
-        <p className="text-gray-600">Carregando seu treino...</p>
+        <p className="text-zinc-300">Carregando seu treino...</p>
       </div>
     )
   }
 
   if (!aluno) {
     return (
-      <Card className="bg-yellow-50 border-2 border-yellow-200">
-        <p className="text-yellow-800">
+      <Card className="bg-amber-950/40 border-2 border-amber-500/30">
+        <p className="text-zinc-100">
           Não foi possível localizar o perfil do aluno para carregar o treino.
         </p>
       </Card>
@@ -344,8 +344,8 @@ export const MeuTreinoPage: React.FC = () => {
 
   if (erroPlano && !erroPlanoNaoEncontrado) {
     return (
-      <Card className="bg-red-50 border-2 border-red-200">
-        <p className="text-red-700">{erroPlano.message}</p>
+      <Card className="bg-red-950/40 border-2 border-red-500/30">
+        <p className="text-red-300">{erroPlano.message}</p>
       </Card>
     )
   }
@@ -354,11 +354,11 @@ export const MeuTreinoPage: React.FC = () => {
     return (
       <Card>
         <div className="text-center py-8">
-          <Dumbbell className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          <Dumbbell className="h-12 w-12 text-zinc-500 mx-auto mb-3" />
+          <h2 className="text-xl font-semibold text-white mb-2">
             Treino ainda não configurado
           </h2>
-          <p className="text-gray-600">
+          <p className="text-zinc-300">
             Seu professor ainda não montou seu plano de treino nesta área.
           </p>
         </div>
@@ -369,10 +369,10 @@ export const MeuTreinoPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white">
           Meu Treino
         </h1>
-        <p className="text-gray-600">
+        <p className="text-zinc-300">
           {planoAtivo.nome} • organize sua execução, cargas e comentários por dia
         </p>
       </div>
@@ -389,13 +389,13 @@ export const MeuTreinoPage: React.FC = () => {
               onClick={() => setSelectedDiaId(dia.id)}
               className={`p-4 rounded-lg border text-left transition-colors ${
                 selectedDiaId === dia.id
-                  ? "border-blue-500 bg-blue-50"
-                  : "border-gray-200 hover:border-gray-300"
+                  ? "border-blue-500 bg-blue-950/40"
+                  : "border-zinc-700 hover:border-zinc-700"
               }`}
             >
-              <p className="font-semibold text-gray-900">{dia.titulo}</p>
-              <p className="text-sm text-gray-600">{formatDiaSemana(dia.diaSemana)}</p>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="font-semibold text-white">{dia.titulo}</p>
+              <p className="text-sm text-zinc-300">{formatDiaSemana(dia.diaSemana)}</p>
+              <p className="text-xs text-zinc-400 mt-1">
                 {dia.exercicios.length} exercício(s)
               </p>
             </button>
@@ -421,7 +421,7 @@ export const MeuTreinoPage: React.FC = () => {
               <h2 className="text-lg font-semibold">
                 Sessão atual: {checkinAtual.treinoDia.titulo}
               </h2>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-zinc-300">
                 Iniciado em{" "}
                 {format(new Date(checkinAtual.iniciadoEm), "dd/MM/yyyy HH:mm", {
                   locale: ptBR,
@@ -434,11 +434,11 @@ export const MeuTreinoPage: React.FC = () => {
           </div>
 
           <div className="mb-4">
-            <div className="flex justify-between text-sm text-gray-600 mb-1">
+            <div className="flex justify-between text-sm text-zinc-300 mb-1">
               <span>Progresso do dia</span>
               <span>{progresso}%</span>
             </div>
-            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-2 bg-zinc-700 rounded-full overflow-hidden">
               <div
                 className="h-full bg-green-600 rounded-full transition-all"
                 style={{ width: `${progresso}%` }}
@@ -458,21 +458,21 @@ export const MeuTreinoPage: React.FC = () => {
               return (
                 <div
                   key={exercise.id}
-                  className="border border-gray-200 rounded-lg p-4 bg-gray-50"
+                  className="border border-zinc-700 rounded-lg p-4 bg-zinc-900"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                     <div>
-                      <h3 className="font-semibold text-gray-900">
+                      <h3 className="font-semibold text-white">
                         {exercise.exercicio.nome}
                       </h3>
-                      <p className="text-xs text-gray-600">
+                      <p className="text-xs text-zinc-300">
                         {grupamentoLabels[exercise.exercicio.grupamentoMuscular]} •
                         {" "}
                         {exercise.treinoDiaExercicio.series || "-"} séries •{" "}
                         {exercise.treinoDiaExercicio.repeticoes || "-"} reps
                       </p>
                     </div>
-                    <label className="flex items-center gap-2 text-sm text-gray-700">
+                    <label className="flex items-center gap-2 text-sm text-zinc-200">
                       <input
                         type="checkbox"
                         checked={draft.concluido}
@@ -570,14 +570,14 @@ export const MeuTreinoPage: React.FC = () => {
         </div>
 
         {loadingProgress && (
-          <div className="flex items-center gap-2 text-gray-600">
+          <div className="flex items-center gap-2 text-zinc-300">
             <Loader2 className="h-4 w-4 animate-spin" />
             Carregando progressão...
           </div>
         )}
 
         {!loadingProgress && seriesDisponiveis.length === 0 && (
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-zinc-400">
             Finalize treinos e registre cargas para visualizar sua evolução.
           </p>
         )}
@@ -585,13 +585,13 @@ export const MeuTreinoPage: React.FC = () => {
         {seriesDisponiveis.length > 0 && (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-zinc-200 mb-1">
                 Exercício
               </label>
               <select
                 value={selectedProgressExerciseId}
                 onChange={(event) => setSelectedProgressExerciseId(event.target.value)}
-                className="w-full md:w-auto px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full md:w-auto px-3 py-2 bg-zinc-900 text-white border border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-300 focus:border-transparent"
               >
                 {seriesDisponiveis.map((serie) => (
                   <option key={serie.exercicioId} value={serie.exercicioId}>
@@ -626,14 +626,14 @@ export const MeuTreinoPage: React.FC = () => {
         </div>
 
         {loadingTimeline && (
-          <div className="flex items-center gap-2 text-gray-600">
+          <div className="flex items-center gap-2 text-zinc-300">
             <Loader2 className="h-4 w-4 animate-spin" />
             Carregando timeline...
           </div>
         )}
 
         {!loadingTimeline && !timeline?.length && (
-          <p className="text-sm text-gray-500">Nenhuma atividade registrada ainda.</p>
+          <p className="text-sm text-zinc-400">Nenhuma atividade registrada ainda.</p>
         )}
 
         <div className="space-y-3">
@@ -642,20 +642,20 @@ export const MeuTreinoPage: React.FC = () => {
             return (
               <div
                 key={event.id}
-                className="border border-gray-200 rounded-lg p-3 bg-gray-50"
+                className="border border-zinc-700 rounded-lg p-3 bg-zinc-900"
               >
                 <div className="flex flex-wrap items-center gap-2 mb-1">
                   <Badge variant={badge.variant}>{badge.text}</Badge>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-zinc-400">
                     {format(new Date(event.dataHora), "dd/MM/yyyy HH:mm", {
                       locale: ptBR,
                     })}
                   </span>
                 </div>
-                <p className="text-sm text-gray-800">{event.descricao}</p>
-                <p className="text-xs text-gray-600 mt-1">{event.treinoDiaTitulo}</p>
+                <p className="text-sm text-zinc-200">{event.descricao}</p>
+                <p className="text-xs text-zinc-300 mt-1">{event.treinoDiaTitulo}</p>
                 {event.exercicioNome && (
-                  <p className="text-xs text-gray-600">
+                  <p className="text-xs text-zinc-300">
                     Exercício: {event.exercicioNome}
                   </p>
                 )}
@@ -672,40 +672,40 @@ export const MeuTreinoPage: React.FC = () => {
         </div>
 
         {loadingCheckins && (
-          <div className="flex items-center gap-2 text-gray-600">
+          <div className="flex items-center gap-2 text-zinc-300">
             <Loader2 className="h-4 w-4 animate-spin" />
             Carregando histórico...
           </div>
         )}
 
         {!loadingCheckins && checkinsOrdenados.length === 0 && (
-          <p className="text-sm text-gray-500">Nenhum check-in encontrado.</p>
+          <p className="text-sm text-zinc-400">Nenhum check-in encontrado.</p>
         )}
 
         <div className="space-y-3">
           {checkinsOrdenados.map((checkin) => (
             <div
               key={checkin.id}
-              className="border border-gray-200 rounded-lg p-3 bg-gray-50"
+              className="border border-zinc-700 rounded-lg p-3 bg-zinc-900"
             >
               <div className="flex flex-wrap items-center gap-2 mb-1">
                 <Badge variant={checkin.status === "CONCLUIDO" ? "success" : "warning"}>
                   {checkin.status === "CONCLUIDO" ? "Concluído" : "Em andamento"}
                 </Badge>
                 <Badge>{checkin.treinoDia.titulo}</Badge>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-zinc-400">
                   {format(new Date(checkin.iniciadoEm), "dd/MM/yyyy HH:mm", {
                     locale: ptBR,
                   })}
                 </span>
               </div>
-              <p className="text-sm text-gray-700">
+              <p className="text-sm text-zinc-200">
                 Exercícios concluídos:{" "}
                 {checkin.exercicios.filter((exercise) => exercise.concluido).length}/
                 {checkin.exercicios.length}
               </p>
               {checkin.comentarioProfessor && (
-                <p className="text-sm text-blue-800 mt-2">
+                <p className="text-sm text-zinc-100 mt-2">
                   <strong>Feedback do professor:</strong>{" "}
                   {checkin.comentarioProfessor}
                 </p>

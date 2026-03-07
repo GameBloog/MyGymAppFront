@@ -29,21 +29,21 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
 
   const variantColors = {
     danger: {
-      icon: "text-red-600",
-      bg: "bg-red-50",
-      border: "border-red-200",
+      icon: "text-red-300",
+      bg: "bg-red-950/50",
+      border: "border-red-500/40",
       button: "danger" as const,
     },
     warning: {
-      icon: "text-yellow-600",
-      bg: "bg-yellow-50",
-      border: "border-yellow-200",
+      icon: "text-amber-300",
+      bg: "bg-amber-950/50",
+      border: "border-amber-500/40",
       button: "primary" as const,
     },
     info: {
-      icon: "text-blue-600",
-      bg: "bg-blue-50",
-      border: "border-blue-200",
+      icon: "text-blue-300",
+      bg: "bg-blue-950/50",
+      border: "border-blue-500/40",
       button: "primary" as const,
     },
   }
@@ -52,36 +52,36 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 animate-fade-in"
+      className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 animate-fade-in"
       onClick={onCancel}
     >
       <div
-        className="bg-white rounded-lg shadow-xl w-full max-w-md transform transition-all animate-scale-in overflow-hidden"
+        className="bg-zinc-950 border border-zinc-800 rounded-lg shadow-xl w-full max-w-md transform transition-all animate-scale-in overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between p-6 border-b">
+        <div className="flex items-start justify-between p-6 border-b border-zinc-800">
           <div className="flex items-center gap-3">
             <div
               className={`p-2 rounded-full ${colors.bg} ${colors.border} border-2`}
             >
               <AlertCircle className={`h-6 w-6 ${colors.icon}`} />
             </div>
-            <h2 className="text-xl font-bold text-gray-900">{title}</h2>
+            <h2 className="text-xl font-bold text-white">{title}</h2>
           </div>
           <button
             onClick={onCancel}
             disabled={isLoading}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
+            className="p-2 hover:bg-zinc-800 rounded-lg transition-colors disabled:opacity-50"
           >
-            <X className="h-5 w-5 text-gray-500" />
+            <X className="h-5 w-5 text-zinc-400" />
           </button>
         </div>
 
         <div className="p-6">
-          <p className="text-gray-700 whitespace-pre-line">{message}</p>
+          <p className="text-zinc-200 whitespace-pre-line">{message}</p>
         </div>
 
-        <div className="flex flex-col-reverse sm:flex-row gap-3 p-6 border-t bg-gray-50">
+        <div className="flex flex-col-reverse sm:flex-row gap-3 p-6 border-t border-zinc-800 bg-zinc-900">
           <Button
             variant="secondary"
             onClick={onCancel}

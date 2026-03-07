@@ -363,7 +363,7 @@ export const AnswerForm: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
         <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
-        <p className="text-gray-600">Carregando professores...</p>
+        <p className="text-zinc-200">Carregando professores...</p>
       </div>
     )
   }
@@ -372,36 +372,36 @@ export const AnswerForm: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
         <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
-        <p className="text-gray-600">Carregando dados...</p>
+        <p className="text-zinc-200">Carregando dados...</p>
       </div>
     )
   }
 
   const isLoading = createAluno.isLoading || updateAluno.isLoading
 
-if (alunoSemRegistro) {
-  return (
-    <div>
-      <Card className="bg-yellow-50 border-2 border-yellow-200">
-        <div className="flex items-start gap-3">
-          <AlertCircle className="h-6 w-6 text-yellow-600 flex-shrink-0 mt-1" />
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold text-yellow-900 mb-2">
-              Perfil Incompleto
-            </h3>
-            <p className="text-yellow-800 mb-4">
-              Seu cadastro de aluno ainda não foi completado. Entre em contato
-              com seu professor ou administrador para finalizar seu registro.
-            </p>
-            <p className="text-sm text-yellow-700">
-              <strong>Usuário:</strong> {user?.nome} ({user?.email})
-            </p>
+  if (alunoSemRegistro) {
+    return (
+      <div>
+        <Card className="bg-amber-950/40 border-2 border-amber-500/30">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="h-6 w-6 text-amber-300 flex-shrink-0 mt-1" />
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-white mb-2">
+                Perfil Incompleto
+              </h3>
+              <p className="text-zinc-100 mb-4">
+                Seu cadastro de aluno ainda não foi completado. Entre em contato
+                com seu professor ou administrador para finalizar seu registro.
+              </p>
+              <p className="text-sm text-amber-300">
+                <strong>Usuário:</strong> {user?.nome} ({user?.email})
+              </p>
+            </div>
           </div>
-        </div>
-      </Card>
-    </div>
-  )
-}
+        </Card>
+      </div>
+    )
+  }
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -409,13 +409,13 @@ if (alunoSemRegistro) {
           {!isAluno && (
             <button
               onClick={() => navigate(getBackRoute())}
-              className="p-2 hover:bg-white rounded-lg transition-colors"
+              className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
               title="Voltar"
             >
               <ArrowLeft className="h-5 w-5" />
             </button>
           )}
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-white">
             {isAluno ? "Meu Perfil" : isEdit ? "Editar Aluno" : "Novo Aluno"}
           </h1>
         </div>
@@ -488,7 +488,7 @@ if (alunoSemRegistro) {
               placeholder="(11) 98765-4321"
             />
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-white mb-1">
                 Sexo biológico (para cálculos)
               </label>
               <select
@@ -496,23 +496,29 @@ if (alunoSemRegistro) {
                 onChange={(e) =>
                   setFormData({ ...formData, sexoBiologico: e.target.value })
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                className="w-full px-3 py-2 bg-zinc-900 text-white border border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-300 focus:border-transparent transition-colors"
               >
-                <option value="">Não informado</option>
-                <option value="MASCULINO">Masculino</option>
-                <option value="FEMININO">Feminino</option>
+                <option value="" className="bg-zinc-900 text-white">
+                  Não informado
+                </option>
+                <option value="MASCULINO" className="bg-zinc-900 text-white">
+                  Masculino
+                </option>
+                <option value="FEMININO" className="bg-zinc-900 text-white">
+                  Feminino
+                </option>
               </select>
             </div>
           </div>
 
           {isAdmin && (
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-white mb-1">
                 Professor Responsável (opcional)
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <UserCheck className="h-5 w-5 text-gray-400" />
+                  <UserCheck className="h-5 w-5 text-zinc-400" />
                 </div>
                 <select
                   value={formData.professorId}
@@ -520,13 +526,19 @@ if (alunoSemRegistro) {
                     setFormData({ ...formData, professorId: e.target.value })
                     setErrors({ ...errors, professorId: "" })
                   }}
-                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
-                    errors.professorId ? "border-red-500" : "border-gray-300"
+                  className={`w-full pl-10 pr-3 py-2 bg-zinc-900 text-white border rounded-lg focus:ring-2 focus:ring-zinc-300 focus:border-transparent transition-colors ${
+                    errors.professorId ? "border-red-500" : "border-zinc-700"
                   }`}
                 >
-                  <option value="">Usar professor padrão</option>
+                  <option value="" className="bg-zinc-900 text-white">
+                    Usar professor padrão
+                  </option>
                   {professores?.map((prof) => (
-                    <option key={prof.id} value={prof.id}>
+                    <option
+                      key={prof.id}
+                      value={prof.id}
+                      className="bg-zinc-900 text-white"
+                    >
                       {prof.user?.nome || `Professor ${prof.id.slice(0, 8)}`}
                       {prof.especialidade && ` - ${prof.especialidade}`}
                     </option>
@@ -538,15 +550,15 @@ if (alunoSemRegistro) {
                   {errors.professorId}
                 </p>
               )}
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-zinc-200">
                 Se não selecionar, será usado o professor padrão
               </p>
             </div>
           )}
 
           {isProfessor && (
-            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-blue-800">
+            <div className="mt-4 p-3 bg-blue-950/40 border border-blue-500/30 rounded-lg">
+              <p className="text-sm text-white">
                 ℹ️ O aluno será automaticamente vinculado a você
               </p>
             </div>
@@ -584,7 +596,7 @@ if (alunoSemRegistro) {
               max="120"
             />
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-white mb-1">
                 Sexo biológico (para cálculos)
               </label>
               <select
@@ -592,11 +604,17 @@ if (alunoSemRegistro) {
                 onChange={(e) =>
                   setFormData({ ...formData, sexoBiologico: e.target.value })
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                className="w-full px-3 py-2 bg-zinc-900 text-white border border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-300 focus:border-transparent transition-colors"
               >
-                <option value="">Não informado</option>
-                <option value="MASCULINO">Masculino</option>
-                <option value="FEMININO">Feminino</option>
+                <option value="" className="bg-zinc-900 text-white">
+                  Não informado
+                </option>
+                <option value="MASCULINO" className="bg-zinc-900 text-white">
+                  Masculino
+                </option>
+                <option value="FEMININO" className="bg-zinc-900 text-white">
+                  Feminino
+                </option>
               </select>
             </div>
           </div>
@@ -609,11 +627,11 @@ if (alunoSemRegistro) {
           Medidas Corporais
         </h2>
 
-        <div className="mb-4 p-4 rounded-lg border border-blue-200 bg-blue-50">
-          <p className="text-sm font-medium text-blue-900">
+        <div className="mb-4 p-4 rounded-lg border border-blue-500/30 bg-blue-950/40">
+          <p className="text-sm font-medium text-white">
             Instruções para tirar medidas
           </p>
-          <p className="text-sm text-blue-800 mt-1">
+          <p className="text-sm text-zinc-100 mt-1">
             Assista os vídeos antes de enviar suas medidas. Você pode trocar os
             links pelos vídeos finais depois.
           </p>
@@ -624,7 +642,7 @@ if (alunoSemRegistro) {
                 href={video.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm font-medium text-blue-700 hover:text-blue-900 underline"
+                className="text-sm font-medium text-white hover:text-zinc-200 underline"
               >
                 {video.label}
               </a>
@@ -749,11 +767,11 @@ if (alunoSemRegistro) {
           />
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-white mb-2">
               Toma remédio atualmente?
             </label>
             <div className="flex flex-col sm:flex-row gap-3">
-              <label className="flex items-center gap-2 text-sm text-gray-700">
+              <label className="flex items-center gap-2 text-sm text-white">
                 <input
                   type="radio"
                   name="toma-remedio"
@@ -765,7 +783,7 @@ if (alunoSemRegistro) {
                 />
                 Sim
               </label>
-              <label className="flex items-center gap-2 text-sm text-gray-700">
+              <label className="flex items-center gap-2 text-sm text-white">
                 <input
                   type="radio"
                   name="toma-remedio"
@@ -778,7 +796,7 @@ if (alunoSemRegistro) {
                 />
                 Não
               </label>
-              <label className="flex items-center gap-2 text-sm text-gray-700">
+              <label className="flex items-center gap-2 text-sm text-white">
                 <input
                   type="radio"
                   name="toma-remedio"
@@ -792,7 +810,7 @@ if (alunoSemRegistro) {
                 Prefiro não informar
               </label>
             </div>
-            <p className="mt-2 text-xs text-gray-500">
+            <p className="mt-2 text-xs text-zinc-200">
               Esta informação é visível para o professor responsável.
             </p>
           </div>
@@ -857,7 +875,7 @@ if (alunoSemRegistro) {
       </div>
 
       {isCreating && (
-        <p className="text-sm text-gray-500 mt-4">* Campos obrigatórios</p>
+        <p className="text-sm text-zinc-200 mt-4">* Campos obrigatórios</p>
       )}
     </div>
   )

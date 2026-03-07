@@ -171,15 +171,15 @@ export const MinhaDietaPage: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
         <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
-        <p className="text-gray-600">Carregando sua dieta...</p>
+        <p className="text-zinc-300">Carregando sua dieta...</p>
       </div>
     )
   }
 
   if (!aluno) {
     return (
-      <Card className="bg-yellow-50 border-2 border-yellow-200">
-        <p className="text-yellow-800">
+      <Card className="bg-amber-950/40 border-2 border-amber-500/30">
+        <p className="text-zinc-100">
           Não foi possível localizar seu perfil de aluno para carregar a dieta.
         </p>
       </Card>
@@ -188,8 +188,8 @@ export const MinhaDietaPage: React.FC = () => {
 
   if (erroPlano && !erroPlanoNaoEncontrado) {
     return (
-      <Card className="bg-red-50 border-2 border-red-200">
-        <p className="text-red-700">{erroPlano.message}</p>
+      <Card className="bg-red-950/40 border-2 border-red-500/30">
+        <p className="text-red-300">{erroPlano.message}</p>
       </Card>
     )
   }
@@ -198,11 +198,11 @@ export const MinhaDietaPage: React.FC = () => {
     return (
       <Card>
         <div className="text-center py-8">
-          <UtensilsCrossed className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          <UtensilsCrossed className="h-12 w-12 text-zinc-500 mx-auto mb-3" />
+          <h2 className="text-xl font-semibold text-white mb-2">
             Dieta ainda não configurada
           </h2>
-          <p className="text-gray-600">
+          <p className="text-zinc-300">
             Seu professor ainda não montou o plano alimentar nesta área.
           </p>
         </div>
@@ -213,8 +213,8 @@ export const MinhaDietaPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Minha Dieta</h1>
-        <p className="text-gray-600">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white">Minha Dieta</h1>
+        <p className="text-zinc-300">
           {planoAtivo.nome} • {planoAtivo.objetivo.toLowerCase()}
         </p>
       </div>
@@ -222,27 +222,27 @@ export const MinhaDietaPage: React.FC = () => {
       <Card>
         <h2 className="text-lg font-semibold mb-3">Metas diárias</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <div className="bg-blue-50 rounded-lg p-3">
-            <p className="text-xs text-gray-600">Calorias</p>
-            <p className="text-lg font-semibold text-blue-700">
+          <div className="bg-blue-950/40 rounded-lg p-3">
+            <p className="text-xs text-white">Calorias</p>
+            <p className="text-lg font-semibold text-white">
               {planoAtivo.caloriasMeta.toFixed(0)} kcal
             </p>
           </div>
-          <div className="bg-green-50 rounded-lg p-3">
-            <p className="text-xs text-gray-600">Proteína</p>
-            <p className="text-lg font-semibold text-green-700">
+          <div className="bg-emerald-950/40 rounded-lg p-3">
+            <p className="text-xs text-white">Proteína</p>
+            <p className="text-lg font-semibold text-white">
               {planoAtivo.proteinasMetaG.toFixed(0)} g
             </p>
           </div>
-          <div className="bg-yellow-50 rounded-lg p-3">
-            <p className="text-xs text-gray-600">Carboidrato</p>
-            <p className="text-lg font-semibold text-yellow-700">
+          <div className="bg-amber-950/40 rounded-lg p-3">
+            <p className="text-xs text-white">Carboidrato</p>
+            <p className="text-lg font-semibold text-white">
               {planoAtivo.carboidratosMetaG.toFixed(0)} g
             </p>
           </div>
-          <div className="bg-purple-50 rounded-lg p-3">
-            <p className="text-xs text-gray-600">Gordura</p>
-            <p className="text-lg font-semibold text-purple-700">
+          <div className="bg-purple-950/40 rounded-lg p-3">
+            <p className="text-xs text-white">Gordura</p>
+            <p className="text-lg font-semibold text-white">
               {planoAtivo.gordurasMetaG.toFixed(0)} g
             </p>
           </div>
@@ -258,13 +258,13 @@ export const MinhaDietaPage: React.FC = () => {
               onClick={() => setSelectedDiaId(dia.id)}
               className={`p-4 rounded-lg border text-left transition-colors ${
                 selectedDiaId === dia.id
-                  ? "border-blue-500 bg-blue-50"
-                  : "border-gray-200 hover:border-gray-300"
+                  ? "border-blue-500 bg-blue-950/40"
+                  : "border-zinc-700 hover:border-zinc-700"
               }`}
             >
-              <p className="font-semibold text-gray-900">{dia.titulo}</p>
-              <p className="text-sm text-gray-600">{formatDiaSemana(dia.diaSemana)}</p>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="font-semibold text-white">{dia.titulo}</p>
+              <p className="text-sm text-white">{formatDiaSemana(dia.diaSemana)}</p>
+              <p className="text-xs text-zinc-200 mt-1">
                 {dia.refeicoes.length} refeição(ões)
               </p>
             </button>
@@ -289,11 +289,11 @@ export const MinhaDietaPage: React.FC = () => {
           </div>
 
           <div className="mb-4">
-            <div className="flex justify-between text-sm text-gray-600 mb-1">
+            <div className="flex justify-between text-sm text-zinc-300 mb-1">
               <span>Progresso do dia</span>
               <span>{progresso}%</span>
             </div>
-            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-2 bg-zinc-700 rounded-full overflow-hidden">
               <div
                 className="h-full bg-green-600 rounded-full"
                 style={{ width: `${progresso}%` }}
@@ -315,19 +315,19 @@ export const MinhaDietaPage: React.FC = () => {
               return (
                 <div
                   key={refeicao.id}
-                  className="border border-gray-200 rounded-lg p-4 bg-gray-50"
+                  className="border border-zinc-700 rounded-lg p-4 bg-zinc-900"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                     <div>
-                      <h3 className="font-semibold text-gray-900">
+                      <h3 className="font-semibold text-white">
                         {refeicao.dietaRefeicao.nome}
                       </h3>
-                      <p className="text-xs text-gray-600">
+                      <p className="text-xs text-zinc-300">
                         {refeicao.dietaRefeicao.horario || "Horário livre"} •{" "}
                         {totalKcal.toFixed(0)} kcal
                       </p>
                     </div>
-                    <label className="flex items-center gap-2 text-sm text-gray-700">
+                    <label className="flex items-center gap-2 text-sm text-zinc-200">
                       <input
                         type="checkbox"
                         checked={draft.concluida}
@@ -345,14 +345,14 @@ export const MinhaDietaPage: React.FC = () => {
                     {refeicao.dietaRefeicao.itens.map((item) => (
                       <div
                         key={item.id}
-                        className="p-2 rounded border border-gray-200 bg-white text-sm"
+                        className="p-2 rounded border border-zinc-700 bg-zinc-900 text-sm"
                       >
                         <div className="flex flex-wrap items-center gap-2">
                           <strong>{item.alimento.nome}</strong>
                           <Badge>{item.quantidadeGramas}g</Badge>
                           <Badge variant="success">{item.calorias} kcal</Badge>
                         </div>
-                        <p className="text-xs text-gray-600 mt-1">
+                        <p className="text-xs text-zinc-300 mt-1">
                           P {item.proteinas}g • C {item.carboidratos}g • G {item.gorduras}g
                         </p>
                       </div>
@@ -413,36 +413,38 @@ export const MinhaDietaPage: React.FC = () => {
         </div>
 
         {loadingCheckins && (
-          <div className="flex items-center gap-2 text-gray-600">
+          <div className="flex items-center gap-2 text-zinc-300">
             <Loader2 className="h-4 w-4 animate-spin" />
             Carregando histórico...
           </div>
         )}
 
         {!loadingCheckins && historicoOrdenado.length === 0 && (
-          <p className="text-sm text-gray-500">Nenhum dia registrado ainda.</p>
+          <p className="text-sm text-zinc-400">Nenhum dia registrado ainda.</p>
         )}
 
         <div className="space-y-3">
           {historicoOrdenado.map((item) => (
-            <div key={item.id} className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+            <div key={item.id} className="border border-zinc-700 rounded-lg p-3 bg-zinc-900">
               <div className="flex flex-wrap items-center gap-2 mb-1">
                 <Badge variant={item.status === "CONCLUIDO" ? "success" : "warning"}>
                   {item.status === "CONCLUIDO" ? "Concluído" : "Em andamento"}
                 </Badge>
-                <Badge>{item.dietaDia.titulo}</Badge>
-                <span className="text-xs text-gray-500">
+                <span className="px-2 py-1 rounded-full text-xs font-medium bg-zinc-800 border border-zinc-700 text-white">
+                  {item.dietaDia.titulo}
+                </span>
+                <span className="text-xs text-zinc-400">
                   {format(new Date(item.iniciadoEm), "dd/MM/yyyy HH:mm", {
                     locale: ptBR,
                   })}
                 </span>
               </div>
-              <p className="text-sm text-gray-700">
+              <p className="text-sm text-zinc-200">
                 Refeições feitas: {item.refeicoes.filter((ref) => ref.concluida).length}/
                 {item.refeicoes.length}
               </p>
               {item.observacaoDia && (
-                <p className="text-sm text-gray-700 mt-1">
+                <p className="text-sm text-zinc-200 mt-1">
                   <strong>Observação:</strong> {item.observacaoDia}
                 </p>
               )}

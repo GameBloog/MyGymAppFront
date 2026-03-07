@@ -49,8 +49,8 @@ export const ProfessorDashboard: React.FC = () => {
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Meus Alunos</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-bold text-white">Meus Alunos</h1>
+          <p className="text-zinc-300 mt-1">
             {alunos?.length || 0} {alunos?.length === 1 ? "aluno" : "alunos"}{" "}
             cadastrado(s)
           </p>
@@ -82,13 +82,13 @@ export const ProfessorDashboard: React.FC = () => {
                     <User className="h-6 w-6 text-blue-600" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <h3 className="text-lg font-semibold text-white">
                       {aluno.user?.nome || `Aluno #${aluno.id.slice(0, 8)}`}
                     </h3>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-zinc-400">
                       {aluno.user?.email || "Email não disponível"}
                     </p>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-zinc-500 mt-1">
                       Cadastrado em{" "}
                       {format(new Date(aluno.createdAt), "dd/MM/yyyy", {
                         locale: ptBR,
@@ -102,7 +102,7 @@ export const ProfessorDashboard: React.FC = () => {
                     onClick={() =>
                       navigate(`/professor/alunos/${aluno.id}/evolucao`)
                     }
-                    className="p-2 hover:bg-green-50 rounded-lg transition-colors"
+                    className="p-2 hover:bg-emerald-950/40 rounded-lg transition-colors"
                     title="Ver Evolução"
                   >
                     <TrendingUp className="h-5 w-5 text-green-600" />
@@ -111,43 +111,43 @@ export const ProfessorDashboard: React.FC = () => {
                     onClick={() =>
                       navigate(`/professor/alunos/${aluno.id}/fotos-arquivos`)
                     }
-                    className="p-2 hover:bg-purple-50 rounded-lg transition-colors"
+                    className="p-2 hover:bg-purple-950/40 rounded-lg transition-colors"
                     title="Ver Fotos e Arquivos"
                   >
                     <Camera className="h-5 w-5 text-purple-600" />
                   </button>
                   <button
                     onClick={() => navigate(`/professor/alunos/${aluno.id}/treino`)}
-                    className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                    className="p-2 hover:bg-blue-950/40 rounded-lg transition-colors"
                     title="Editar Treino"
                   >
-                    <Dumbbell className="h-5 w-5 text-blue-700" />
+                    <Dumbbell className="h-5 w-5 text-blue-300" />
                   </button>
                   <button
                     onClick={() => navigate(`/professor/alunos/${aluno.id}/dieta`)}
-                    className="p-2 hover:bg-orange-50 rounded-lg transition-colors"
+                    className="p-2 hover:bg-orange-950/40 rounded-lg transition-colors"
                     title="Editar Dieta"
                   >
-                    <UtensilsCrossed className="h-5 w-5 text-orange-700" />
+                    <UtensilsCrossed className="h-5 w-5 text-orange-300" />
                   </button>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3 mb-4">
                 {aluno.telefone && (
-                  <div className="flex items-center gap-2 text-gray-600">
+                  <div className="flex items-center gap-2 text-zinc-300">
                     <Phone className="h-4 w-4" />
                     <span className="text-sm">{aluno.telefone}</span>
                   </div>
                 )}
                 {aluno.idade && (
-                  <div className="flex items-center gap-2 text-gray-600">
+                  <div className="flex items-center gap-2 text-zinc-300">
                     <Calendar className="h-4 w-4" />
                     <span className="text-sm">{aluno.idade} anos</span>
                   </div>
                 )}
                 {aluno.dias_treino_semana !== null && (
-                  <div className="flex items-center gap-2 text-gray-600">
+                  <div className="flex items-center gap-2 text-zinc-300">
                     <Activity className="h-4 w-4" />
                     <span className="text-sm">
                       {aluno.dias_treino_semana}x por semana
@@ -214,11 +214,11 @@ export const ProfessorDashboard: React.FC = () => {
         </div>
       ) : (
         <Card className="text-center py-12">
-          <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <Users className="h-12 w-12 text-zinc-500 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-white mb-2">
             {searchTerm ? "Nenhum aluno encontrado" : "Nenhum aluno cadastrado"}
           </h3>
-          <p className="text-gray-500 mb-6">
+          <p className="text-zinc-400 mb-6">
             {searchTerm
               ? "Tente ajustar sua busca"
               : "Adicione seu primeiro aluno para começar"}

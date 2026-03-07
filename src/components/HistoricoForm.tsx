@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react"
 import { Activity, Plus, Calendar } from "lucide-react"
-import { Card, Input, Button, Textarea } from "../components/ui"
+import { Card, Input, Button, Textarea, Select } from "../components/ui"
 import { useCreateHistorico } from "../hooks/useHistorico"
 import { type CreateHistoricoDTO } from "../types/historico"
 import { useAluno } from "../hooks/useAlunos"
@@ -159,12 +159,12 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
 
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-zinc-200 mb-1">
             Data do Registro
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Calendar className="h-5 w-5 text-gray-400" />
+              <Calendar className="h-5 w-5 text-zinc-500" />
             </div>
             <input
               type="datetime-local"
@@ -172,10 +172,10 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
               onChange={(e) =>
                 setFormData({ ...formData, dataRegistro: e.target.value })
               }
-              className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pl-10 pr-3 py-2 bg-zinc-900 text-white border border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-300 focus:border-transparent"
             />
           </div>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-zinc-400 mt-1">
             Deixe em branco para usar a data/hora atual
           </p>
         </div>
@@ -236,29 +236,30 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
           />
         </div>
 
-        <div className="mt-2 p-3 rounded-lg border border-blue-200 bg-blue-50">
-          <p className="text-sm font-medium text-blue-900">
+        <div className="mt-2 p-3 rounded-lg border border-blue-500/30 bg-blue-950/40">
+          <p className="text-sm font-medium text-white">
             Cálculo automático de composição corporal (Navy)
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Sexo biológico
-              </label>
-              <select
-                value={sexoCalculo}
-                onChange={(e) =>
-                  setSexoCalculo(e.target.value as SexoBiologico | "")
-                }
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="">Selecione</option>
-                <option value="MASCULINO">Masculino</option>
-                <option value="FEMININO">Feminino</option>
-              </select>
-            </div>
+            <Select
+              label="Sexo biológico"
+              value={sexoCalculo}
+              onChange={(e) =>
+                setSexoCalculo(e.target.value as SexoBiologico | "")
+              }
+            >
+              <option value="" className="bg-zinc-900 text-white">
+                Selecione
+              </option>
+              <option value="MASCULINO" className="bg-zinc-900 text-white">
+                Masculino
+              </option>
+              <option value="FEMININO" className="bg-zinc-900 text-white">
+                Feminino
+              </option>
+            </Select>
             <div className="flex items-end">
-              <label className="flex items-center gap-2 text-sm text-gray-700">
+              <label className="flex items-center gap-2 text-sm text-zinc-200">
                 <input
                   type="checkbox"
                   checked={autoCalcularComposicao}
@@ -267,14 +268,14 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
                 Preencher automaticamente
               </label>
             </div>
-            <div className="text-xs text-blue-800 flex items-end">
+            <div className="text-xs text-zinc-100 flex items-end">
               Preencha altura, cintura e pescoço. Para mulheres, inclua quadril.
             </div>
           </div>
         </div>
 
         <div className="border-t pt-4">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">
+          <h3 className="text-sm font-medium text-zinc-200 mb-3">
             Medidas de Membros
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -322,7 +323,7 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
         </div>
 
         <div className="border-t pt-4">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">
+          <h3 className="text-sm font-medium text-zinc-200 mb-3">
             Composição Corporal
           </h3>
           <div className="grid grid-cols-2 gap-4">

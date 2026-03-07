@@ -27,10 +27,10 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="min-h-screen flex items-center justify-center bg-black">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
-          <p className="text-gray-600">Carregando...</p>
+          <p className="text-zinc-300">Carregando...</p>
         </div>
       </div>
     )
@@ -42,14 +42,14 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
 
   if (allowedRoles && user && !allowedRoles.includes(user.role)) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-black flex items-center justify-center p-4">
         <Card className="max-w-md w-full">
           <div className="text-center">
             <div className="text-6xl mb-4">⛔</div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            <h1 className="text-2xl font-bold text-white mb-2">
               Acesso Negado
             </h1>
-            <p className="text-gray-600 mb-6">
+            <p className="text-zinc-300 mb-6">
               Você não tem permissão para acessar esta página.
             </p>
             <div className="flex flex-col gap-3">

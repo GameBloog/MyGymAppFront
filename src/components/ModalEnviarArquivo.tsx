@@ -90,34 +90,34 @@ export const ModalEnviarArquivo: React.FC<ModalEnviarArquivoProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+      className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50"
       onClick={handleClose}
     >
       <div
-        className="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden"
+        className="bg-zinc-950 border border-zinc-800 rounded-lg shadow-xl w-full max-w-md overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+        <div className="flex items-center justify-between p-6 border-b border-zinc-800">
+          <h2 className="text-xl font-bold text-white flex items-center gap-2">
             <FileText className="h-5 w-5" />
             Enviar Arquivo
           </h2>
           <button
             onClick={handleClose}
             disabled={isLoading}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
           >
-            <X className="h-5 w-5 text-gray-500" />
+            <X className="h-5 w-5 text-zinc-400" />
           </button>
         </div>
 
         <div className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-200 mb-2">
               Tipo *
             </label>
             <div className="flex gap-3">
-              <label className="flex-1 flex items-center p-3 border-2 rounded-lg cursor-pointer transition-colors hover:bg-blue-50">
+              <label className="flex-1 flex items-center p-3 border-2 border-zinc-700 rounded-lg cursor-pointer transition-colors hover:bg-blue-950/30">
                 <input
                   type="radio"
                   name="tipo"
@@ -127,10 +127,10 @@ export const ModalEnviarArquivo: React.FC<ModalEnviarArquivoProps> = ({
                   className="mr-3"
                   disabled={isLoading}
                 />
-                <span className="font-medium">Treino</span>
+                <span className="font-medium text-zinc-100">Treino</span>
               </label>
 
-              <label className="flex-1 flex items-center p-3 border-2 rounded-lg cursor-pointer transition-colors hover:bg-green-50">
+              <label className="flex-1 flex items-center p-3 border-2 border-zinc-700 rounded-lg cursor-pointer transition-colors hover:bg-emerald-950/30">
                 <input
                   type="radio"
                   name="tipo"
@@ -140,7 +140,7 @@ export const ModalEnviarArquivo: React.FC<ModalEnviarArquivoProps> = ({
                   className="mr-3"
                   disabled={isLoading}
                 />
-                <span className="font-medium">Dieta</span>
+                <span className="font-medium text-zinc-100">Dieta</span>
               </label>
             </div>
           </div>
@@ -149,8 +149,8 @@ export const ModalEnviarArquivo: React.FC<ModalEnviarArquivoProps> = ({
             <label
               className={`flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 cursor-pointer transition-colors ${
                 file
-                  ? "border-green-500 bg-green-50"
-                  : "border-gray-300 hover:border-blue-500 hover:bg-blue-50"
+                  ? "border-emerald-500 bg-emerald-950/30"
+                  : "border-zinc-700 hover:border-blue-500 hover:bg-blue-950/30"
               }`}
             >
               <input
@@ -164,23 +164,23 @@ export const ModalEnviarArquivo: React.FC<ModalEnviarArquivoProps> = ({
               {file ? (
                 <div className="text-center">
                   <FileText className="h-12 w-12 text-green-600 mx-auto mb-2" />
-                  <p className="text-sm font-medium text-gray-900">
+                  <p className="text-sm font-medium text-white">
                     {file.name}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-zinc-400 mt-1">
                     {formatarTamanho(file.size)}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-zinc-400 mt-1">
                     Clique para trocar
                   </p>
                 </div>
               ) : (
                 <div className="text-center">
-                  <Upload className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-                  <p className="text-gray-700 font-medium mb-1">
+                  <Upload className="h-12 w-12 text-zinc-400 mx-auto mb-3" />
+                  <p className="text-zinc-200 font-medium mb-1">
                     Arraste aqui ou clique
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-zinc-400">
                     Apenas PDF • Máximo 5MB
                   </p>
                 </div>
@@ -213,7 +213,7 @@ export const ModalEnviarArquivo: React.FC<ModalEnviarArquivoProps> = ({
           />
         </div>
 
-        <div className="flex gap-3 p-6 border-t bg-gray-50">
+        <div className="flex gap-3 p-6 border-t border-zinc-800 bg-zinc-900">
           <Button
             variant="secondary"
             onClick={handleClose}

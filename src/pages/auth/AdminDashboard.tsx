@@ -31,28 +31,28 @@ export const AdminDashboard: React.FC = () => {
       title: "Professores",
       value: professores?.length || 0,
       icon: UserCheck,
-      color: "bg-purple-100 text-purple-600",
+      color: "bg-purple-500/15 text-purple-300 ring-1 ring-purple-400/30",
       onClick: () => navigate("/admin/professores"),
     },
     {
       title: "Total de Alunos",
       value: alunos?.length || 0,
       icon: Users,
-      color: "bg-blue-100 text-blue-600",
+      color: "bg-blue-500/15 text-blue-300 ring-1 ring-blue-400/30",
       onClick: () => navigate("/admin/alunos"),
     },
     {
       title: "Códigos Ativos",
       value: inviteCodes?.filter((c) => !c.usedBy).length || 0,
       icon: Ticket,
-      color: "bg-green-100 text-green-600",
+      color: "bg-emerald-500/15 text-emerald-300 ring-1 ring-emerald-400/30",
       onClick: () => navigate("/admin/invite-codes"),
     },
     {
       title: "Leads Únicos",
       value: leadAnalytics?.cards.clicksUnique || 0,
       icon: MousePointerClick,
-      color: "bg-indigo-100 text-indigo-600",
+      color: "bg-indigo-500/15 text-indigo-300 ring-1 ring-indigo-400/30",
       onClick: () => navigate("/admin/lead-links"),
     },
   ]
@@ -69,10 +69,10 @@ export const AdminDashboard: React.FC = () => {
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-zinc-100">
             Dashboard Administrativo
           </h1>
-          <p className="text-gray-600 mt-1">Visão geral do sistema</p>
+          <p className="text-zinc-400 mt-1">Visão geral do sistema</p>
         </div>
 
         <div className="flex gap-3">
@@ -97,8 +97,8 @@ export const AdminDashboard: React.FC = () => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 mb-1">{stat.title}</p>
-                <p className="text-3xl font-bold text-gray-900">
+                <p className="text-sm text-zinc-400 mb-1">{stat.title}</p>
+                <p className="text-3xl font-bold text-zinc-100">
                   {loadingAlunos || loadingCodes || loadingProfessores || loadingLeads
                     ? "..."
                     : stat.value}
@@ -115,15 +115,15 @@ export const AdminDashboard: React.FC = () => {
       <Card>
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">Aquisição de Leads</h2>
-            <p className="text-sm text-gray-600">
+            <h2 className="text-xl font-semibold text-zinc-100">Aquisição de Leads</h2>
+            <p className="text-sm text-zinc-400">
               Cliques rastreados, conversão e ranking de links
             </p>
           </div>
 
           <div className="flex items-center gap-2">
             <select
-              className="px-3 py-2 rounded-lg border border-gray-300 bg-white"
+              className="px-3 py-2 rounded-lg border border-zinc-700 bg-zinc-900 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-600"
               value={leadRange}
               onChange={(event) =>
                 setLeadRange(Number(event.target.value) as (typeof ranges)[number])
@@ -142,27 +142,27 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="p-4 bg-blue-50 border border-blue-100 rounded-lg">
-            <p className="text-sm text-blue-700">Cliques totais</p>
-            <p className="text-2xl font-bold text-blue-900">
+          <div className="p-4 bg-blue-950/40 border border-blue-500/30 rounded-lg">
+            <p className="text-sm text-zinc-100">Cliques totais</p>
+            <p className="text-2xl font-bold text-white">
               {loadingLeads ? "..." : leadAnalytics?.cards.clicksTotal || 0}
             </p>
           </div>
-          <div className="p-4 bg-green-50 border border-green-100 rounded-lg">
-            <p className="text-sm text-green-700">Cliques únicos</p>
-            <p className="text-2xl font-bold text-green-900">
+          <div className="p-4 bg-emerald-950/40 border border-emerald-500/30 rounded-lg">
+            <p className="text-sm text-zinc-100">Cliques únicos</p>
+            <p className="text-2xl font-bold text-white">
               {loadingLeads ? "..." : leadAnalytics?.cards.clicksUnique || 0}
             </p>
           </div>
-          <div className="p-4 bg-amber-50 border border-amber-100 rounded-lg">
-            <p className="text-sm text-amber-700">Novos cadastros</p>
-            <p className="text-2xl font-bold text-amber-900">
+          <div className="p-4 bg-amber-950/40 border border-amber-500/30 rounded-lg">
+            <p className="text-sm text-zinc-100">Novos cadastros</p>
+            <p className="text-2xl font-bold text-white">
               {loadingLeads ? "..." : leadAnalytics?.cards.novosCadastros || 0}
             </p>
           </div>
-          <div className="p-4 bg-indigo-50 border border-indigo-100 rounded-lg">
-            <p className="text-sm text-indigo-700">Taxa de conversão</p>
-            <p className="text-2xl font-bold text-indigo-900">
+          <div className="p-4 bg-indigo-950/40 border border-indigo-500/30 rounded-lg">
+            <p className="text-sm text-zinc-100">Taxa de conversão</p>
+            <p className="text-2xl font-bold text-white">
               {loadingLeads
                 ? "..."
                 : `${leadAnalytics?.cards.conversao?.toFixed(2) || "0.00"}%`}
@@ -171,11 +171,11 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         <div className="mb-6">
-          <h3 className="font-semibold text-gray-900 mb-3">
+          <h3 className="font-semibold text-zinc-100 mb-3">
             Evolução diária de cliques únicos
           </h3>
           <div className="overflow-x-auto">
-            <div className="min-w-[640px] flex items-end gap-2 h-44 p-3 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="min-w-[640px] flex items-end gap-2 h-44 p-3 bg-zinc-900 rounded-lg border border-zinc-700">
               {(leadAnalytics?.series || []).map((point) => {
                 const height = Math.max(
                   8,
@@ -184,13 +184,13 @@ export const AdminDashboard: React.FC = () => {
 
                 return (
                   <div key={point.date} className="flex flex-col items-center gap-2 w-10">
-                    <span className="text-[11px] text-gray-700">{point.clicksUnique}</span>
+                    <span className="text-[11px] text-zinc-200">{point.clicksUnique}</span>
                     <div
                       className="w-8 rounded-t bg-indigo-500"
                       style={{ height: `${height}px` }}
                       title={`${point.date}: ${point.clicksUnique} cliques únicos`}
                     />
-                    <span className="text-[11px] text-gray-500">{point.date.slice(5)}</span>
+                    <span className="text-[11px] text-zinc-400">{point.date.slice(5)}</span>
                   </div>
                 )
               })}
@@ -199,19 +199,19 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         <div>
-          <h3 className="font-semibold text-gray-900 mb-3">Top links</h3>
+          <h3 className="font-semibold text-zinc-100 mb-3">Top links</h3>
           <div className="space-y-2">
             {(leadAnalytics?.topLinks || []).slice(0, 5).map((item) => (
               <div
                 key={item.leadLinkId}
-                className="p-3 bg-gray-50 border border-gray-200 rounded-lg flex flex-col md:flex-row md:items-center md:justify-between gap-2"
+                className="p-3 bg-zinc-900 border border-zinc-700 rounded-lg flex flex-col md:flex-row md:items-center md:justify-between gap-2"
               >
                 <div>
-                  <p className="font-medium text-gray-900">{item.nome}</p>
-                  <p className="text-sm text-gray-600">{item.slug}</p>
+                  <p className="font-medium text-zinc-100">{item.nome}</p>
+                  <p className="text-sm text-zinc-400">{item.slug}</p>
                 </div>
 
-                <div className="flex items-center gap-4 text-sm text-gray-700">
+                <div className="flex items-center gap-4 text-sm text-zinc-300">
                   <span>Total: {item.clicksTotal}</span>
                   <span>Únicos: {item.clicksUnique}</span>
                   <span>Cadastros: {item.novosCadastros}</span>
@@ -221,49 +221,49 @@ export const AdminDashboard: React.FC = () => {
             ))}
 
             {!loadingLeads && (!leadAnalytics?.topLinks || leadAnalytics.topLinks.length === 0) && (
-              <p className="text-sm text-gray-600">Nenhum dado de lead no período.</p>
+              <p className="text-sm text-zinc-400">Nenhum dado de lead no período.</p>
             )}
           </div>
         </div>
       </Card>
 
       <Card className="mt-6">
-        <h2 className="text-xl font-semibold mb-4">Ações Rápidas</h2>
+        <h2 className="text-xl font-semibold text-zinc-100 mb-4">Ações Rápidas</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <button
             onClick={() => navigate("/admin/professores")}
-            className="p-4 border-2 border-gray-200 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-colors text-left"
+            className="p-4 border-2 border-zinc-700 bg-zinc-900 rounded-lg hover:border-purple-400 hover:bg-purple-500/10 transition-colors text-left"
           >
             <UserCheck className="h-6 w-6 text-purple-600 mb-2" />
-            <h3 className="font-semibold text-gray-900">Gerenciar Professores</h3>
-            <p className="text-sm text-gray-600">Ver, editar e criar professores</p>
+            <h3 className="font-semibold text-zinc-100">Gerenciar Professores</h3>
+            <p className="text-sm text-zinc-400">Ver, editar e criar professores</p>
           </button>
 
           <button
             onClick={() => navigate("/admin/alunos")}
-            className="p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors text-left"
+            className="p-4 border-2 border-zinc-700 bg-zinc-900 rounded-lg hover:border-blue-400 hover:bg-blue-500/10 transition-colors text-left"
           >
             <Users className="h-6 w-6 text-blue-600 mb-2" />
-            <h3 className="font-semibold text-gray-900">Gerenciar Alunos</h3>
-            <p className="text-sm text-gray-600">Ver e editar todos os alunos do sistema</p>
+            <h3 className="font-semibold text-zinc-100">Gerenciar Alunos</h3>
+            <p className="text-sm text-zinc-400">Ver e editar todos os alunos do sistema</p>
           </button>
 
           <button
             onClick={() => navigate("/admin/invite-codes")}
-            className="p-4 border-2 border-gray-200 rounded-lg hover:border-green-500 hover:bg-green-50 transition-colors text-left"
+            className="p-4 border-2 border-zinc-700 bg-zinc-900 rounded-lg hover:border-emerald-400 hover:bg-emerald-500/10 transition-colors text-left"
           >
-            <Ticket className="h-6 w-6 text-green-600 mb-2" />
-            <h3 className="font-semibold text-gray-900">Códigos de Convite</h3>
-            <p className="text-sm text-gray-600">Gerenciar códigos para professores</p>
+            <Ticket className="h-6 w-6 text-emerald-400 mb-2" />
+            <h3 className="font-semibold text-zinc-100">Códigos de Convite</h3>
+            <p className="text-sm text-zinc-400">Gerenciar códigos para professores</p>
           </button>
 
           <button
             onClick={() => navigate("/admin/lead-links")}
-            className="p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition-colors text-left"
+            className="p-4 border-2 border-zinc-700 bg-zinc-900 rounded-lg hover:border-indigo-400 hover:bg-indigo-500/10 transition-colors text-left"
           >
             <Link2 className="h-6 w-6 text-indigo-600 mb-2" />
-            <h3 className="font-semibold text-gray-900">Links de Lead</h3>
-            <p className="text-sm text-gray-600">Criar links rastreáveis e acompanhar conversão</p>
+            <h3 className="font-semibold text-zinc-100">Links de Lead</h3>
+            <p className="text-sm text-zinc-400">Criar links rastreáveis e acompanhar conversão</p>
           </button>
         </div>
       </Card>
@@ -271,7 +271,7 @@ export const AdminDashboard: React.FC = () => {
       {alunos && alunos.length > 0 && (
         <Card className="mt-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">
+            <h2 className="text-xl font-semibold text-zinc-100">
               Últimos Alunos Cadastrados
             </h2>
             <Button
@@ -286,28 +286,28 @@ export const AdminDashboard: React.FC = () => {
             {alunos.slice(0, 5).map((aluno) => (
               <div
                 key={aluno.id}
-                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+                className="flex items-center justify-between p-3 bg-zinc-900 border border-zinc-800 rounded-lg hover:bg-zinc-800/80 transition-colors cursor-pointer"
                 onClick={() => navigate(`/admin/alunos/${aluno.id}/edit`)}
               >
                 <div className="flex items-center gap-3">
-                  <div className="bg-blue-100 p-2 rounded-full">
-                    <UserPlus className="h-4 w-4 text-blue-600" />
+                  <div className="bg-blue-500/15 p-2 rounded-full">
+                    <UserPlus className="h-4 w-4 text-blue-300" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">
+                    <p className="font-medium text-zinc-100">
                       {aluno.user?.nome || `Aluno #${aluno.id.slice(0, 8)}`}
                     </p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-zinc-400">
                       {new Date(aluno.createdAt).toLocaleDateString("pt-BR")}
                     </p>
                   </div>
                 </div>
                 <div className="text-right">
                   {aluno.pesoKg && (
-                    <p className="text-sm font-medium">{aluno.pesoKg} kg</p>
+                    <p className="text-sm font-medium text-zinc-200">{aluno.pesoKg} kg</p>
                   )}
                   {aluno.dias_treino_semana && (
-                    <p className="text-xs text-gray-600">
+                    <p className="text-xs text-zinc-400">
                       {aluno.dias_treino_semana}x/semana
                     </p>
                   )}
