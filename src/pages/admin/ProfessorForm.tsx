@@ -122,7 +122,7 @@ export const ProfessorForm: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
         <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
-        <p className="text-gray-600">Carregando dados...</p>
+        <p className="text-zinc-200">Carregando dados...</p>
       </div>
     )
   }
@@ -135,12 +135,12 @@ export const ProfessorForm: React.FC = () => {
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate("/admin/professores")}
-            className="p-2 hover:bg-white rounded-lg transition-colors"
+            className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
             title="Voltar"
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-white">
             {isEdit ? "Editar Professor" : "Novo Professor"}
           </h1>
         </div>
@@ -153,7 +153,7 @@ export const ProfessorForm: React.FC = () => {
         </h2>
 
         {!isEdit && (
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-zinc-200 mb-4">
             O professor usará essas credenciais para fazer login no sistema.
           </p>
         )}
@@ -203,13 +203,13 @@ export const ProfessorForm: React.FC = () => {
           )}
 
           {isEdit && (
-            <div className="md:col-span-2 p-4 bg-blue-50 rounded-lg border border-blue-200 mb-4">
-              <p className="text-sm text-blue-800">
+            <div className="md:col-span-2 p-4 bg-blue-950/40 rounded-lg border border-blue-500/30 mb-4">
+              <p className="text-sm text-white">
                 <strong>Nome:</strong> {existingProfessor?.user?.nome}
                 <br />
                 <strong>Email:</strong> {existingProfessor?.user?.email}
               </p>
-              <p className="text-xs text-blue-600 mt-2">
+              <p className="text-xs text-zinc-200 mt-2">
                 ℹ️ Nome e email não podem ser alterados aqui. Entre em contato
                 com o administrador do sistema.
               </p>
@@ -257,7 +257,7 @@ export const ProfessorForm: React.FC = () => {
       </div>
 
       {!isEdit && (
-        <p className="text-sm text-gray-500 mt-4">* Campos obrigatórios</p>
+        <p className="text-sm text-zinc-300 mt-4">* Campos obrigatórios</p>
       )}
     </div>
   )

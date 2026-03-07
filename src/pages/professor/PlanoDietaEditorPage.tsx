@@ -650,8 +650,8 @@ export const PlanoDietaEditorPage: React.FC = () => {
 
   if (!alunoId) {
     return (
-      <Card className="bg-red-50 border-2 border-red-200">
-        <p className="text-red-700">Aluno inválido para montar dieta.</p>
+      <Card className="bg-red-950/40 border-2 border-red-500/30">
+        <p className="text-red-300">Aluno inválido para montar dieta.</p>
       </Card>
     )
   }
@@ -660,15 +660,15 @@ export const PlanoDietaEditorPage: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
         <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
-        <p className="text-gray-600">Carregando editor de dieta...</p>
+        <p className="text-zinc-300">Carregando editor de dieta...</p>
       </div>
     )
   }
 
   if (!aluno) {
     return (
-      <Card className="bg-red-50 border-2 border-red-200">
-        <p className="text-red-700">Aluno não encontrado.</p>
+      <Card className="bg-red-950/40 border-2 border-red-500/30">
+        <p className="text-red-300">Aluno não encontrado.</p>
       </Card>
     )
   }
@@ -681,16 +681,16 @@ export const PlanoDietaEditorPage: React.FC = () => {
             onClick={() =>
               navigate(isAdmin ? "/admin/alunos" : "/professor/dashboard")
             }
-            className="p-2 hover:bg-white rounded-lg transition-colors"
+            className="p-2 hover:bg-zinc-900 rounded-lg transition-colors"
             title="Voltar"
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white">
               Editor de Dieta
             </h1>
-            <p className="text-gray-600">
+            <p className="text-zinc-300">
               {aluno.user?.nome || "Aluno"} • plano semanal com macros e check-ins
             </p>
           </div>
@@ -709,39 +709,39 @@ export const PlanoDietaEditorPage: React.FC = () => {
               onClick={() => setObjetivo(item.value)}
               className={`text-left border rounded-lg p-3 transition-colors ${
                 objetivo === item.value
-                  ? "border-blue-500 bg-blue-50"
-                  : "border-gray-200 hover:border-gray-300"
+                  ? "border-blue-500 bg-blue-950/40"
+                  : "border-zinc-700 hover:border-zinc-700"
               }`}
             >
-              <p className="font-semibold text-gray-900">{item.label}</p>
-              <p className="text-xs text-gray-600 mt-1">{item.description}</p>
+              <p className="font-semibold text-white">{item.label}</p>
+              <p className="text-xs text-zinc-300 mt-1">{item.description}</p>
             </button>
           ))}
         </div>
 
         {recomendacao && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-            <div className="bg-blue-50 rounded-lg p-3">
-              <p className="text-xs text-gray-600">% Gordura</p>
-              <p className="text-lg font-semibold text-blue-700">
+            <div className="bg-blue-950/40 rounded-lg p-3">
+              <p className="text-xs text-white">% Gordura</p>
+              <p className="text-lg font-semibold text-white">
                 {recomendacao.percentualGordura ?? "-"}
               </p>
             </div>
-            <div className="bg-green-50 rounded-lg p-3">
-              <p className="text-xs text-gray-600">Massa magra (kg)</p>
-              <p className="text-lg font-semibold text-green-700">
+            <div className="bg-emerald-950/40 rounded-lg p-3">
+              <p className="text-xs text-zinc-300">Massa magra (kg)</p>
+              <p className="text-lg font-semibold text-emerald-300">
                 {recomendacao.massaMagraKg ?? "-"}
               </p>
             </div>
-            <div className="bg-yellow-50 rounded-lg p-3">
-              <p className="text-xs text-gray-600">TMB (kcal)</p>
-              <p className="text-lg font-semibold text-yellow-700">
+            <div className="bg-amber-950/40 rounded-lg p-3">
+              <p className="text-xs text-zinc-300">TMB (kcal)</p>
+              <p className="text-lg font-semibold text-amber-300">
                 {recomendacao.tmbKcal ?? "-"}
               </p>
             </div>
-            <div className="bg-purple-50 rounded-lg p-3">
-              <p className="text-xs text-gray-600">Calorias alvo (kcal)</p>
-              <p className="text-lg font-semibold text-purple-700">
+            <div className="bg-purple-950/40 rounded-lg p-3">
+              <p className="text-xs text-white">Calorias alvo (kcal)</p>
+              <p className="text-lg font-semibold text-white">
                 {recomendacao.caloriasMeta ?? "-"}
               </p>
             </div>
@@ -749,11 +749,11 @@ export const PlanoDietaEditorPage: React.FC = () => {
         )}
 
         {recomendacao && recomendacao.missingFields.length > 0 && (
-          <div className="mb-4 p-3 rounded-lg border border-yellow-300 bg-yellow-50">
-            <p className="text-sm text-yellow-900 font-medium">
+          <div className="mb-4 p-3 rounded-lg border border-amber-500/40 bg-amber-950/40">
+            <p className="text-sm text-white font-medium">
               Alguns dados estão ausentes para recomendação completa:
             </p>
-            <p className="text-sm text-yellow-800">
+            <p className="text-sm text-zinc-100">
               {recomendacao.missingFields.join(", ")}
             </p>
           </div>
@@ -826,8 +826,8 @@ export const PlanoDietaEditorPage: React.FC = () => {
               key={day.localId}
               className={`border rounded-lg p-4 ${
                 selectedDayId === day.localId
-                  ? "border-blue-400 bg-blue-50/40"
-                  : "border-gray-200"
+                  ? "border-blue-400 bg-blue-950/30"
+                  : "border-zinc-700"
               }`}
             >
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
@@ -837,7 +837,7 @@ export const PlanoDietaEditorPage: React.FC = () => {
                   onChange={(e) => updateDay(day.localId, { titulo: e.target.value })}
                 />
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-zinc-200 mb-1">
                     Dia da semana
                   </label>
                   <select
@@ -847,7 +847,7 @@ export const PlanoDietaEditorPage: React.FC = () => {
                         diaSemana: e.target.value ? Number(e.target.value) : undefined,
                       })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 bg-zinc-900 text-white border border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-300 focus:border-transparent"
                   >
                     <option value="">Sem dia fixo</option>
                     {diasSemana.map((opt) => (
@@ -886,7 +886,7 @@ export const PlanoDietaEditorPage: React.FC = () => {
 
               <div className="mt-4">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-sm font-medium text-gray-700">
+                  <p className="text-sm font-medium text-zinc-200">
                     Refeições de {day.titulo} ({formatDiaSemana(day.diaSemana)})
                   </p>
                   <Button
@@ -904,7 +904,7 @@ export const PlanoDietaEditorPage: React.FC = () => {
                     <div
                       key={meal.localId}
                       className={`border rounded-lg p-3 ${
-                        selectedMealId === meal.localId ? "border-blue-300 bg-white" : "border-gray-200"
+                        selectedMealId === meal.localId ? "border-blue-300 bg-zinc-900" : "border-zinc-700"
                       }`}
                     >
                       <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
@@ -974,14 +974,18 @@ export const PlanoDietaEditorPage: React.FC = () => {
                           return (
                             <div
                               key={item.localId}
-                              className="rounded-lg border border-gray-200 p-3 bg-gray-50"
+                              className="rounded-lg border border-zinc-700 p-3 bg-zinc-900"
                             >
                               <div className="flex flex-wrap items-center gap-2 mb-2">
-                                <p className="font-medium text-gray-900">
+                                <p className="font-medium text-white">
                                   {item.alimento.nome}
                                 </p>
-                                <Badge>{item.quantidadeGramas}g</Badge>
-                                <Badge variant="success">{macros.calorias} kcal</Badge>
+                                <span className="px-2 py-1 rounded-full text-xs font-medium bg-zinc-800 border border-zinc-700 text-white">
+                                  {item.quantidadeGramas}g
+                                </span>
+                                <span className="px-2 py-1 rounded-full text-xs font-medium bg-emerald-950/50 border border-emerald-500/30 text-white">
+                                  {macros.calorias} kcal
+                                </span>
                               </div>
                               <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
                                 <Input
@@ -1035,7 +1039,7 @@ export const PlanoDietaEditorPage: React.FC = () => {
                         })}
 
                         {meal.itens.length === 0 && (
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-zinc-400">
                             Nenhum alimento nesta refeição.
                           </p>
                         )}
@@ -1054,23 +1058,23 @@ export const PlanoDietaEditorPage: React.FC = () => {
           <UtensilsCrossed className="h-5 w-5" />
           Banco de alimentos
         </h2>
-        <p className="text-sm text-gray-600 mb-3">
+        <p className="text-sm text-zinc-300 mb-3">
           Dia ativo: <strong>{selectedDay?.titulo || "nenhum"}</strong> • Refeição
           ativa: <strong>{selectedMeal?.nome || "nenhuma"}</strong>
         </p>
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           <div>
-            <h3 className="font-semibold text-gray-900 mb-2">Alimentos cadastrados</h3>
+            <h3 className="font-semibold text-white mb-2">Alimentos cadastrados</h3>
             <Input
               icon={Search}
               value={filtroAlimento}
               onChange={(e) => setFiltroAlimento(e.target.value)}
               placeholder="Buscar alimento"
             />
-            <div className="mt-2 max-h-80 overflow-auto border border-gray-200 rounded-lg">
+            <div className="mt-2 max-h-80 overflow-auto border border-zinc-700 rounded-lg">
               {loadingAlimentos && (
-                <div className="p-3 flex items-center gap-2 text-gray-600">
+                <div className="p-3 flex items-center gap-2 text-zinc-300">
                   <Loader2 className="h-4 w-4 animate-spin" />
                   Carregando alimentos...
                 </div>
@@ -1082,8 +1086,8 @@ export const PlanoDietaEditorPage: React.FC = () => {
                     className="p-3 border-b last:border-b-0 flex items-start justify-between gap-3"
                   >
                     <div>
-                      <p className="font-medium text-gray-900">{food.nome}</p>
-                      <p className="text-xs text-gray-600 mt-1">
+                      <p className="font-medium text-white">{food.nome}</p>
+                      <p className="text-xs text-white mt-1">
                         {food.calorias100g} kcal/100g • P {food.proteinas100g}g • C{" "}
                         {food.carboidratos100g}g • G {food.gorduras100g}g
                       </p>
@@ -1102,14 +1106,14 @@ export const PlanoDietaEditorPage: React.FC = () => {
                 ))}
 
               {!loadingAlimentos && (alimentos || []).length === 0 && (
-                <div className="p-3 text-sm text-gray-500">
+                <div className="p-3 text-sm text-zinc-400">
                   Nenhum alimento encontrado com os filtros atuais.
                 </div>
               )}
             </div>
 
             <div className="mt-4 border rounded-lg p-4">
-              <h4 className="font-semibold text-gray-900 mb-3">
+              <h4 className="font-semibold text-white mb-3">
                 Criar alimento personalizado
               </h4>
               <Input
@@ -1207,7 +1211,7 @@ export const PlanoDietaEditorPage: React.FC = () => {
                   placeholder="2"
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-2 mb-3">
+              <p className="text-xs text-zinc-400 mt-2 mb-3">
                 Regra: proteínas + carboidratos + gorduras deve ser até 100g por 100g.
               </p>
               <Button
@@ -1221,7 +1225,7 @@ export const PlanoDietaEditorPage: React.FC = () => {
           </div>
 
           <div>
-            <h3 className="font-semibold text-gray-900 mb-2">
+            <h3 className="font-semibold text-white mb-2">
               Buscar alimentos externos (USDA/TACO)
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-2">
@@ -1232,7 +1236,7 @@ export const PlanoDietaEditorPage: React.FC = () => {
                 placeholder="Buscar alimento"
               />
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-zinc-200 mb-1">
                   Fonte
                 </label>
                 <select
@@ -1240,7 +1244,7 @@ export const PlanoDietaEditorPage: React.FC = () => {
                   onChange={(e) =>
                     setFonteExterna(e.target.value as "USDA" | "TACO" | "ALL")
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-zinc-900 text-white border border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-300 focus:border-transparent"
                 >
                   <option value="ALL">USDA + TACO</option>
                   <option value="USDA">USDA</option>
@@ -1249,15 +1253,15 @@ export const PlanoDietaEditorPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="max-h-80 overflow-auto border border-gray-200 rounded-lg">
+            <div className="max-h-80 overflow-auto border border-zinc-700 rounded-lg">
               {buscaExterna.trim().length < 2 && (
-                <p className="p-3 text-sm text-gray-500">
+                <p className="p-3 text-sm text-zinc-400">
                   Digite pelo menos 2 letras para pesquisar.
                 </p>
               )}
 
               {loadingExternos && (
-                <div className="p-3 flex items-center gap-2 text-gray-600">
+                <div className="p-3 flex items-center gap-2 text-zinc-300">
                   <Loader2 className="h-4 w-4 animate-spin" />
                   Buscando alimentos...
                 </div>
@@ -1270,8 +1274,8 @@ export const PlanoDietaEditorPage: React.FC = () => {
                     className="p-3 border-b last:border-b-0 flex items-start justify-between gap-3"
                   >
                     <div>
-                      <p className="font-medium text-gray-900">{food.nome}</p>
-                      <p className="text-xs text-gray-600 mt-1">
+                      <p className="font-medium text-white">{food.nome}</p>
+                      <p className="text-xs text-zinc-300 mt-1">
                         {food.source} • {food.calorias100g} kcal/100g
                       </p>
                     </div>
@@ -1288,7 +1292,7 @@ export const PlanoDietaEditorPage: React.FC = () => {
               {buscaExterna.trim().length >= 2 &&
                 !loadingExternos &&
                 externos?.length === 0 && (
-                  <p className="p-3 text-sm text-gray-500">
+                  <p className="p-3 text-sm text-zinc-400">
                     Nenhum resultado externo encontrado. Verifique os filtros ou crie
                     um alimento personalizado.
                   </p>
@@ -1301,27 +1305,27 @@ export const PlanoDietaEditorPage: React.FC = () => {
       <Card>
         <h2 className="text-lg font-semibold mb-3">Resumo do plano montado</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <div className="bg-blue-50 p-3 rounded-lg">
-            <p className="text-xs text-gray-600">Kcal total planejada</p>
-            <p className="text-lg font-semibold text-blue-700">
+          <div className="bg-blue-950/40 p-3 rounded-lg">
+            <p className="text-xs text-white">Kcal total planejada</p>
+            <p className="text-lg font-semibold text-white">
               {macrosResumo.calorias.toFixed(1)}
             </p>
           </div>
-          <div className="bg-green-50 p-3 rounded-lg">
-            <p className="text-xs text-gray-600">Proteína total (g)</p>
-            <p className="text-lg font-semibold text-green-700">
+          <div className="bg-emerald-950/40 p-3 rounded-lg">
+            <p className="text-xs text-white">Proteína total (g)</p>
+            <p className="text-lg font-semibold text-white">
               {macrosResumo.proteinas.toFixed(1)}
             </p>
           </div>
-          <div className="bg-yellow-50 p-3 rounded-lg">
-            <p className="text-xs text-gray-600">Carbo total (g)</p>
-            <p className="text-lg font-semibold text-yellow-700">
+          <div className="bg-amber-950/40 p-3 rounded-lg">
+            <p className="text-xs text-white">Carbo total (g)</p>
+            <p className="text-lg font-semibold text-white">
               {macrosResumo.carboidratos.toFixed(1)}
             </p>
           </div>
-          <div className="bg-purple-50 p-3 rounded-lg">
-            <p className="text-xs text-gray-600">Gordura total (g)</p>
-            <p className="text-lg font-semibold text-purple-700">
+          <div className="bg-purple-950/40 p-3 rounded-lg">
+            <p className="text-xs text-white">Gordura total (g)</p>
+            <p className="text-lg font-semibold text-white">
               {macrosResumo.gorduras.toFixed(1)}
             </p>
           </div>
@@ -1330,21 +1334,21 @@ export const PlanoDietaEditorPage: React.FC = () => {
 
       <Card>
         <div className="flex items-center gap-2 mb-4">
-          <ClipboardList className="h-5 w-5 text-gray-700" />
+          <ClipboardList className="h-5 w-5 text-zinc-200" />
           <h2 className="text-lg font-semibold">
             Check-ins recentes e comentários do professor
           </h2>
         </div>
 
         {loadingCheckins && (
-          <div className="flex items-center gap-2 text-gray-600">
+          <div className="flex items-center gap-2 text-zinc-300">
             <Loader2 className="h-4 w-4 animate-spin" />
             Carregando check-ins...
           </div>
         )}
 
         {!loadingCheckins && checkinsOrdenados.length === 0 && (
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-zinc-400">
             Ainda não há check-ins de dieta para este aluno.
           </p>
         )}
@@ -1355,25 +1359,27 @@ export const PlanoDietaEditorPage: React.FC = () => {
             return (
               <div
                 key={checkin.id}
-                className="border border-gray-200 rounded-lg p-4 bg-gray-50"
+                className="border border-zinc-700 rounded-lg p-4 bg-zinc-900"
               >
                 <div className="flex flex-wrap items-center gap-2 mb-2">
                   <Badge variant={status.variant}>{status.text}</Badge>
-                  <Badge>{checkin.dietaDia.titulo}</Badge>
-                  <span className="text-xs text-gray-500">
+                  <span className="px-2 py-1 rounded-full text-xs font-medium bg-zinc-800 border border-zinc-700 text-white">
+                    {checkin.dietaDia.titulo}
+                  </span>
+                  <span className="text-xs text-zinc-400">
                     {format(new Date(checkin.iniciadoEm), "dd/MM/yyyy HH:mm", {
                       locale: ptBR,
                     })}
                   </span>
                 </div>
 
-                <p className="text-sm text-gray-700">
+                <p className="text-sm text-zinc-200">
                   Refeições concluídas: {checkin.refeicoes.filter((ref) => ref.concluida).length}
                   /{checkin.refeicoes.length}
                 </p>
 
                 {checkin.observacaoDia && (
-                  <p className="text-sm text-gray-700 mt-2">
+                  <p className="text-sm text-zinc-200 mt-2">
                     <strong>Observação do aluno:</strong> {checkin.observacaoDia}
                   </p>
                 )}

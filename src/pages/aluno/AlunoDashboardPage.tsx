@@ -467,15 +467,15 @@ export const AlunoDashboardPage: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
         <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
-        <p className="text-gray-600">Carregando dashboard...</p>
+        <p className="text-zinc-300">Carregando dashboard...</p>
       </div>
     )
   }
 
   if (!aluno) {
     return (
-      <Card className="bg-red-50 border-2 border-red-200">
-        <p className="text-red-700">
+      <Card className="bg-red-950/40 border-2 border-red-500/30">
+        <p className="text-red-300">
           Não foi possível carregar seu perfil de aluno para montar o dashboard.
         </p>
       </Card>
@@ -492,13 +492,14 @@ export const AlunoDashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <Card className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white">
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <Card className="relative overflow-hidden bg-gradient-to-r from-blue-800 to-cyan-800 border border-blue-500/30 text-white">
+        <div className="absolute inset-0 bg-black/30" />
+        <div className="relative flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold">
               Dashboard do Aluno
             </h1>
-            <p className="text-blue-100 mt-1">
+            <p className="text-zinc-200 mt-1">
               Bem-vindo, {aluno.user?.nome}. Seu resumo semanal está aqui.
             </p>
           </div>
@@ -514,8 +515,8 @@ export const AlunoDashboardPage: React.FC = () => {
       </Card>
 
       {(treinoError && !treinoNaoEncontrado) || (dietaError && !dietaNaoEncontrada) ? (
-        <Card className="bg-red-50 border-2 border-red-200">
-          <p className="text-red-700">
+        <Card className="bg-red-950/40 border-2 border-red-500/30">
+          <p className="text-red-300">
             Erro ao carregar parte dos dados do dashboard. Treino:{" "}
             {treinoError?.message || "ok"} | Dieta: {dietaError?.message || "ok"}
           </p>
@@ -562,18 +563,18 @@ export const AlunoDashboardPage: React.FC = () => {
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <Card>
           <div className="flex items-center gap-2 mb-3">
-            <UtensilsCrossed className="h-5 w-5 text-blue-700" />
+            <UtensilsCrossed className="h-5 w-5 text-blue-300" />
             <h2 className="text-lg font-semibold">Próxima refeição</h2>
           </div>
 
           {loadingDieta && (
-            <p className="text-sm text-gray-600">Carregando agenda de dieta...</p>
+            <p className="text-sm text-zinc-300">Carregando agenda de dieta...</p>
           )}
 
           {!loadingDieta && proximaRefeicao && (
             <div className="space-y-2">
-              <p className="text-xl font-bold text-gray-900">{proximaRefeicao.refeicaoNome}</p>
-              <p className="text-sm text-gray-600">
+              <p className="text-xl font-bold text-white">{proximaRefeicao.refeicaoNome}</p>
+              <p className="text-sm text-zinc-300">
                 {proximaRefeicao.diaTitulo} •{" "}
                 {format(proximaRefeicao.dataHora, "dd/MM/yyyy HH:mm", {
                   locale: ptBR,
@@ -590,7 +591,7 @@ export const AlunoDashboardPage: React.FC = () => {
 
           {!loadingDieta && !proximaRefeicao && (
             <div className="space-y-3">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-zinc-300">
                 Nenhum plano de dieta dinâmico ativo no momento.
               </p>
               {ultimaDietaPdf ? (
@@ -603,7 +604,7 @@ export const AlunoDashboardPage: React.FC = () => {
                   <Button icon={FileText}>Abrir última dieta em PDF</Button>
                 </a>
               ) : (
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-zinc-400">
                   Também não há PDF de dieta disponível.
                 </p>
               )}
@@ -613,18 +614,18 @@ export const AlunoDashboardPage: React.FC = () => {
 
         <Card>
           <div className="flex items-center gap-2 mb-3">
-            <Dumbbell className="h-5 w-5 text-blue-700" />
+            <Dumbbell className="h-5 w-5 text-blue-300" />
             <h2 className="text-lg font-semibold">Próximo treino</h2>
           </div>
 
           {loadingTreino && (
-            <p className="text-sm text-gray-600">Carregando agenda de treino...</p>
+            <p className="text-sm text-zinc-300">Carregando agenda de treino...</p>
           )}
 
           {!loadingTreino && proximoTreino && (
             <div className="space-y-2">
-              <p className="text-xl font-bold text-gray-900">{proximoTreino.diaTitulo}</p>
-              <p className="text-sm text-gray-600">
+              <p className="text-xl font-bold text-white">{proximoTreino.diaTitulo}</p>
+              <p className="text-sm text-zinc-300">
                 {format(proximoTreino.dataHora, "dd/MM/yyyy", { locale: ptBR })} •{" "}
                 {formatDiaSemana(getIsoDay(proximoTreino.dataHora))}
               </p>
@@ -639,7 +640,7 @@ export const AlunoDashboardPage: React.FC = () => {
 
           {!loadingTreino && !proximoTreino && (
             <div className="space-y-3">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-zinc-300">
                 Nenhum plano de treino dinâmico ativo no momento.
               </p>
               {ultimoTreinoPdf ? (
@@ -652,7 +653,7 @@ export const AlunoDashboardPage: React.FC = () => {
                   <Button icon={FileText}>Abrir último treino em PDF</Button>
                 </a>
               ) : (
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-zinc-400">
                   Também não há PDF de treino disponível.
                 </p>
               )}
@@ -668,20 +669,20 @@ export const AlunoDashboardPage: React.FC = () => {
             <h2 className="text-lg font-semibold">Resumo semanal</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-            <div className="rounded-lg bg-blue-50 p-3">
-              <p className="text-xs text-gray-600">Treinos na semana</p>
-              <p className="text-2xl font-bold text-blue-700">{checkinsTreinoSemana}</p>
+            <div className="rounded-lg bg-blue-950/40 p-3">
+              <p className="text-xs text-zinc-300">Treinos na semana</p>
+              <p className="text-2xl font-bold text-white">{checkinsTreinoSemana}</p>
             </div>
-            <div className="rounded-lg bg-green-50 p-3">
-              <p className="text-xs text-gray-600">Check-ins dieta</p>
-              <p className="text-2xl font-bold text-green-700">{checkinsDietaSemana}</p>
+            <div className="rounded-lg bg-emerald-950/40 p-3">
+              <p className="text-xs text-zinc-300">Check-ins dieta</p>
+              <p className="text-2xl font-bold text-white">{checkinsDietaSemana}</p>
             </div>
-            <div className="rounded-lg bg-yellow-50 p-3">
-              <p className="text-xs text-gray-600">Aderência dieta</p>
-              <p className="text-2xl font-bold text-yellow-700">{progressoSemanaDieta}%</p>
+            <div className="rounded-lg bg-amber-950/40 p-3">
+              <p className="text-xs text-zinc-300">Aderência dieta</p>
+              <p className="text-2xl font-bold text-white">{progressoSemanaDieta}%</p>
             </div>
           </div>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-zinc-300">
             Frequência de treino nos últimos 28 dias:{" "}
             <strong>{frequenciaTreino28Dias} sessão(ões) concluída(s)</strong>.
           </p>
@@ -694,23 +695,23 @@ export const AlunoDashboardPage: React.FC = () => {
           </div>
 
           {comentariosProfessor.length === 0 && (
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-zinc-400">
               Quando houver feedback no treino ou dieta ele aparece aqui.
             </p>
           )}
 
           <div className="space-y-3">
             {comentariosProfessor.map((comment) => (
-              <div key={comment.id} className="rounded-lg border border-blue-200 bg-blue-50 p-3">
+              <div key={comment.id} className="rounded-lg border border-blue-500/30 bg-blue-950/40 p-3">
                 <div className="flex items-center justify-between gap-2">
                   <Badge>{comment.origem}</Badge>
-                  <span className="text-xs text-gray-600">
+                  <span className="text-xs text-zinc-300">
                     {format(new Date(comment.dataHora), "dd/MM HH:mm", {
                       locale: ptBR,
                     })}
                   </span>
                 </div>
-                <p className="text-sm text-blue-900 mt-2">{comment.texto}</p>
+                <p className="text-sm text-white mt-2">{comment.texto}</p>
               </div>
             ))}
           </div>
@@ -729,15 +730,15 @@ export const AlunoDashboardPage: React.FC = () => {
               const dietaWidth = (item.dieta / maxCheckinSemana) * 100
               return (
                 <div key={item.key}>
-                  <p className="text-xs text-gray-600 mb-1">Semana {item.key}</p>
+                  <p className="text-xs text-zinc-300 mb-1">Semana {item.key}</p>
                   <div className="space-y-1">
-                    <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+                    <div className="h-2 rounded-full bg-zinc-800 overflow-hidden">
                       <div className="h-full bg-blue-600 rounded-full" style={{ width: `${treinoWidth}%` }} />
                     </div>
-                    <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+                    <div className="h-2 rounded-full bg-zinc-800 overflow-hidden">
                       <div className="h-full bg-green-600 rounded-full" style={{ width: `${dietaWidth}%` }} />
                     </div>
-                    <p className="text-[11px] text-gray-500">
+                    <p className="text-[11px] text-zinc-400">
                       Treino: {item.treino} | Dieta: {item.dieta}
                     </p>
                   </div>
@@ -754,14 +755,14 @@ export const AlunoDashboardPage: React.FC = () => {
           </div>
 
           {seriePeso.length === 0 && (
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-zinc-400">
               Sem registros de evolução com peso para montar o gráfico.
             </p>
           )}
 
           {seriePeso.length > 0 && (
             <div className="space-y-3">
-              <div className="h-44 border-l border-b border-gray-200 px-2 flex items-end gap-2">
+              <div className="h-44 border-l border-b border-zinc-700 px-2 flex items-end gap-2">
                 {seriePeso.map((item) => {
                   const peso = item.pesoKg as number
                   const heightPercent =
@@ -773,14 +774,14 @@ export const AlunoDashboardPage: React.FC = () => {
                         style={{ height: `${heightPercent}%` }}
                         title={`${peso} kg`}
                       />
-                      <span className="text-[10px] text-gray-500">
+                      <span className="text-[10px] text-zinc-400">
                         {format(new Date(item.dataRegistro), "dd/MM")}
                       </span>
                     </div>
                   )
                 })}
               </div>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-zinc-300">
                 Atual: <strong>{seriePeso[seriePeso.length - 1].pesoKg} kg</strong> | Inicial:{" "}
                 <strong>{seriePeso[0].pesoKg} kg</strong>
               </p>
@@ -796,31 +797,31 @@ export const AlunoDashboardPage: React.FC = () => {
         </div>
 
         {(loadingTreinoTimeline || loadingTreinoCheckins || loadingDietaCheckins) && (
-          <div className="flex items-center gap-2 text-gray-600 mb-3">
+          <div className="flex items-center gap-2 text-zinc-300 mb-3">
             <Loader2 className="h-4 w-4 animate-spin" />
             Atualizando feed...
           </div>
         )}
 
         {feed.length === 0 && (
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-zinc-400">
             Sem atividades ainda. Comece o treino ou dieta para alimentar sua timeline.
           </p>
         )}
 
         <div className="space-y-3">
           {feed.map((event) => (
-            <div key={event.id} className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+            <div key={event.id} className="border border-zinc-700 rounded-lg p-3 bg-zinc-900">
               <div className="flex flex-wrap items-center gap-2 mb-1">
                 <Badge variant={event.variant}>{event.titulo}</Badge>
                 <Badge>{event.origem}</Badge>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-zinc-400">
                   {format(new Date(event.dataHora), "dd/MM/yyyy HH:mm", {
                     locale: ptBR,
                   })}
                 </span>
               </div>
-              <p className="text-sm text-gray-800">{event.descricao}</p>
+              <p className="text-sm text-zinc-200">{event.descricao}</p>
             </div>
           ))}
         </div>

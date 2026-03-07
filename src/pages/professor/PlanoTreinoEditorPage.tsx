@@ -560,8 +560,8 @@ export const PlanoTreinoEditorPage: React.FC = () => {
 
   if (!alunoId) {
     return (
-      <Card className="bg-red-50 border-2 border-red-200">
-        <p className="text-red-700">Aluno inválido para montar plano de treino.</p>
+      <Card className="bg-red-950/40 border-2 border-red-500/30">
+        <p className="text-red-300">Aluno inválido para montar plano de treino.</p>
       </Card>
     )
   }
@@ -570,23 +570,23 @@ export const PlanoTreinoEditorPage: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
         <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
-        <p className="text-gray-600">Carregando editor de treino...</p>
+        <p className="text-zinc-300">Carregando editor de treino...</p>
       </div>
     )
   }
 
   if (erroPlanoAtivo && !erroPlanoNaoEncontrado) {
     return (
-      <Card className="bg-red-50 border-2 border-red-200">
-        <p className="text-red-700">{erroPlanoAtivo.message}</p>
+      <Card className="bg-red-950/40 border-2 border-red-500/30">
+        <p className="text-red-300">{erroPlanoAtivo.message}</p>
       </Card>
     )
   }
 
   if (!aluno) {
     return (
-      <Card className="bg-red-50 border-2 border-red-200">
-        <p className="text-red-700">Aluno não encontrado.</p>
+      <Card className="bg-red-950/40 border-2 border-red-500/30">
+        <p className="text-red-300">Aluno não encontrado.</p>
       </Card>
     )
   }
@@ -597,16 +597,16 @@ export const PlanoTreinoEditorPage: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(getBackRoute(isAdmin))}
-            className="p-2 hover:bg-white rounded-lg transition-colors"
+            className="p-2 hover:bg-zinc-900 rounded-lg transition-colors"
             title="Voltar"
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white">
               Editor de Treino
             </h1>
-            <p className="text-gray-600 text-sm sm:text-base">
+            <p className="text-zinc-300 text-sm sm:text-base">
               {aluno.user?.nome || "Aluno"} • monte dias, exercícios, métodos e
               observações
             </p>
@@ -655,8 +655,8 @@ export const PlanoTreinoEditorPage: React.FC = () => {
               key={day.localId}
               className={`border rounded-lg p-4 transition-colors ${
                 selectedDayId === day.localId
-                  ? "border-blue-400 bg-blue-50/40"
-                  : "border-gray-200 bg-white"
+                  ? "border-blue-400 bg-blue-950/30"
+                  : "border-zinc-700 bg-zinc-900"
               }`}
             >
               <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
@@ -670,7 +670,7 @@ export const PlanoTreinoEditorPage: React.FC = () => {
                     placeholder="Treino A - Inferiores"
                   />
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-zinc-200 mb-1">
                       Dia da semana
                     </label>
                     <select
@@ -682,7 +682,7 @@ export const PlanoTreinoEditorPage: React.FC = () => {
                             : undefined,
                         })
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 bg-zinc-900 text-white border border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-300 focus:border-transparent"
                     >
                       <option value="">Sem dia fixo</option>
                       {diasSemanaOptions.map((option) => (
@@ -736,7 +736,7 @@ export const PlanoTreinoEditorPage: React.FC = () => {
               </div>
 
               <div className="space-y-3">
-                <p className="text-sm font-medium text-gray-700">
+                <p className="text-sm font-medium text-zinc-200">
                   Exercícios ({day.exercicios.length}) • arraste e solte para
                   reorganizar
                 </p>
@@ -753,10 +753,10 @@ export const PlanoTreinoEditorPage: React.FC = () => {
                     }
                     onDragOver={(event) => event.preventDefault()}
                     onDrop={() => handleDropExercise(day.localId, index)}
-                    className="rounded-lg border border-gray-200 bg-gray-50 p-3"
+                    className="rounded-lg border border-zinc-700 bg-zinc-900 p-3"
                   >
                     <div className="flex flex-col lg:flex-row lg:items-start gap-3">
-                      <div className="flex items-center gap-2 text-gray-400 mt-1">
+                      <div className="flex items-center gap-2 text-zinc-500 mt-1">
                         <GripVertical className="h-4 w-4" />
                         <span className="text-xs font-semibold">
                           {item.ordem}
@@ -765,14 +765,14 @@ export const PlanoTreinoEditorPage: React.FC = () => {
 
                       <div className="flex-1 min-w-0">
                         <div className="flex flex-wrap items-center gap-2 mb-2">
-                          <h4 className="font-semibold text-gray-900">
+                          <h4 className="font-semibold text-white">
                             {item.exercicio.nome}
                           </h4>
                           <Badge>{grupamentoLabels[item.exercicio.grupamentoMuscular]}</Badge>
                           <Badge variant="warning">{formatDiaSemana(day.diaSemana)}</Badge>
                         </div>
                         {item.exercicio.descricao && (
-                          <p className="text-xs text-gray-600 mb-3">
+                          <p className="text-xs text-zinc-300 mb-3">
                             {item.exercicio.descricao}
                           </p>
                         )}
@@ -855,7 +855,7 @@ export const PlanoTreinoEditorPage: React.FC = () => {
                 <div
                   onDragOver={(event) => event.preventDefault()}
                   onDrop={() => handleDropExercise(day.localId, day.exercicios.length)}
-                  className="border border-dashed border-gray-300 rounded-lg p-3 text-xs text-gray-500 text-center"
+                  className="border border-dashed border-zinc-700 rounded-lg p-3 text-xs text-zinc-400 text-center"
                 >
                   Solte aqui para mover o exercício para o final deste dia
                 </div>
@@ -868,8 +868,8 @@ export const PlanoTreinoEditorPage: React.FC = () => {
       <Card>
         <h2 className="text-lg font-semibold mb-4">Banco de Exercícios</h2>
 
-        <div className="mb-4 p-3 rounded-lg bg-blue-50 border border-blue-200">
-          <p className="text-sm text-blue-900">
+        <div className="mb-4 p-3 rounded-lg bg-blue-950/40 border border-blue-500/30">
+          <p className="text-sm text-white">
             Dia ativo para adicionar exercícios:{" "}
             <strong>{selectedDay?.titulo || "nenhum"}</strong>
           </p>
@@ -877,7 +877,7 @@ export const PlanoTreinoEditorPage: React.FC = () => {
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           <div>
-            <h3 className="font-semibold text-gray-900 mb-3">
+            <h3 className="font-semibold text-white mb-3">
               Exercícios já cadastrados
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -888,7 +888,7 @@ export const PlanoTreinoEditorPage: React.FC = () => {
                 onChange={(event) => setFiltroExercicio(event.target.value)}
               />
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-zinc-200 mb-1">
                   Grupamento
                 </label>
                 <select
@@ -898,7 +898,7 @@ export const PlanoTreinoEditorPage: React.FC = () => {
                       event.target.value as GrupamentoMuscular | "",
                     )
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-zinc-900 text-white border border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-300 focus:border-transparent"
                 >
                   <option value="">Todos</option>
                   {(grupamentos || []).map((grupamento) => (
@@ -910,9 +910,9 @@ export const PlanoTreinoEditorPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="mt-3 max-h-80 overflow-auto border border-gray-200 rounded-lg">
+            <div className="mt-3 max-h-80 overflow-auto border border-zinc-700 rounded-lg">
               {loadingExercicios ? (
-                <div className="p-4 flex items-center gap-2 text-gray-600">
+                <div className="p-4 flex items-center gap-2 text-zinc-300">
                   <Loader2 className="h-4 w-4 animate-spin" />
                   Carregando exercícios...
                 </div>
@@ -923,8 +923,8 @@ export const PlanoTreinoEditorPage: React.FC = () => {
                     className="p-3 border-b last:border-b-0 flex items-start justify-between gap-3"
                   >
                     <div>
-                      <p className="font-medium text-gray-900">{exercise.nome}</p>
-                      <p className="text-xs text-gray-600 mt-1">
+                      <p className="font-medium text-white">{exercise.nome}</p>
+                      <p className="text-xs text-zinc-300 mt-1">
                         {grupamentoLabels[exercise.grupamentoMuscular]}
                       </p>
                     </div>
@@ -940,14 +940,14 @@ export const PlanoTreinoEditorPage: React.FC = () => {
               )}
 
               {!loadingExercicios && exercicios?.length === 0 && (
-                <div className="p-4 text-sm text-gray-500">
+                <div className="p-4 text-sm text-zinc-400">
                   Nenhum exercício encontrado com os filtros atuais.
                 </div>
               )}
             </div>
 
             <div className="mt-4 border rounded-lg p-4">
-              <h4 className="font-semibold text-gray-900 mb-3">
+              <h4 className="font-semibold text-white mb-3">
                 Criar exercício personalizado
               </h4>
               <Input
@@ -962,7 +962,7 @@ export const PlanoTreinoEditorPage: React.FC = () => {
                 placeholder="Ex: Agachamento com pausa"
               />
               <div className="mb-3">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-zinc-200 mb-1">
                   Grupamento muscular
                 </label>
                 <select
@@ -973,7 +973,7 @@ export const PlanoTreinoEditorPage: React.FC = () => {
                       grupamentoMuscular: event.target.value as GrupamentoMuscular,
                     }))
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-zinc-900 text-white border border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-300 focus:border-transparent"
                 >
                   {(grupamentos || []).map((grupamento) => (
                     <option key={grupamento} value={grupamento}>
@@ -1005,7 +1005,7 @@ export const PlanoTreinoEditorPage: React.FC = () => {
           </div>
 
           <div>
-            <h3 className="font-semibold text-gray-900 mb-3">
+            <h3 className="font-semibold text-white mb-3">
               Buscar exercícios externos
             </h3>
             <Input
@@ -1015,15 +1015,15 @@ export const PlanoTreinoEditorPage: React.FC = () => {
               onChange={(event) => setBuscaExterna(event.target.value)}
             />
 
-            <div className="mt-3 max-h-80 overflow-auto border border-gray-200 rounded-lg">
+            <div className="mt-3 max-h-80 overflow-auto border border-zinc-700 rounded-lg">
               {buscaExterna.trim().length < 2 && (
-                <div className="p-4 text-sm text-gray-500">
+                <div className="p-4 text-sm text-zinc-400">
                   Digite um termo para buscar na base externa.
                 </div>
               )}
 
               {loadingExerciciosExternos && (
-                <div className="p-4 flex items-center gap-2 text-gray-600">
+                <div className="p-4 flex items-center gap-2 text-zinc-300">
                   <Loader2 className="h-4 w-4 animate-spin" />
                   Buscando exercícios...
                 </div>
@@ -1037,8 +1037,8 @@ export const PlanoTreinoEditorPage: React.FC = () => {
                     className="p-3 border-b last:border-b-0 flex items-start justify-between gap-3"
                   >
                     <div>
-                      <p className="font-medium text-gray-900">{exercise.nome}</p>
-                      <p className="text-xs text-gray-600 mt-1">
+                      <p className="font-medium text-white">{exercise.nome}</p>
+                      <p className="text-xs text-zinc-300 mt-1">
                         {grupamentoLabels[exercise.grupamentoMuscular]} • fonte{" "}
                         {exercise.externalSource}
                       </p>
@@ -1057,7 +1057,7 @@ export const PlanoTreinoEditorPage: React.FC = () => {
               {buscaExterna.trim().length >= 2 &&
                 !loadingExerciciosExternos &&
                 exerciciosExternos?.length === 0 && (
-                  <div className="p-4 text-sm text-gray-500">
+                  <div className="p-4 text-sm text-zinc-400">
                     Nenhum exercício externo encontrado.
                   </div>
                 )}
@@ -1068,21 +1068,21 @@ export const PlanoTreinoEditorPage: React.FC = () => {
 
       <Card>
         <div className="flex items-center gap-2 mb-4">
-          <ClipboardList className="h-5 w-5 text-gray-700" />
+          <ClipboardList className="h-5 w-5 text-zinc-200" />
           <h2 className="text-lg font-semibold">
             Check-ins recentes e comentários do professor
           </h2>
         </div>
 
         {loadingCheckins && (
-          <div className="flex items-center gap-2 text-gray-600">
+          <div className="flex items-center gap-2 text-zinc-300">
             <Loader2 className="h-4 w-4 animate-spin" />
             Carregando check-ins...
           </div>
         )}
 
         {!loadingCheckins && checkinsOrdenados.length === 0 && (
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-zinc-400">
             Ainda não há check-ins para este aluno.
           </p>
         )}
@@ -1093,19 +1093,19 @@ export const PlanoTreinoEditorPage: React.FC = () => {
             return (
               <div
                 key={checkin.id}
-                className="border border-gray-200 rounded-lg p-4 bg-gray-50"
+                className="border border-zinc-700 rounded-lg p-4 bg-zinc-900"
               >
                 <div className="flex flex-wrap items-center gap-2 mb-2">
                   <Badge variant={status.variant}>{status.text}</Badge>
                   <Badge>{checkin.treinoDia.titulo}</Badge>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-zinc-400">
                     {format(new Date(checkin.iniciadoEm), "dd/MM/yyyy HH:mm", {
                       locale: ptBR,
                     })}
                   </span>
                 </div>
 
-                <p className="text-sm text-gray-700">
+                <p className="text-sm text-zinc-200">
                   Concluídos:{" "}
                   {
                     checkin.exercicios.filter((exercise) => exercise.concluido)
@@ -1115,7 +1115,7 @@ export const PlanoTreinoEditorPage: React.FC = () => {
                 </p>
 
                 {checkin.comentarioAluno && (
-                  <p className="text-sm text-gray-700 mt-2">
+                  <p className="text-sm text-zinc-200 mt-2">
                     <strong>Comentário do aluno:</strong> {checkin.comentarioAluno}
                   </p>
                 )}

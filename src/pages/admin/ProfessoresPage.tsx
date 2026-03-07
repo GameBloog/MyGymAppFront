@@ -47,21 +47,21 @@ export const ProfessoresPage: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
         <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
-        <p className="text-gray-600">Carregando professores...</p>
+        <p className="text-zinc-200">Carregando professores...</p>
       </div>
     )
   }
 
   if (error) {
     return (
-      <Card className="bg-red-50 border-2 border-red-200">
+      <Card className="bg-red-950/40 border-2 border-red-500/30">
         <div className="flex items-start gap-3">
-          <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-1" />
+          <AlertCircle className="h-6 w-6 text-red-300 flex-shrink-0 mt-1" />
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-red-900 mb-2">
+            <h3 className="text-lg font-semibold text-white mb-2">
               Erro ao carregar professores
             </h3>
-            <p className="text-red-800 mb-4">{error.message}</p>
+            <p className="text-zinc-100 mb-4">{error.message}</p>
             <div className="flex gap-3">
               <Button onClick={() => refetch()} variant="secondary">
                 Tentar Novamente
@@ -82,14 +82,14 @@ export const ProfessoresPage: React.FC = () => {
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate("/admin/dashboard")}
-            className="p-2 hover:bg-white rounded-lg transition-colors"
+            className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
             title="Voltar"
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Professores</h1>
-            <p className="text-gray-600 mt-1">
+            <h1 className="text-3xl font-bold text-white">Professores</h1>
+            <p className="text-zinc-200 mt-1">
               {professores?.length || 0}{" "}
               {professores?.length === 1 ? "professor" : "professores"}{" "}
               cadastrado(s)
@@ -116,11 +116,11 @@ export const ProfessoresPage: React.FC = () => {
                       <UserCheck className="h-5 w-5 text-blue-600" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900">
+                      <h3 className="text-lg font-semibold text-white">
                         {professor.user?.nome ||
                           `Professor #${professor.id.slice(0, 8)}`}
                       </h3>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-zinc-300">
                         Cadastrado em{" "}
                         {format(
                           new Date(professor.createdAt),
@@ -136,10 +136,10 @@ export const ProfessoresPage: React.FC = () => {
                       onClick={() =>
                         navigate(`/admin/professores/${professor.id}/edit`)
                       }
-                      className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                      className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
                       title="Editar"
                     >
-                      <Edit className="h-4 w-4 text-gray-600" />
+                      <Edit className="h-4 w-4 text-zinc-200" />
                     </button>
                     <button
                       onClick={() =>
@@ -149,35 +149,35 @@ export const ProfessoresPage: React.FC = () => {
                         )
                       }
                       disabled={deleteProfessor.isLoading}
-                      className="p-2 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                      className="p-2 hover:bg-red-950/30 rounded-lg transition-colors disabled:opacity-50"
                       title="Excluir"
                     >
-                      <Trash2 className="h-4 w-4 text-red-600" />
+                      <Trash2 className="h-4 w-4 text-red-300" />
                     </button>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {professor.user?.email && (
-                    <div className="flex items-center gap-2 text-gray-600">
+                    <div className="flex items-center gap-2 text-zinc-200">
                       <Mail className="h-4 w-4 flex-shrink-0" />
                       <span className="text-sm">{professor.user.email}</span>
                     </div>
                   )}
                   {professor.telefone && (
-                    <div className="flex items-center gap-2 text-gray-600">
+                    <div className="flex items-center gap-2 text-zinc-200">
                       <Phone className="h-4 w-4 flex-shrink-0" />
                       <span className="text-sm">{professor.telefone}</span>
                     </div>
                   )}
                   {professor.especialidade && (
-                    <div className="flex items-center gap-2 text-gray-600">
+                    <div className="flex items-center gap-2 text-zinc-200">
                       <Briefcase className="h-4 w-4 flex-shrink-0" />
                       <span className="text-sm">{professor.especialidade}</span>
                     </div>
                   )}
                   {professor.totalAlunos !== undefined && (
-                    <div className="flex items-center gap-2 text-gray-600">
+                    <div className="flex items-center gap-2 text-zinc-200">
                       <Users className="h-4 w-4 flex-shrink-0" />
                       <span className="text-sm">
                         {professor.totalAlunos}{" "}
@@ -208,11 +208,11 @@ export const ProfessoresPage: React.FC = () => {
           ))
         ) : (
           <Card className="text-center py-12">
-            <UserCheck className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <UserCheck className="h-12 w-12 text-zinc-500 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-white mb-2">
               Nenhum professor cadastrado
             </h3>
-            <p className="text-gray-500 mb-6">
+            <p className="text-zinc-300 mb-6">
               Cadastre o primeiro professor para começar
             </p>
             <Button

@@ -114,21 +114,21 @@ export const AnswersList: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
         <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
-        <p className="text-gray-600">Carregando alunos...</p>
+        <p className="text-zinc-300">Carregando alunos...</p>
       </div>
     )
   }
 
   if (error) {
     return (
-      <Card className="bg-red-50 border-2 border-red-200">
+      <Card className="bg-red-950/40 border-2 border-red-500/30">
         <div className="flex items-start gap-3">
-          <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-1" />
+          <AlertCircle className="h-6 w-6 text-red-300 flex-shrink-0 mt-1" />
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-red-900 mb-2">
+            <h3 className="text-lg font-semibold text-white mb-2">
               Erro ao carregar alunos
             </h3>
-            <p className="text-red-800 mb-4">{error.message}</p>
+            <p className="text-zinc-100 mb-4">{error.message}</p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Button onClick={() => refetch()} variant="secondary">
                 Tentar Novamente
@@ -149,10 +149,10 @@ export const AnswersList: React.FC = () => {
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-white">
             {user?.role === "ALUNO" ? "Meu Perfil" : "Alunos"}
           </h1>
-          <p className="text-gray-600 mt-1">
+          <p className="text-zinc-300 mt-1">
             {alunos?.length || 0} {alunos?.length === 1 ? "aluno" : "alunos"}{" "}
             cadastrado(s)
           </p>
@@ -182,14 +182,14 @@ export const AnswersList: React.FC = () => {
             <div className="flex flex-col gap-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <div className="bg-blue-100 p-2 rounded-full flex-shrink-0">
-                    <User className="h-5 w-5 text-blue-600" />
+                  <div className="bg-blue-500/15 p-2 rounded-full flex-shrink-0">
+                    <User className="h-5 w-5 text-blue-300" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-lg font-semibold text-gray-900 truncate">
+                    <h3 className="text-lg font-semibold text-white truncate">
                       {aluno.user?.nome || `Aluno #${aluno.id.slice(0, 8)}`}
                     </h3>
-                    <p className="text-sm text-gray-500 truncate">
+                    <p className="text-sm text-zinc-400 truncate">
                       {format(
                         new Date(aluno.createdAt),
                         "dd/MM/yyyy 'às' HH:mm",
@@ -203,42 +203,42 @@ export const AnswersList: React.FC = () => {
                   {canViewEvolucao && (
                     <button
                       onClick={() => navigate(getEvolucaoRoute(aluno.id))}
-                      className="p-2 hover:bg-green-50 rounded-lg transition-colors"
+                      className="p-2 hover:bg-emerald-950/30 rounded-lg transition-colors"
                       title="Ver Evolução"
                     >
-                      <TrendingUp className="h-4 w-4 text-green-600" />
+                      <TrendingUp className="h-4 w-4 text-emerald-300" />
                     </button>
                   )}
 
                   <button
                     onClick={() => navigate(getFotosRoute(aluno.id))}
-                    className="p-2 hover:bg-purple-50 rounded-lg transition-colors"
+                    className="p-2 hover:bg-purple-950/30 rounded-lg transition-colors"
                     title="Ver Fotos e Arquivos"
                   >
-                    <Camera className="h-4 w-4 text-purple-600" />
+                    <Camera className="h-4 w-4 text-purple-300" />
                   </button>
 
                   <button
                     onClick={() => navigate(getEditRoute(aluno.id))}
-                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                    className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
                     title="Editar"
                   >
-                    <Edit className="h-4 w-4 text-gray-600" />
+                    <Edit className="h-4 w-4 text-zinc-300" />
                   </button>
 
                   <button
                     onClick={() => navigate(getTreinoRoute(aluno.id))}
-                    className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                    className="p-2 hover:bg-blue-950/30 rounded-lg transition-colors"
                     title="Treino"
                   >
-                    <Dumbbell className="h-4 w-4 text-blue-700" />
+                    <Dumbbell className="h-4 w-4 text-blue-300" />
                   </button>
                   <button
                     onClick={() => navigate(getDietaRoute(aluno.id))}
-                    className="p-2 hover:bg-orange-50 rounded-lg transition-colors"
+                    className="p-2 hover:bg-orange-950/30 rounded-lg transition-colors"
                     title="Dieta"
                   >
-                    <UtensilsCrossed className="h-4 w-4 text-orange-700" />
+                    <UtensilsCrossed className="h-4 w-4 text-orange-300" />
                   </button>
 
                   {canDelete && (
@@ -247,10 +247,10 @@ export const AnswersList: React.FC = () => {
                         handleDelete(aluno.id, aluno.user?.nome || "este aluno")
                       }
                       disabled={deleteAluno.isLoading}
-                      className="p-2 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                      className="p-2 hover:bg-red-950/30 rounded-lg transition-colors disabled:opacity-50"
                       title="Excluir"
                     >
-                      <Trash2 className="h-4 w-4 text-red-600" />
+                      <Trash2 className="h-4 w-4 text-red-300" />
                     </button>
                   )}
                 </div>
@@ -258,26 +258,26 @@ export const AnswersList: React.FC = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {aluno.user?.email && (
-                  <div className="flex items-center gap-2 text-gray-600 min-w-0">
+                  <div className="flex items-center gap-2 text-zinc-300 min-w-0">
                     <Mail className="h-4 w-4 flex-shrink-0" />
                     <span className="text-sm truncate">{aluno.user.email}</span>
                   </div>
                 )}
                 {aluno.telefone && (
-                  <div className="flex items-center gap-2 text-gray-600">
+                  <div className="flex items-center gap-2 text-zinc-300">
                     <Phone className="h-4 w-4 flex-shrink-0" />
                     <span className="text-sm">{aluno.telefone}</span>
                   </div>
                 )}
                 {aluno.idade && (
-                  <div className="flex items-center gap-2 text-gray-600">
+                  <div className="flex items-center gap-2 text-zinc-300">
                     <Calendar className="h-4 w-4 flex-shrink-0" />
                     <span className="text-sm">{aluno.idade} anos</span>
                   </div>
                 )}
                 {aluno.dias_treino_semana !== null &&
                   aluno.dias_treino_semana !== undefined && (
-                    <div className="flex items-center gap-2 text-gray-600">
+                    <div className="flex items-center gap-2 text-zinc-300">
                       <Activity className="h-4 w-4 flex-shrink-0" />
                       <span className="text-sm">
                         {aluno.dias_treino_semana}x por semana
@@ -302,7 +302,7 @@ export const AnswersList: React.FC = () => {
                 )}
               </div>
 
-              <div className="border-t pt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="border-t border-zinc-800 pt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <Button
                   variant="secondary"
                   icon={TrendingUp}
@@ -338,14 +338,14 @@ export const AnswersList: React.FC = () => {
                 aluno.objetivos_atuais ||
                 (aluno.toma_remedio !== null &&
                   aluno.toma_remedio !== undefined)) && (
-                <div className="border-t pt-4 space-y-2 text-sm">
+                <div className="border-t border-zinc-800 pt-4 space-y-2 text-sm">
                   {aluno.alimentos_quer_diario &&
                     aluno.alimentos_quer_diario.length > 0 && (
                       <div>
-                        <span className="font-medium text-gray-700">
+                        <span className="font-medium text-zinc-200">
                           Alimentos diários:{" "}
                         </span>
-                        <span className="text-gray-600">
+                        <span className="text-zinc-300">
                           {aluno.alimentos_quer_diario.join(", ")}
                         </span>
                       </div>
@@ -353,10 +353,10 @@ export const AnswersList: React.FC = () => {
                   {aluno.alimentos_nao_comem &&
                     aluno.alimentos_nao_comem.length > 0 && (
                       <div>
-                        <span className="font-medium text-gray-700">
+                        <span className="font-medium text-zinc-200">
                           Não come:{" "}
                         </span>
-                        <span className="text-gray-600">
+                        <span className="text-zinc-300">
                           {aluno.alimentos_nao_comem.join(", ")}
                         </span>
                       </div>
@@ -364,10 +364,10 @@ export const AnswersList: React.FC = () => {
                   {aluno.alergias_alimentares &&
                     aluno.alergias_alimentares.length > 0 && (
                       <div>
-                        <span className="font-medium text-gray-700">
+                        <span className="font-medium text-zinc-200">
                           Alergias:{" "}
                         </span>
-                        <span className="text-red-600 font-medium">
+                        <span className="text-red-300 font-medium">
                           {aluno.alergias_alimentares.join(", ")}
                         </span>
                       </div>
@@ -375,40 +375,40 @@ export const AnswersList: React.FC = () => {
                   {aluno.suplementos_consumidos &&
                     aluno.suplementos_consumidos.length > 0 && (
                       <div>
-                        <span className="font-medium text-gray-700">
+                        <span className="font-medium text-zinc-200">
                           Suplementos:{" "}
                         </span>
-                        <span className="text-gray-600">
+                        <span className="text-zinc-300">
                           {aluno.suplementos_consumidos.join(", ")}
                         </span>
                       </div>
                     )}
                   {aluno.dores_articulares && (
                     <div>
-                      <span className="font-medium text-gray-700">
+                      <span className="font-medium text-zinc-200">
                         Dores articulares:{" "}
                       </span>
-                      <span className="text-gray-600">
+                      <span className="text-zinc-300">
                         {aluno.dores_articulares}
                       </span>
                     </div>
                   )}
                   {aluno.frequencia_horarios_refeicoes && (
                     <div>
-                      <span className="font-medium text-gray-700">
+                      <span className="font-medium text-zinc-200">
                         Refeições:{" "}
                       </span>
-                      <span className="text-gray-600">
+                      <span className="text-zinc-300">
                         {aluno.frequencia_horarios_refeicoes}
                       </span>
                     </div>
                   )}
                   {aluno.objetivos_atuais && (
                     <div>
-                      <span className="font-medium text-gray-700">
+                      <span className="font-medium text-zinc-200">
                         Objetivos atuais:{" "}
                       </span>
-                      <span className="text-gray-600">
+                      <span className="text-zinc-300">
                         {aluno.objetivos_atuais}
                       </span>
                     </div>
@@ -416,20 +416,20 @@ export const AnswersList: React.FC = () => {
                   {aluno.toma_remedio !== null &&
                     aluno.toma_remedio !== undefined && (
                       <div>
-                        <span className="font-medium text-gray-700">
+                        <span className="font-medium text-zinc-200">
                           Toma remédio:{" "}
                         </span>
-                        <span className="text-gray-600">
+                        <span className="text-zinc-300">
                           {aluno.toma_remedio ? "Sim" : "Não"}
                         </span>
                       </div>
                     )}
                   {aluno.remedios_uso && (
                     <div>
-                      <span className="font-medium text-gray-700">
+                      <span className="font-medium text-zinc-200">
                         Quais remédios:{" "}
                       </span>
-                      <span className="text-gray-600">{aluno.remedios_uso}</span>
+                      <span className="text-zinc-300">{aluno.remedios_uso}</span>
                     </div>
                   )}
                 </div>
@@ -441,11 +441,11 @@ export const AnswersList: React.FC = () => {
 
       {filteredAlunos.length === 0 && (
         <Card className="text-center py-12">
-          <User className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <User className="h-12 w-12 text-zinc-500 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-white mb-2">
             {searchTerm ? "Nenhum aluno encontrado" : "Nenhum aluno cadastrado"}
           </h3>
-          <p className="text-gray-500 mb-6">
+          <p className="text-zinc-400 mb-6">
             {searchTerm
               ? "Tente ajustar sua busca"
               : "Cadastre o primeiro aluno para começar"}

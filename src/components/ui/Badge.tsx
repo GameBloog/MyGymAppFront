@@ -13,10 +13,10 @@ export const Badge: React.FC<BadgeProps> = ({
   variant = "default",
 }) => {
   const variants: Record<BadgeVariant, string> = {
-    default: "bg-blue-100 text-blue-800",
-    success: "bg-green-100 text-green-800",
-    warning: "bg-yellow-100 text-yellow-800",
-    danger: "bg-red-100 text-red-800",
+    default: "bg-blue-950/50 text-white border border-blue-500/30",
+    success: "bg-emerald-950/50 text-white border border-emerald-500/30",
+    warning: "bg-amber-950/50 text-white border border-amber-500/30",
+    danger: "bg-red-950/50 text-white border border-red-500/30",
   }
 
   return (

@@ -13,17 +13,17 @@ export const CustomToast: React.FC<CustomToastProps> = ({
   title,
 }) => {
   const icons = {
-    success: <CheckCircle className="h-5 w-5 text-green-500" />,
-    error: <XCircle className="h-5 w-5 text-red-500" />,
-    warning: <AlertCircle className="h-5 w-5 text-yellow-500" />,
-    info: <Info className="h-5 w-5 text-blue-500" />,
+    success: <CheckCircle className="h-5 w-5 text-emerald-300" />,
+    error: <XCircle className="h-5 w-5 text-red-300" />,
+    warning: <AlertCircle className="h-5 w-5 text-amber-300" />,
+    info: <Info className="h-5 w-5 text-blue-300" />,
   }
 
   const colors = {
-    success: "bg-green-50 border-green-200",
-    error: "bg-red-50 border-red-200",
-    warning: "bg-yellow-50 border-yellow-200",
-    info: "bg-blue-50 border-blue-200",
+    success: "bg-emerald-950/50 border-emerald-500/30",
+    error: "bg-red-950/50 border-red-500/30",
+    warning: "bg-amber-950/50 border-amber-500/30",
+    info: "bg-blue-950/50 border-blue-500/30",
   }
 
   return (
@@ -32,8 +32,8 @@ export const CustomToast: React.FC<CustomToastProps> = ({
     >
       <div className="flex-shrink-0 mt-0.5">{icons[type]}</div>
       <div className="flex-1">
-        {title && <p className="font-semibold text-gray-900 mb-1">{title}</p>}
-        <p className="text-sm text-gray-700">{message}</p>
+        {title && <p className="font-semibold text-white mb-1">{title}</p>}
+        <p className="text-sm text-zinc-200">{message}</p>
       </div>
     </div>
   )

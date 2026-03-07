@@ -144,7 +144,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
 
       <footer className="bg-zinc-950 border-t border-zinc-800 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <p className="text-center text-sm text-gray-400">
+          <p className="text-center text-sm text-zinc-400">
             © 2026 G-Force Coach. Todos os direitos reservados.
           </p>
         </div>

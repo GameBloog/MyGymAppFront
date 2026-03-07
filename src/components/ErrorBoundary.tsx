@@ -113,20 +113,20 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-black flex items-center justify-center p-4">
       <Card className="max-w-md w-full">
         <div className="text-center">
           <div className="text-6xl mb-4">{errorInfo.icon}</div>
 
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl font-bold text-white mb-2">
             {errorInfo.title}
           </h1>
 
-          <p className="text-gray-600 mb-6">{errorInfo.message}</p>
+          <p className="text-zinc-300 mb-6">{errorInfo.message}</p>
 
           {error?.code && (
-            <div className="mb-6 p-3 bg-gray-100 rounded-lg">
-              <p className="text-xs text-gray-500 font-mono">
+            <div className="mb-6 p-3 bg-zinc-900 border border-zinc-700 rounded-lg">
+              <p className="text-xs text-zinc-400 font-mono">
                 Código: {error.code}
                 {error.status && ` | Status: ${error.status}`}
               </p>

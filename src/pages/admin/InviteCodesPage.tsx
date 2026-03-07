@@ -84,7 +84,7 @@ export const InviteCodesPage: React.FC = () => {
   console.log("🔧 Render InviteCodesPage:", { showModal, isLoading })
 
   if (isLoading) {
-    return <div className="text-center py-12">Carregando códigos...</div>
+    return <div className="text-center py-12 text-zinc-300">Carregando códigos...</div>
   }
 
   return (
@@ -93,15 +93,15 @@ export const InviteCodesPage: React.FC = () => {
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate("/admin/dashboard")}
-            className="p-2 hover:bg-white rounded-lg transition-colors"
+            className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-white">
               Códigos de Convite
             </h1>
-            <p className="text-gray-600 mt-1">
+            <p className="text-zinc-300 mt-1">
               {activeCodes?.length || 0} ativos • {usedCodes?.length || 0}{" "}
               usados
             </p>
@@ -114,39 +114,39 @@ export const InviteCodesPage: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <Card>
+        <Card className="bg-emerald-950/40 border-emerald-500/30">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Códigos Ativos</p>
-              <p className="text-3xl font-bold text-green-600">
+              <p className="text-sm text-zinc-100 mb-1">Códigos Ativos</p>
+              <p className="text-3xl font-bold text-emerald-200">
                 {activeCodes?.length || 0}
               </p>
             </div>
-            <Ticket className="h-8 w-8 text-green-600" />
+            <Ticket className="h-8 w-8 text-emerald-300" />
           </div>
         </Card>
 
-        <Card>
+        <Card className="bg-blue-950/40 border-blue-500/30">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Códigos Usados</p>
-              <p className="text-3xl font-bold text-blue-600">
+              <p className="text-sm text-zinc-100 mb-1">Códigos Usados</p>
+              <p className="text-3xl font-bold text-blue-200">
                 {usedCodes?.length || 0}
               </p>
             </div>
-            <Check className="h-8 w-8 text-blue-600" />
+            <Check className="h-8 w-8 text-blue-300" />
           </div>
         </Card>
 
-        <Card>
+        <Card className="bg-zinc-900 border-zinc-700">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Total de Códigos</p>
-              <p className="text-3xl font-bold text-gray-900">
+              <p className="text-sm text-zinc-100 mb-1">Total de Códigos</p>
+              <p className="text-3xl font-bold text-white">
                 {inviteCodes?.length || 0}
               </p>
             </div>
-            <Ticket className="h-8 w-8 text-gray-600" />
+            <Ticket className="h-8 w-8 text-zinc-300" />
           </div>
         </Card>
       </div>
@@ -159,7 +159,7 @@ export const InviteCodesPage: React.FC = () => {
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-3">
                     <Ticket className="h-5 w-5 text-blue-600" />
-                    <code className="text-lg font-mono font-bold text-gray-900">
+                    <code className="text-lg font-mono font-bold text-white">
                       {code.code}
                     </code>
                     {getStatusBadge(code)}
@@ -167,13 +167,13 @@ export const InviteCodesPage: React.FC = () => {
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                     <div>
-                      <p className="text-gray-600">Tipo</p>
-                      <p className="font-medium text-gray-900">{code.role}</p>
+                      <p className="text-zinc-300">Tipo</p>
+                      <p className="font-medium text-white">{code.role}</p>
                     </div>
 
                     <div>
-                      <p className="text-gray-600">Criado em</p>
-                      <p className="font-medium text-gray-900">
+                      <p className="text-zinc-300">Criado em</p>
+                      <p className="font-medium text-white">
                         {format(new Date(code.createdAt), "dd/MM/yyyy", {
                           locale: ptBR,
                         })}
@@ -182,8 +182,8 @@ export const InviteCodesPage: React.FC = () => {
 
                     {code.expiresAt && (
                       <div>
-                        <p className="text-gray-600">Expira em</p>
-                        <p className="font-medium text-gray-900">
+                        <p className="text-zinc-300">Expira em</p>
+                        <p className="font-medium text-white">
                           {format(new Date(code.expiresAt), "dd/MM/yyyy", {
                             locale: ptBR,
                           })}
@@ -193,8 +193,8 @@ export const InviteCodesPage: React.FC = () => {
 
                     {code.usedBy && code.usedAt && (
                       <div>
-                        <p className="text-gray-600">Usado em</p>
-                        <p className="font-medium text-gray-900">
+                        <p className="text-zinc-300">Usado em</p>
+                        <p className="font-medium text-white">
                           {format(new Date(code.usedAt), "dd/MM/yyyy", {
                             locale: ptBR,
                           })}
@@ -209,7 +209,7 @@ export const InviteCodesPage: React.FC = () => {
                     variant="secondary"
                     icon={copiedCode === code.code ? Check : Copy}
                     onClick={() => handleCopyCode(code.code)}
-                    className={copiedCode === code.code ? "bg-green-100" : ""}
+                    className={copiedCode === code.code ? "!bg-emerald-950/40 !border-emerald-500/30 !text-emerald-200" : ""}
                   >
                     {copiedCode === code.code ? "Copiado!" : "Copiar"}
                   </Button>
@@ -219,11 +219,11 @@ export const InviteCodesPage: React.FC = () => {
           ))
         ) : (
           <Card className="text-center py-12">
-            <Ticket className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <Ticket className="h-12 w-12 text-zinc-500 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-white mb-2">
               Nenhum código gerado
             </h3>
-            <p className="text-gray-500 mb-6">
+            <p className="text-zinc-400 mb-6">
               Crie seu primeiro código de convite
             </p>
             <Button icon={Plus} onClick={handleOpenModal}>
@@ -235,26 +235,26 @@ export const InviteCodesPage: React.FC = () => {
 
       {showModal && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+          className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50"
           onClick={handleCloseModal}
         >
           <div
-            className="bg-white rounded-lg shadow-xl w-full max-w-md p-6"
+            className="bg-zinc-900 border border-zinc-700 rounded-lg shadow-xl w-full max-w-md p-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-2xl font-bold mb-6">Gerar Código de Convite</h2>
+            <h2 className="text-2xl font-bold text-white mb-6">Gerar Código de Convite</h2>
 
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
+                <label className="block text-sm font-medium text-zinc-200 mb-3">
                   Tipo de Usuário
                 </label>
                 <div className="space-y-2">
                   <label
-                    className="flex items-center p-3 border-2 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors"
+                    className="flex items-center p-3 border-2 rounded-lg cursor-pointer hover:bg-blue-950/30 transition-colors"
                     style={{
                       borderColor:
-                        selectedRole === "PROFESSOR" ? "#3b82f6" : "#e5e7eb",
+                        selectedRole === "PROFESSOR" ? "#3b82f6" : "#3f3f46",
                     }}
                   >
                     <input
@@ -268,18 +268,18 @@ export const InviteCodesPage: React.FC = () => {
                       className="mr-3"
                     />
                     <div>
-                      <p className="font-medium text-gray-900">Professor</p>
-                      <p className="text-sm text-gray-600">
+                      <p className="font-medium text-white">Professor</p>
+                      <p className="text-sm text-zinc-300">
                         Para cadastro de professores
                       </p>
                     </div>
                   </label>
 
                   <label
-                    className="flex items-center p-3 border-2 rounded-lg cursor-pointer hover:bg-purple-50 transition-colors"
+                    className="flex items-center p-3 border-2 rounded-lg cursor-pointer hover:bg-purple-950/30 transition-colors"
                     style={{
                       borderColor:
-                        selectedRole === "ADMIN" ? "#a855f7" : "#e5e7eb",
+                        selectedRole === "ADMIN" ? "#a855f7" : "#3f3f46",
                     }}
                   >
                     <input
@@ -293,8 +293,8 @@ export const InviteCodesPage: React.FC = () => {
                       className="mr-3"
                     />
                     <div>
-                      <p className="font-medium text-gray-900">Administrador</p>
-                      <p className="text-sm text-gray-600">
+                      <p className="font-medium text-white">Administrador</p>
+                      <p className="text-sm text-zinc-300">
                         Para cadastro de admins
                       </p>
                     </div>
@@ -303,7 +303,7 @@ export const InviteCodesPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
+                <label className="block text-sm font-medium text-zinc-200 mb-3">
                   Validade do Código
                 </label>
 
@@ -314,23 +314,23 @@ export const InviteCodesPage: React.FC = () => {
                     onChange={(e) => setHasExpiration(e.target.checked)}
                     className="mr-2"
                   />
-                  <span className="text-sm text-gray-700">
+                  <span className="text-sm text-zinc-200">
                     Código com validade
                   </span>
                 </label>
 
                 {hasExpiration && (
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-600">Expira em</span>
+                    <span className="text-sm text-zinc-300">Expira em</span>
                     <input
                       type="number"
                       value={expiresInDays}
                       onChange={(e) => setExpiresInDays(Number(e.target.value))}
                       min="1"
                       max="365"
-                      className="w-20 px-3 py-2 border border-gray-300 rounded-lg"
+                      className="w-20 px-3 py-2 bg-zinc-900 text-white border border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-300 focus:border-transparent"
                     />
-                    <span className="text-sm text-gray-600">dias</span>
+                    <span className="text-sm text-zinc-300">dias</span>
                   </div>
                 )}
               </div>
