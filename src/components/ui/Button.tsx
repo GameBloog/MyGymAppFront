@@ -20,8 +20,8 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const variants: Record<ButtonVariant, string> = {
-    primary: "bg-blue-600 hover:bg-blue-700 text-white",
-    secondary: "bg-gray-200 hover:bg-gray-300 text-gray-800",
+    primary: "bg-white hover:bg-zinc-200 text-black",
+    secondary: "bg-zinc-800 hover:bg-zinc-700 text-white border border-zinc-700",
     danger: "bg-red-600 hover:bg-red-700 text-white",
   }
 

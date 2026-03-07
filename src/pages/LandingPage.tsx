@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import {
-  Activity,
   Check,
   X,
   Menu,
@@ -15,6 +14,7 @@ import {
 } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { leadLinksApi } from "../services/api"
+import { BrandMark } from "../components/BrandMark"
 import {
   normalizeLeadSlug,
   saveLeadSlug,
@@ -90,63 +90,56 @@ const LandingPage = () => {
   const handleLoginClick = () => navigate("/login")
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-black text-white">
       {/* Header/Nav */}
-      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
+      <nav className="fixed top-0 w-full bg-black/95 backdrop-blur-sm shadow-sm border-b border-zinc-800 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <div className="flex items-center gap-2">
-              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-2 rounded-lg">
-                <Activity className="h-6 w-6 text-white" />
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                G-FORCE
-              </span>
-            </div>
+            <BrandMark size="sm" textClassName="text-xl" />
 
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center gap-8">
               <button
                 onClick={() => scrollToSection("problema")}
-                className="text-gray-700 hover:text-blue-600 transition-colors"
+                className="text-gray-300 hover:text-white transition-colors"
               >
                 O Problema
               </button>
               <button
                 onClick={() => scrollToSection("solucao")}
-                className="text-gray-700 hover:text-blue-600 transition-colors"
+                className="text-gray-300 hover:text-white transition-colors"
               >
                 A Solução
               </button>
               <button
                 onClick={() => scrollToSection("diferenciais")}
-                className="text-gray-700 hover:text-blue-600 transition-colors"
+                className="text-gray-300 hover:text-white transition-colors"
               >
                 Diferenciais
               </button>
               <button
                 onClick={() => scrollToSection("depoimentos")}
-                className="text-gray-700 hover:text-blue-600 transition-colors"
+                className="text-gray-300 hover:text-white transition-colors"
               >
                 Depoimentos
               </button>
               <button
                 onClick={() => scrollToSection("camisetas")}
-                className="text-gray-700 hover:text-blue-600 transition-colors"
+                className="text-gray-300 hover:text-white transition-colors"
               >
                 Camisetas
               </button>
               <button
                 onClick={handleLoginClick}
-                className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-blue-600 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-white transition-colors"
               >
                 <LogIn className="h-4 w-4" />
                 <span>Acessar</span>
               </button>
               <button
                 onClick={handleWhatsAppClick}
-                className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:shadow-lg transition-all"
+                className="flex items-center gap-2 px-6 py-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-all"
               >
                 <MessageCircle className="h-4 w-4" />
                 <span>Contato</span>
@@ -156,7 +149,7 @@ const LandingPage = () => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              className="md:hidden p-2 rounded-lg hover:bg-zinc-900 transition-colors"
             >
               {mobileMenuOpen ? (
                 <X className="h-6 w-6" />
@@ -168,47 +161,47 @@ const LandingPage = () => {
 
           {/* Mobile Menu */}
           {mobileMenuOpen && (
-            <div className="md:hidden py-4 border-t space-y-2">
+            <div className="md:hidden py-4 border-t border-zinc-800 space-y-2">
               <button
                 onClick={() => scrollToSection("problema")}
-                className="block w-full text-left px-4 py-2 hover:bg-gray-50 rounded-lg"
+                className="block w-full text-left px-4 py-2 hover:bg-zinc-900 rounded-lg"
               >
                 O Problema
               </button>
               <button
                 onClick={() => scrollToSection("solucao")}
-                className="block w-full text-left px-4 py-2 hover:bg-gray-50 rounded-lg"
+                className="block w-full text-left px-4 py-2 hover:bg-zinc-900 rounded-lg"
               >
                 A Solução
               </button>
               <button
                 onClick={() => scrollToSection("diferenciais")}
-                className="block w-full text-left px-4 py-2 hover:bg-gray-50 rounded-lg"
+                className="block w-full text-left px-4 py-2 hover:bg-zinc-900 rounded-lg"
               >
                 Diferenciais
               </button>
               <button
                 onClick={() => scrollToSection("depoimentos")}
-                className="block w-full text-left px-4 py-2 hover:bg-gray-50 rounded-lg"
+                className="block w-full text-left px-4 py-2 hover:bg-zinc-900 rounded-lg"
               >
                 Depoimentos
               </button>
               <button
                 onClick={() => scrollToSection("camisetas")}
-                className="block w-full text-left px-4 py-2 hover:bg-gray-50 rounded-lg"
+                className="block w-full text-left px-4 py-2 hover:bg-zinc-900 rounded-lg"
               >
                 Camisetas
               </button>
               <button
                 onClick={handleLoginClick}
-                className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-50 rounded-lg"
+                className="flex items-center gap-2 w-full px-4 py-2 hover:bg-zinc-900 rounded-lg"
               >
                 <LogIn className="h-4 w-4" />
                 <span>Acessar Plataforma</span>
               </button>
               <button
                 onClick={handleWhatsAppClick}
-                className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg"
+                className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-zinc-800 text-white rounded-lg"
               >
                 <MessageCircle className="h-4 w-4" />
                 <span>Falar no WhatsApp</span>
@@ -219,15 +212,15 @@ const LandingPage = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      <section className="pt-24 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-black via-zinc-950 to-black">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
                 Evolução real não é sorte. É processo, constância e
                 acompanhamento.
               </h1>
-              <p className="text-xl text-gray-600 leading-relaxed">
+              <p className="text-xl text-gray-300 leading-relaxed">
                 A G-Force é uma comunidade de treino e dieta com acompanhamento
                 organizado, centralizado e focado em evolução consistente — sem
                 atalhos, sem promessas irreais.
@@ -235,14 +228,14 @@ const LandingPage = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   onClick={handleWhatsAppClick}
-                  className="flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-lg font-semibold rounded-lg hover:shadow-xl transition-all"
+                  className="flex items-center justify-center gap-2 px-8 py-4 bg-white text-black text-lg font-semibold rounded-lg hover:bg-zinc-200 transition-all"
                 >
                   <MessageCircle className="h-5 w-5" />
                   Quero fazer parte da G-Force
                 </button>
                 <button
                   onClick={handleLoginClick}
-                  className="flex items-center justify-center gap-2 px-8 py-4 bg-white border-2 border-gray-200 text-gray-700 text-lg font-semibold rounded-lg hover:border-blue-600 hover:text-blue-600 transition-all"
+                  className="flex items-center justify-center gap-2 px-8 py-4 bg-transparent border-2 border-zinc-700 text-white text-lg font-semibold rounded-lg hover:border-zinc-300 hover:bg-zinc-900 transition-all"
                 >
                   <LogIn className="h-5 w-5" />
                   Já sou aluno
@@ -250,22 +243,24 @@ const LandingPage = () => {
               </div>
             </div>
             <div className="relative">
-              <div className="aspect-square rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
-                <Activity className="h-32 w-32 text-white opacity-20" />
-              </div>
+              <img
+                src="/0e831fa0-39ee-4b03-9071-98532877d713.jpeg"
+                alt="Logo G-Force"
+                className="aspect-square w-full object-cover rounded-2xl border border-zinc-700"
+              />
             </div>
           </div>
         </div>
       </section>
 
       {/* Problema Section */}
-      <section id="problema" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      <section id="problema" className="py-20 px-4 sm:px-6 lg:px-8 bg-zinc-900">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
               A maioria das pessoas não falha por falta de esforço.
               <br />
-              <span className="text-blue-600">
+              <span className="text-zinc-300">
                 Falha por falta de organização.
               </span>
             </h2>
@@ -274,52 +269,52 @@ const LandingPage = () => {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
               <div className="space-y-4">
-                <div className="flex items-start gap-4 p-6 bg-red-50 border-2 border-red-200 rounded-lg">
+                <div className="flex items-start gap-4 p-6 bg-red-950 border-2 border-red-700 rounded-lg">
                   <X className="h-6 w-6 text-red-600 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">
+                    <h3 className="font-semibold text-white mb-2">
                       Treino no PDF.
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-gray-300">
                       Arquivos desorganizados, versões antigas, difícil
                       acompanhamento.
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-6 bg-red-50 border-2 border-red-200 rounded-lg">
+                <div className="flex items-start gap-4 p-6 bg-red-950 border-2 border-red-700 rounded-lg">
                   <X className="h-6 w-6 text-red-600 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">
+                    <h3 className="font-semibold text-white mb-2">
                       Dieta no bloco de notas.
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-gray-300">
                       Informações dispersas, sem histórico, impossível analisar
                       evolução.
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-6 bg-red-50 border-2 border-red-200 rounded-lg">
+                <div className="flex items-start gap-4 p-6 bg-red-950 border-2 border-red-700 rounded-lg">
                   <X className="h-6 w-6 text-red-600 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">
+                    <h3 className="font-semibold text-white mb-2">
                       Fotos perdidas no WhatsApp.
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-gray-300">
                       Progress pics misturadas com conversas, sem linha do tempo
                       clara.
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-6 bg-red-50 border-2 border-red-200 rounded-lg">
+                <div className="flex items-start gap-4 p-6 bg-red-950 border-2 border-red-700 rounded-lg">
                   <X className="h-6 w-6 text-red-600 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">
+                    <h3 className="font-semibold text-white mb-2">
                       Mensagens importantes misturadas.
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-gray-300">
                       Orientações perdidas entre conversas aleatórias e memes.
                     </p>
                   </div>
@@ -340,7 +335,7 @@ const LandingPage = () => {
             </div>
 
             <div className="relative">
-              <div className="aspect-[4/3] rounded-2xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+              <div className="aspect-[4/3] rounded-2xl bg-gradient-to-br from-zinc-900 to-black flex items-center justify-center">
                 <Users className="h-32 w-32 text-gray-400" />
               </div>
             </div>
@@ -351,14 +346,14 @@ const LandingPage = () => {
       {/* Solução Section */}
       <section
         id="solucao"
-        className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-indigo-50"
+        className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-zinc-950 to-black"
       >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
               O que é a G-Force
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
               A G-Force é uma comunidade de acompanhamento fitness estruturada,
               criada para quem leva o processo a sério.
             </p>
@@ -366,72 +361,74 @@ const LandingPage = () => {
 
           <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
             <div className="relative order-2 md:order-1">
-              <div className="aspect-[4/3] rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
-                <Activity className="h-32 w-32 text-white opacity-20" />
-              </div>
+              <img
+                src="/0e831fa0-39ee-4b03-9071-98532877d713.jpeg"
+                alt="Logo G-Force"
+                className="aspect-[4/3] w-full object-cover rounded-2xl border border-zinc-700"
+              />
             </div>
 
             <div className="space-y-6 order-1 md:order-2">
-              <p className="text-lg text-gray-700 leading-relaxed">
+              <p className="text-lg text-gray-200 leading-relaxed">
                 Tudo acontece em uma <strong>plataforma própria</strong>, onde o
                 aluno tem acesso centralizado a:
               </p>
 
               <div className="space-y-4">
-                <div className="flex items-start gap-4 p-4 bg-white rounded-lg shadow-sm">
+                <div className="flex items-start gap-4 p-4 bg-zinc-900 rounded-lg shadow-sm">
                   <Check className="h-6 w-6 text-green-600 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">Treino</h3>
-                    <p className="text-gray-600">
+                    <h3 className="font-semibold text-white">Treino</h3>
+                    <p className="text-gray-300">
                       Sempre atualizado e acessível
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-4 bg-white rounded-lg shadow-sm">
+                <div className="flex items-start gap-4 p-4 bg-zinc-900 rounded-lg shadow-sm">
                   <Check className="h-6 w-6 text-green-600 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">Dieta</h3>
-                    <p className="text-gray-600">
+                    <h3 className="font-semibold text-white">Dieta</h3>
+                    <p className="text-gray-300">
                       Planos e ajustes organizados
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-4 bg-white rounded-lg shadow-sm">
+                <div className="flex items-start gap-4 p-4 bg-zinc-900 rounded-lg shadow-sm">
                   <Check className="h-6 w-6 text-green-600 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">
+                    <h3 className="font-semibold text-white">
                       Materiais e documentos
                     </h3>
-                    <p className="text-gray-600">Tudo em um só lugar</p>
+                    <p className="text-gray-300">Tudo em um só lugar</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-4 bg-white rounded-lg shadow-sm">
+                <div className="flex items-start gap-4 p-4 bg-zinc-900 rounded-lg shadow-sm">
                   <Check className="h-6 w-6 text-green-600 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">
+                    <h3 className="font-semibold text-white">
                       Envio de fotos de evolução
                     </h3>
-                    <p className="text-gray-600">Linha do tempo visual clara</p>
+                    <p className="text-gray-300">Linha do tempo visual clara</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-4 bg-white rounded-lg shadow-sm">
+                <div className="flex items-start gap-4 p-4 bg-zinc-900 rounded-lg shadow-sm">
                   <Check className="h-6 w-6 text-green-600 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-semibold text-gray-900">
+                    <h3 className="font-semibold text-white">
                       Histórico completo
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-gray-300">
                       Acompanhamento detalhado do processo
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="p-6 bg-blue-900 text-white rounded-lg">
+              <div className="p-6 bg-zinc-800 text-white rounded-lg">
                 <p className="text-lg font-semibold mb-2">
                   Nada de depender do WhatsApp
                 </p>
@@ -448,61 +445,61 @@ const LandingPage = () => {
       </section>
 
       {/* Como Funciona */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-zinc-900">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
               Como funciona
             </h2>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto">
+              <div className="w-16 h-16 bg-gradient-to-r from-zinc-600 to-zinc-900 rounded-full flex items-center justify-center mx-auto">
                 <span className="text-2xl font-bold text-white">1</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900">
+              <h3 className="text-xl font-bold text-white">
                 Entrada na comunidade
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-300">
                 Você passa a fazer parte da G-Force e recebe acesso à
                 plataforma.
               </p>
             </div>
 
             <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto">
+              <div className="w-16 h-16 bg-gradient-to-r from-zinc-600 to-zinc-900 rounded-full flex items-center justify-center mx-auto">
                 <span className="text-2xl font-bold text-white">2</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900">
+              <h3 className="text-xl font-bold text-white">
                 Organização total
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-300">
                 Treino, dieta e materiais ficam centralizados em um único lugar.
               </p>
             </div>
 
             <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto">
+              <div className="w-16 h-16 bg-gradient-to-r from-zinc-600 to-zinc-900 rounded-full flex items-center justify-center mx-auto">
                 <span className="text-2xl font-bold text-white">3</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900">
+              <h3 className="text-xl font-bold text-white">
                 Acompanhamento contínuo
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-300">
                 Você envia fotos, acompanha seu histórico e mantém clareza da
                 evolução.
               </p>
             </div>
 
             <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto">
+              <div className="w-16 h-16 bg-gradient-to-r from-zinc-600 to-zinc-900 rounded-full flex items-center justify-center mx-auto">
                 <span className="text-2xl font-bold text-white">4</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900">
+              <h3 className="text-xl font-bold text-white">
                 Processo constante
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-300">
                 Sem atalhos. Sem bagunça. Evolução construída no dia a dia.
               </p>
             </div>
@@ -513,11 +510,11 @@ const LandingPage = () => {
       {/* Diferenciais */}
       <section
         id="diferenciais"
-        className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-indigo-50 to-purple-50"
+        className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-zinc-950 to-black"
       >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
               Diferenciais da G-Force
             </h2>
           </div>
@@ -525,7 +522,7 @@ const LandingPage = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
-                icon: Activity,
+                icon: null,
                 title: "Plataforma própria de acompanhamento",
                 desc: "Tecnologia desenvolvida especificamente para o processo",
               },
@@ -557,13 +554,21 @@ const LandingPage = () => {
             ].map((item, idx) => (
               <div
                 key={idx}
-                className="p-6 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                className="p-6 bg-zinc-900 rounded-lg shadow-sm hover:shadow-md transition-shadow"
               >
-                <item.icon className="h-12 w-12 text-blue-600 mb-4" />
-                <h3 className="text-lg font-bold text-gray-900 mb-2">
+                {item.icon ? (
+                  <item.icon className="h-12 w-12 text-zinc-300 mb-4" />
+                ) : (
+                  <img
+                    src="/0e831fa0-39ee-4b03-9071-98532877d713.jpeg"
+                    alt="Logo G-Force"
+                    className="h-12 w-12 object-cover rounded-md border border-zinc-700 mb-4"
+                  />
+                )}
+                <h3 className="text-lg font-bold text-white mb-2">
                   {item.title}
                 </h3>
-                <p className="text-gray-600">{item.desc}</p>
+                <p className="text-gray-300">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -571,37 +576,37 @@ const LandingPage = () => {
       </section>
 
       {/* Para quem é / não é */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-zinc-900">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-8">
             {/* Para quem é */}
-            <div className="p-8 bg-green-50 border-2 border-green-200 rounded-lg">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+            <div className="p-8 bg-green-950 border-2 border-green-700 rounded-lg">
+              <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                 <Check className="h-8 w-8 text-green-600" />A G-Force é para
                 você que:
               </h3>
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
                   <Check className="h-6 w-6 text-green-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">
+                  <span className="text-gray-200">
                     Quer resultados reais e sustentáveis
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="h-6 w-6 text-green-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">
+                  <span className="text-gray-200">
                     Valoriza acompanhamento sério
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="h-6 w-6 text-green-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">
+                  <span className="text-gray-200">
                     Entende que evolução exige disciplina
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="h-6 w-6 text-green-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">
+                  <span className="text-gray-200">
                     Busca organização e clareza no processo
                   </span>
                 </li>
@@ -609,32 +614,32 @@ const LandingPage = () => {
             </div>
 
             {/* Para quem não é */}
-            <div className="p-8 bg-red-50 border-2 border-red-200 rounded-lg">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+            <div className="p-8 bg-red-950 border-2 border-red-700 rounded-lg">
+              <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                 <X className="h-8 w-8 text-red-600" />A G-Force não é para quem:
               </h3>
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
                   <X className="h-6 w-6 text-red-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">
+                  <span className="text-gray-200">
                     Procura soluções rápidas ou milagrosas
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <X className="h-6 w-6 text-red-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">
+                  <span className="text-gray-200">
                     Não quer seguir um processo
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <X className="h-6 w-6 text-red-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">
+                  <span className="text-gray-200">
                     Vive pulando de método em método
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <X className="h-6 w-6 text-red-600 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">Não valoriza constância</span>
+                  <span className="text-gray-200">Não valoriza constância</span>
                 </li>
               </ul>
             </div>
@@ -645,17 +650,17 @@ const LandingPage = () => {
       {/* Depoimentos */}
       <section
         id="depoimentos"
-        className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-indigo-50"
+        className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-zinc-950 to-black"
       >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
               Pessoas diferentes. Objetivos diferentes.
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
               Um ponto em comum: compromisso com o processo.
             </p>
-            <p className="text-lg text-gray-600 mt-4">
+            <p className="text-lg text-gray-300 mt-4">
               Veja o que dizem alunos que escolheram a organização, a constância
               e a evolução real com a G-Force.
             </p>
@@ -663,16 +668,16 @@ const LandingPage = () => {
 
           <div className="grid md:grid-cols-3 gap-8">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="p-6 bg-white rounded-lg shadow-sm">
-                <div className="aspect-square bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg mb-4 flex items-center justify-center">
+              <div key={i} className="p-6 bg-zinc-900 rounded-lg shadow-sm">
+                <div className="aspect-square bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-lg mb-4 flex items-center justify-center">
                   <Users className="h-16 w-16 text-gray-400" />
                 </div>
-                <p className="text-gray-700 italic mb-4">
+                <p className="text-gray-200 italic mb-4">
                   "Depoimento de aluno sobre a experiência com a G-Force e os
                   resultados obtidos através do processo."
                 </p>
-                <p className="font-semibold text-gray-900">Aluno G-Force</p>
-                <p className="text-sm text-gray-600">Membro desde 2024</p>
+                <p className="font-semibold text-white">Aluno G-Force</p>
+                <p className="text-sm text-gray-300">Membro desde 2024</p>
               </div>
             ))}
           </div>
@@ -680,47 +685,44 @@ const LandingPage = () => {
       </section>
 
       {/* Camisetas */}
-      <section id="camisetas" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      <section id="camisetas" className="py-20 px-4 sm:px-6 lg:px-8 bg-zinc-900">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-10 items-center">
             <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-zinc-800 text-zinc-100 rounded-full text-sm font-medium">
                 <ShoppingBag className="h-4 w-4" />
                 Loja G-Force
               </div>
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
+              <h2 className="text-3xl sm:text-4xl font-bold text-white">
                 Camisetas oficiais da comunidade
               </h2>
-              <p className="text-lg text-gray-600">
+              <p className="text-lg text-gray-300">
                 Garanta a sua camiseta da G-Force. Clique no botão abaixo e
                 fale direto no WhatsApp para receber valores e disponibilidade.
               </p>
               <button
                 onClick={handleShirtWhatsAppClick}
-                className="inline-flex items-center gap-2 px-7 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+                className="inline-flex items-center gap-2 px-7 py-4 bg-white text-black rounded-lg font-semibold hover:bg-zinc-200 transition-all"
               >
                 <MessageCircle className="h-5 w-5" />
                 Tenho interesse nas camisetas
               </button>
             </div>
 
-            <div className="rounded-2xl border-2 border-dashed border-gray-300 bg-gradient-to-br from-gray-50 to-gray-100 min-h-[320px] flex items-center justify-center p-8">
-              <div className="text-center">
-                <ShoppingBag className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-                <p className="text-gray-600 font-medium">
-                  Espaço reservado para foto das camisetas
-                </p>
-                <p className="text-sm text-gray-500 mt-1">
-                  Você pode substituir este bloco por uma imagem do produto
-                </p>
-              </div>
+            <div className="rounded-2xl overflow-hidden border border-zinc-700 shadow-sm bg-zinc-900">
+              <img
+                src="/20b27da5-b7bb-45e7-904e-66e8e5a997a1.jpeg"
+                alt="Camisetas oficiais da comunidade G-Force"
+                className="w-full h-full min-h-[320px] object-cover"
+                loading="lazy"
+              />
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA Final */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-zinc-800 text-white">
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold">
             Evolução não acontece por acaso.
@@ -734,7 +736,7 @@ const LandingPage = () => {
           </p>
           <button
             onClick={handleWhatsAppClick}
-            className="inline-flex items-center gap-3 px-10 py-5 bg-white text-blue-600 text-xl font-bold rounded-lg hover:shadow-2xl transition-all"
+            className="inline-flex items-center gap-3 px-10 py-5 bg-white text-black text-xl font-bold rounded-lg hover:bg-zinc-200 transition-all"
           >
             <MessageCircle className="h-6 w-6" />
             Quero iniciar meu acompanhamento na G-Force
@@ -777,12 +779,7 @@ const LandingPage = () => {
 
           <div className="border-t border-gray-800 pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <div className="flex items-center gap-2">
-                <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-2 rounded-lg">
-                  <Activity className="h-5 w-5 text-white" />
-                </div>
-                <span className="text-lg font-bold">G-FORCE</span>
-              </div>
+              <BrandMark size="sm" textClassName="text-lg text-white" />
               <p className="text-gray-400">
                 © 2025 G-Force. Todos os direitos reservados.
               </p>

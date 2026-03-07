@@ -1,7 +1,8 @@
 import React, { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
-import { Activity, Mail, Lock, AlertCircle } from "lucide-react"
+import { Mail, Lock, AlertCircle } from "lucide-react"
 import { Card, Input, Button } from "../components/ui"
+import { BrandMark } from "../components/BrandMark"
 import { useAuth } from "../hooks/useAuth"
 import { type LoginDTO } from "../types"
 import { showToast } from "../utils/toast"
@@ -65,18 +66,12 @@ export const LoginPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-black flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
-        <div className="flex justify-center mb-8">
-          <div className="bg-blue-600 p-4 rounded-2xl">
-            <Activity className="h-12 w-12 text-white" />
-          </div>
-        </div>
-
-        <h1 className="text-3xl font-bold text-center text-gray-900 mb-2">
-          G-FORCE Coach
+        <h1 className="flex justify-center mb-2">
+          <BrandMark size="lg" text="G-FORCE Coach" />
         </h1>
-        <p className="text-center text-gray-600 mb-8">
+        <p className="text-center text-gray-300 mb-8">
           Faça login para continuar
         </p>
 
@@ -136,11 +131,11 @@ export const LoginPage: React.FC = () => {
         </div>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-300">
             Não tem uma conta?{" "}
             <Link
               to="/register"
-              className="text-blue-600 hover:text-blue-700 font-medium"
+              className="text-white hover:text-gray-300 font-medium underline"
             >
               Registre-se
             </Link>

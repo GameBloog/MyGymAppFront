@@ -11,6 +11,7 @@ import {
 } from "lucide-react"
 import { Button } from "./ui/Button"
 import { useAuth } from "../hooks/useAuth"
+import { BrandMark } from "./BrandMark"
 
 export const Layout: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -35,14 +36,14 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
     isAluno && !location.pathname.includes("/fotos-arquivos")
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm border-b border-gray-200">
+    <div className="min-h-screen bg-black text-white">
+      <header className="bg-zinc-950 shadow-sm border-b border-zinc-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <h1 className="text-xl font-bold text-gray-900">G-Force Coach</h1>
+              <BrandMark size="sm" text="G-Force Coach" />
               {user && (
-                <span className="ml-4 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
+                <span className="ml-4 px-3 py-1 bg-zinc-800 text-zinc-100 text-sm rounded-full">
                   {user.role === "ADMIN" && "Administrador"}
                   {user.role === "PROFESSOR" && "Professor"}
                   {user.role === "ALUNO" && "Aluno"}
@@ -141,9 +142,9 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
         {children}
       </main>
 
-      <footer className="bg-white border-t border-gray-200 mt-auto">
+      <footer className="bg-zinc-950 border-t border-zinc-800 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <p className="text-center text-sm text-gray-500">
+          <p className="text-center text-sm text-gray-400">
             © 2026 G-Force Coach. Todos os direitos reservados.
           </p>
         </div>
