@@ -1,16 +1,11 @@
-import type React from "react";
-import { Activity } from "lucide-react";
+import type React from "react"
+import { BrandMark } from "./BrandMark"
 
 export const Navigation: React.FC = () => {
   return (
-    <nav className="bg-white shadow-md md-8">
+    <nav className="bg-zinc-950 shadow-md border-b border-zinc-800">
       <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center gap-3">
-          <div className="bg-blue-600 p-2 rounded-lg">
-            <Activity className="h-6 w-6 text-white" />
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900">G-FORCE Coach</h1>
-        </div>
+        <BrandMark size="md" text="G-FORCE Coach" />
       </div>
     </nav>
   )

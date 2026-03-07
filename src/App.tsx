@@ -187,17 +187,17 @@ function AppRoutes() {
         <Route
           path="/unauthorized"
           element={
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-              <div className="text-center bg-white p-8 rounded-lg shadow-lg">
+            <div className="min-h-screen flex items-center justify-center bg-black">
+              <div className="text-center bg-zinc-950 border border-zinc-800 p-8 rounded-lg shadow-lg text-white">
                 <h1 className="text-4xl font-bold text-red-600 mb-4">
                   ⛔ Acesso Negado
                 </h1>
-                <p className="text-gray-600 mb-6">
+                <p className="text-gray-300 mb-6">
                   Você não tem permissão para acessar esta página.
                 </p>
                 <button
                   onClick={() => (window.location.href = "/")}
-                  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                  className="bg-white text-black px-6 py-2 rounded-lg hover:bg-zinc-200 transition-colors"
                 >
                   Voltar ao Início
                 </button>

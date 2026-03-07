@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import {
-  Activity,
   Mail,
   Lock,
   User,
@@ -10,6 +9,7 @@ import {
   Ticket,
 } from "lucide-react"
 import { Card, Input, Button } from "../../components/ui"
+import { BrandMark } from "../../components/BrandMark"
 import { useAuth } from "../../hooks/useAuth"
 import { type RegisterDTO } from "../../types"
 import { getStoredLeadSlug } from "../../utils/leadTracking"
@@ -113,30 +113,28 @@ export const RegisterPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-black flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
-        <div className="flex justify-center mb-8">
-          <div className="bg-blue-600 p-4 rounded-2xl">
-            <Activity className="h-12 w-12 text-white" />
-          </div>
+        <div className="flex justify-center mb-6">
+          <BrandMark size="lg" text="G-FORCE Coach" />
         </div>
 
-        <h1 className="text-3xl font-bold text-center text-gray-900 mb-2">
+        <h1 className="text-3xl font-bold text-center text-white mb-2">
           Criar Conta
         </h1>
-        <p className="text-center text-gray-600 mb-8">
+        <p className="text-center text-gray-300 mb-8">
           Preencha os dados para se registrar
         </p>
 
-        <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+        <div className="mb-6 p-4 bg-zinc-900 rounded-lg border border-zinc-700">
           <label className="flex items-center cursor-pointer">
             <input
               type="checkbox"
               checked={isProfessor}
               onChange={handleToggleProfessor}
-              className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              className="w-4 h-4 text-zinc-300 border-zinc-600 rounded focus:ring-zinc-300"
             />
-            <span className="ml-2 text-sm font-medium text-gray-700">
+            <span className="ml-2 text-sm font-medium text-gray-200">
               Sou um Professor (preciso de código de convite)
             </span>
           </label>
@@ -197,7 +195,7 @@ export const RegisterPage: React.FC = () => {
           {isProfessor && (
             <>
               <div className="border-t pt-4">
-                <p className="text-sm font-medium text-gray-700 mb-4">
+                <p className="text-sm font-medium text-gray-200 mb-4">
                   Dados do Professor
                 </p>
 
@@ -252,11 +250,11 @@ export const RegisterPage: React.FC = () => {
         </div>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-300">
             Já tem uma conta?{" "}
             <Link
               to="/login"
-              className="text-blue-600 hover:text-blue-700 font-medium"
+              className="text-white hover:text-gray-300 font-medium underline"
             >
               Faça login
             </Link>
