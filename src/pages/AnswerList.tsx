@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useMemo, useState } from "react"
 import { Camera } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import {
@@ -16,9 +16,15 @@ import {
   TrendingUp,
   Dumbbell,
   UtensilsCrossed,
+  UserCheck,
+  UserX,
 } from "lucide-react"
 import { Card, Badge, Input, Button } from "../components/ui"
-import { useAlunos, useDeleteAluno } from "../hooks/useAlunos"
+import {
+  useAlunos,
+  useDeleteAluno,
+  useUpdateAlunoStatus,
+} from "../hooks/useAlunos"
 import { useAuth } from "../hooks/useAuth"
 import { showToast } from "../utils/toast"
 import { format } from "date-fns"
@@ -28,8 +34,12 @@ export const AnswersList: React.FC = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
   const [searchTerm, setSearchTerm] = useState("")
+  const [activeTab, setActiveTab] = useState<"ATIVOS" | "INATIVOS" | "TODOS">(
+    "ATIVOS",
+  )
   const { data: alunos, isLoading, error, refetch } = useAlunos()
   const deleteAluno = useDeleteAluno()
+  const updateAlunoStatus = useUpdateAlunoStatus()
 
   const getNewRoute = () => {
     if (user?.role === "ADMIN") return "/admin/alunos/new"
@@ -70,7 +80,18 @@ export const AnswersList: React.FC = () => {
 
   const canDelete = user?.role === "ADMIN" || user?.role === "PROFESSOR"
   const canCreate = user?.role === "ADMIN" || user?.role === "PROFESSOR"
+  const canToggleStatus = user?.role === "ADMIN" || user?.role === "PROFESSOR"
   const canViewEvolucao = true
+
+  const alunosAtivos = useMemo(
+    () => (alunos || []).filter((aluno) => aluno.ativo).length,
+    [alunos],
+  )
+
+  const alunosInativos = useMemo(
+    () => (alunos || []).filter((aluno) => !aluno.ativo).length,
+    [alunos],
+  )
 
   const handleDelete = async (id: string, nome: string) => {
     if (
@@ -95,8 +116,35 @@ export const AnswersList: React.FC = () => {
     }
   }
 
+  const handleToggleStatus = async (id: string, ativoAtual: boolean) => {
+    const actionLabel = ativoAtual ? "inativar" : "reativar"
+    if (!window.confirm(`Deseja ${actionLabel} este aluno?`)) {
+      return
+    }
+
+    try {
+      await updateAlunoStatus.mutateAsync({
+        id,
+        data: { ativo: !ativoAtual },
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const filteredAlunos =
     alunos?.filter((aluno) => {
+      const matchesTab =
+        activeTab === "TODOS"
+          ? true
+          : activeTab === "ATIVOS"
+            ? aluno.ativo
+            : !aluno.ativo
+
+      if (!matchesTab) {
+        return false
+      }
+
       const search = searchTerm.toLowerCase()
       const nome = aluno.user?.nome?.toLowerCase() || ""
       const email = aluno.user?.email?.toLowerCase() || ""
@@ -156,6 +204,11 @@ export const AnswersList: React.FC = () => {
             {alunos?.length || 0} {alunos?.length === 1 ? "aluno" : "alunos"}{" "}
             cadastrado(s)
           </p>
+          {(user?.role === "ADMIN" || user?.role === "PROFESSOR") && (
+            <p className="text-sm text-zinc-400 mt-1">
+              {alunosAtivos} ativo(s) • {alunosInativos} inativo(s)
+            </p>
+          )}
         </div>
         {canCreate && (
           <Button icon={Plus} onClick={() => navigate(getNewRoute())}>
@@ -166,7 +219,29 @@ export const AnswersList: React.FC = () => {
       </div>
 
       {alunos && alunos.length > 1 && (
-        <Card className="mb-6">
+        <Card className="mb-6 space-y-3">
+          {canToggleStatus && (
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant={activeTab === "ATIVOS" ? "primary" : "secondary"}
+                onClick={() => setActiveTab("ATIVOS")}
+              >
+                Ativos ({alunosAtivos})
+              </Button>
+              <Button
+                variant={activeTab === "INATIVOS" ? "primary" : "secondary"}
+                onClick={() => setActiveTab("INATIVOS")}
+              >
+                Inativos ({alunosInativos})
+              </Button>
+              <Button
+                variant={activeTab === "TODOS" ? "primary" : "secondary"}
+                onClick={() => setActiveTab("TODOS")}
+              >
+                Todos ({alunos?.length || 0})
+              </Button>
+            </div>
+          )}
           <Input
             icon={Search}
             placeholder="Buscar aluno..."
@@ -196,6 +271,11 @@ export const AnswersList: React.FC = () => {
                         { locale: ptBR },
                       )}
                     </p>
+                    <div className="mt-2">
+                      <Badge variant={aluno.ativo ? "success" : "warning"}>
+                        {aluno.ativo ? "Ativo" : "Inativo"}
+                      </Badge>
+                    </div>
                   </div>
                 </div>
 
@@ -240,6 +320,20 @@ export const AnswersList: React.FC = () => {
                   >
                     <UtensilsCrossed className="h-4 w-4 text-orange-300" />
                   </button>
+
+                  {canToggleStatus && (
+                    <button
+                      onClick={() => handleToggleStatus(aluno.id, aluno.ativo)}
+                      className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
+                      title={aluno.ativo ? "Inativar" : "Reativar"}
+                    >
+                      {aluno.ativo ? (
+                        <UserX className="h-4 w-4 text-amber-300" />
+                      ) : (
+                        <UserCheck className="h-4 w-4 text-emerald-300" />
+                      )}
+                    </button>
+                  )}
 
                   {canDelete && (
                     <button

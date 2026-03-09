@@ -5,14 +5,17 @@ import {
   Camera,
   ClipboardList,
   Dumbbell,
+  ExternalLink,
   FileText,
   Flame,
   Loader2,
   MessageSquareText,
+  PlayCircle,
   Target,
   TrendingUp,
   User,
   UtensilsCrossed,
+  Youtube,
 } from "lucide-react"
 import { format, addDays, endOfWeek, isWithinInterval, set, startOfDay, startOfWeek, subDays, subWeeks } from "date-fns"
 import { ptBR } from "date-fns/locale"
@@ -23,6 +26,7 @@ import { useHistorico } from "../../hooks/useHistorico"
 import { useArquivoAluno } from "../../hooks/useArquivoAluno"
 import { usePlanoDietaAtivo, useDietaCheckins } from "../../hooks/useDieta"
 import { usePlanoTreinoAtivo, useTreinoCheckins, useTreinoTimeline } from "../../hooks/useTreino"
+import { useLatestYoutubeContent } from "../../hooks/useYoutubeContent"
 import { formatDiaSemana } from "../../utils/treino"
 import type { TimelineEventoTreino } from "../../types"
 
@@ -86,6 +90,7 @@ export const AlunoDashboardPage: React.FC = () => {
   const navigate = useNavigate()
   const { token } = useAuth()
   const { data: aluno, isLoading: loadingAluno } = useMyAluno()
+  const { data: youtubeContent, isLoading: loadingYoutubeContent } = useLatestYoutubeContent()
   const alunoId = aluno?.id || ""
 
   const {
@@ -461,6 +466,16 @@ export const AlunoDashboardPage: React.FC = () => {
       .slice(-8)
   }, [historico])
 
+  const youtubePublishedLabel = useMemo(() => {
+    if (!youtubeContent?.video?.publishedAt) {
+      return null
+    }
+
+    return format(new Date(youtubeContent.video.publishedAt), "dd/MM/yyyy 'às' HH:mm", {
+      locale: ptBR,
+    })
+  }, [youtubeContent?.video?.publishedAt])
+
   const loadingBase = loadingAluno || loadingHistorico
 
   if (loadingBase) {
@@ -486,6 +501,8 @@ export const AlunoDashboardPage: React.FC = () => {
     1,
     ...serieSemanal.flatMap((item) => [item.treino, item.dieta]),
   )
+  const fallbackYoutubeChannelUrl = "https://www.youtube.com/@gforce.oficialbr"
+  const youtubeChannelUrl = youtubeContent?.channelUrl || fallbackYoutubeChannelUrl
   const valoresPeso = seriePeso.map((item) => item.pesoKg as number)
   const minPeso = valoresPeso.length > 0 ? Math.min(...valoresPeso) : 0
   const maxPeso = valoresPeso.length > 0 ? Math.max(...valoresPeso) : 0
@@ -511,6 +528,98 @@ export const AlunoDashboardPage: React.FC = () => {
               {checkinsTreinoSemana} treino(s) / {checkinsDietaSemana} dieta(s)
             </Badge>
           </div>
+        </div>
+      </Card>
+
+      <Card className="relative overflow-hidden border border-red-500/30 bg-gradient-to-r from-red-950/50 via-zinc-950 to-zinc-950">
+        <div className="absolute inset-0 bg-black/20" />
+        <div className="relative grid grid-cols-1 gap-4 lg:grid-cols-[1.2fr_1fr] lg:items-center">
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant="danger">
+                <span className="inline-flex items-center gap-1">
+                  <Youtube className="h-3.5 w-3.5" />
+                  Canal da G-Force
+                </span>
+              </Badge>
+              {youtubeContent?.stale && <Badge variant="warning">Conteúdo em cache</Badge>}
+            </div>
+
+            <div>
+              <h2 className="text-lg font-semibold text-white">Vídeo novo da semana</h2>
+              {loadingYoutubeContent && (
+                <p className="mt-2 text-sm text-zinc-300">Buscando último vídeo...</p>
+              )}
+
+              {!loadingYoutubeContent && youtubeContent?.video && (
+                <div className="space-y-2 mt-2">
+                  <p className="text-xl font-bold text-white leading-tight">
+                    {youtubeContent.video.title}
+                  </p>
+                  <p className="text-sm text-zinc-300">
+                    {youtubeContent.video.channelTitle}
+                    {youtubePublishedLabel ? ` • Publicado em ${youtubePublishedLabel}` : ""}
+                  </p>
+                </div>
+              )}
+
+              {!loadingYoutubeContent && !youtubeContent?.video && (
+                <p className="mt-2 text-sm text-zinc-300">
+                  Não conseguimos carregar o vídeo mais novo agora. Acesse o canal para assistir
+                  os conteúdos recentes.
+                </p>
+              )}
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {youtubeContent?.video ? (
+                <a
+                  href={youtubeContent.video.watchUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex"
+                >
+                  <Button icon={PlayCircle}>Assistir no YouTube</Button>
+                </a>
+              ) : null}
+              <a
+                href={youtubeChannelUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex"
+              >
+                <Button variant="secondary" icon={ExternalLink}>
+                  Acessar canal da G-Force
+                </Button>
+              </a>
+            </div>
+          </div>
+
+          {!loadingYoutubeContent && youtubeContent?.video && (
+            <a
+              href={youtubeContent.video.watchUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="group block"
+              aria-label={`Abrir vídeo ${youtubeContent.video.title} no YouTube`}
+            >
+              <div className="relative overflow-hidden rounded-lg border border-zinc-700">
+                <img
+                  src={youtubeContent.video.thumbnailUrl}
+                  alt={`Thumbnail do vídeo ${youtubeContent.video.title}`}
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                  <PlayCircle className="h-14 w-14 text-white drop-shadow-xl" />
+                </div>
+              </div>
+            </a>
+          )}
+
+          {loadingYoutubeContent && (
+            <div className="h-44 animate-pulse rounded-lg border border-zinc-700 bg-zinc-800/60" />
+          )}
         </div>
       </Card>
 

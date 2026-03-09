@@ -17,10 +17,21 @@ import {
   type Aluno,
   type CreateAlunoDTO,
   type UpdateAlunoDTO,
+  type UpdateAlunoStatusDTO,
   type ApiError,
   type UserAnswer,
   type CreateUserAnswerDTO,
   type UpdateUserAnswerDTO,
+  type YoutubeLatestContentResponse,
+  type FinanceDashboardResponse,
+  type FinanceRenewal,
+  type CreateFinanceRenewalDTO,
+  type UpdateFinanceRenewalDTO,
+  type FinanceEntry,
+  type CreateFinanceEntryDTO,
+  type UpdateFinanceEntryDTO,
+  type FinanceEntryType,
+  type FinanceMonthState,
 } from "../types"
 
 export const api = axios.create({
@@ -230,6 +241,15 @@ export const leadLinksApi = {
   },
 }
 
+export const contentApi = {
+  getLatestYoutubeVideo: async (): Promise<YoutubeLatestContentResponse> => {
+    const response = await api.get<YoutubeLatestContentResponse>(
+      "/content/youtube/latest",
+    )
+    return response.data
+  },
+}
+
 export const professoresApi = {
   getAll: async (): Promise<Professor[]> => {
     const response = await api.get<Professor[]>("/professores")
@@ -341,8 +361,93 @@ export const alunosApi = {
     return response.data
   },
 
+  updateStatus: async (
+    id: string,
+    data: UpdateAlunoStatusDTO,
+  ): Promise<Aluno> => {
+    const response = await api.patch<Aluno>(`/alunos/${id}/status`, data)
+    return response.data
+  },
+
   delete: async (id: string): Promise<void> => {
     await api.delete(`/alunos/${id}`)
+  },
+}
+
+export const financeApi = {
+  getDashboard: async (
+    from?: string,
+    to?: string,
+  ): Promise<FinanceDashboardResponse> => {
+    const params = new URLSearchParams()
+
+    if (from) {
+      params.set("from", from)
+    }
+    if (to) {
+      params.set("to", to)
+    }
+
+    const query = params.toString()
+    const path = query ? `/finance/dashboard?${query}` : "/finance/dashboard"
+    const response = await api.get<FinanceDashboardResponse>(path)
+    return response.data
+  },
+
+  getRenewals: async (month: string): Promise<FinanceRenewal[]> => {
+    const response = await api.get<FinanceRenewal[]>(
+      `/finance/renewals?month=${month}`,
+    )
+    return response.data
+  },
+
+  createRenewal: async (data: CreateFinanceRenewalDTO): Promise<FinanceRenewal> => {
+    const response = await api.post<FinanceRenewal>("/finance/renewals", data)
+    return response.data
+  },
+
+  updateRenewal: async (
+    id: string,
+    data: UpdateFinanceRenewalDTO,
+  ): Promise<FinanceRenewal> => {
+    const response = await api.patch<FinanceRenewal>(`/finance/renewals/${id}`, data)
+    return response.data
+  },
+
+  deleteRenewal: async (id: string): Promise<void> => {
+    await api.delete(`/finance/renewals/${id}`)
+  },
+
+  getEntries: async (month: string, type?: FinanceEntryType): Promise<FinanceEntry[]> => {
+    const path = type
+      ? `/finance/entries?month=${month}&type=${type}`
+      : `/finance/entries?month=${month}`
+    const response = await api.get<FinanceEntry[]>(path)
+    return response.data
+  },
+
+  createEntry: async (data: CreateFinanceEntryDTO): Promise<FinanceEntry> => {
+    const response = await api.post<FinanceEntry>("/finance/entries", data)
+    return response.data
+  },
+
+  updateEntry: async (id: string, data: UpdateFinanceEntryDTO): Promise<FinanceEntry> => {
+    const response = await api.patch<FinanceEntry>(`/finance/entries/${id}`, data)
+    return response.data
+  },
+
+  deleteEntry: async (id: string): Promise<void> => {
+    await api.delete(`/finance/entries/${id}`)
+  },
+
+  closeMonth: async (month: string): Promise<FinanceMonthState> => {
+    const response = await api.patch<FinanceMonthState>(`/finance/months/${month}/close`)
+    return response.data
+  },
+
+  reopenMonth: async (month: string): Promise<FinanceMonthState> => {
+    const response = await api.patch<FinanceMonthState>(`/finance/months/${month}/reopen`)
+    return response.data
   },
 }
 

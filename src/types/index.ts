@@ -128,6 +128,205 @@ export interface LeadAnalytics {
   topLinks: LeadAnalyticsTopLink[]
 }
 
+export interface YoutubeLatestVideo {
+  videoId: string
+  title: string
+  publishedAt: string
+  thumbnailUrl: string
+  watchUrl: string
+  embedUrl: string
+  channelTitle: string
+}
+
+export interface YoutubeLatestContentResponse {
+  video: YoutubeLatestVideo | null
+  channelUrl: string
+  cached: boolean
+  fetchedAt: string | null
+  stale: boolean
+}
+
+export type FinanceRenewalPlanType = "COMPLETO" | "TREINO" | "DIETA"
+export type FinanceEntryType = "RECEITA" | "DESPESA"
+export type FinanceEntryCategory =
+  | "CAMISA"
+  | "YOUTUBE"
+  | "PARCERIA"
+  | "OUTRA_RECEITA"
+  | "CUSTO_OPERACIONAL"
+  | "OUTRA_DESPESA"
+export type FinanceMonthStatus = "ABERTO" | "FECHADO"
+
+export interface FinanceRenewal {
+  id: string
+  alunoId: string
+  month: string
+  tipoPlano: FinanceRenewalPlanType
+  valor: number
+  renovadoEm: string
+  observacao?: string | null
+  createdBy: string
+  createdAt: string
+  updatedAt: string
+  aluno?: {
+    id: string
+    user?: {
+      nome?: string
+      email?: string
+    }
+  }
+}
+
+export interface FinanceEntry {
+  id: string
+  month: string
+  tipo: FinanceEntryType
+  categoria: FinanceEntryCategory
+  valor: number
+  quantidade?: number | null
+  descricao?: string | null
+  dataLancamento: string
+  createdBy: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface FinanceMonthSummary {
+  month: string
+  status: FinanceMonthStatus
+  receitas: number
+  despesas: number
+  saldo: number
+  saldoAcumulado: number
+  renewals: {
+    total: number
+    completo: number
+    treino: number
+    dieta: number
+  }
+  camisasVendidas: number
+}
+
+export interface FinanceProjectionTotals {
+  receitas: number
+  despesas: number
+  saldo: number
+}
+
+export interface FinanceDashboardResponse {
+  period: {
+    from: string
+    to: string
+  }
+  months: FinanceMonthSummary[]
+  totals: {
+    receitas: number
+    despesas: number
+    saldo: number
+    camisasVendidas: number
+    renewals: {
+      total: number
+      completo: number
+      treino: number
+      dieta: number
+    }
+  }
+  charts: {
+    receitasVsDespesas: Array<{
+      month: string
+      receitas: number
+      despesas: number
+    }>
+    saldoAcumulado: Array<{
+      month: string
+      saldoAcumulado: number
+    }>
+    composicaoReceitas: Array<{
+      categoria: FinanceEntryCategory
+      valor: number
+    }>
+    projecoes: Array<{
+      horizonMonths: 3 | 6
+      receitas: number
+      despesas: number
+      saldo: number
+    }>
+  }
+  projections: {
+    method: string
+    baseMonths: string[]
+    months3: FinanceProjectionTotals
+    months6: FinanceProjectionTotals
+  }
+  systemMetrics: {
+    alunos: {
+      total: number
+      ativos: number
+      inativos: number
+    }
+    novosAlunosPorMes: Array<{
+      month: string
+      count: number
+    }>
+    professores: Array<{
+      professorId: string
+      professorNome: string
+      total: number
+      ativos: number
+      inativos: number
+    }>
+    aquisicaoPorCanal: Array<{
+      canal: string
+      cadastros: number
+    }>
+  }
+}
+
+export interface CreateFinanceRenewalDTO {
+  alunoId: string
+  tipoPlano: FinanceRenewalPlanType
+  valor: number
+  renovadoEm: string
+  observacao?: string | null
+}
+
+export interface UpdateFinanceRenewalDTO {
+  alunoId?: string
+  tipoPlano?: FinanceRenewalPlanType
+  valor?: number
+  renovadoEm?: string
+  observacao?: string | null
+}
+
+export interface CreateFinanceEntryDTO {
+  tipo: FinanceEntryType
+  categoria: FinanceEntryCategory
+  valor: number
+  quantidade?: number | null
+  descricao?: string | null
+  dataLancamento: string
+}
+
+export interface UpdateFinanceEntryDTO {
+  tipo?: FinanceEntryType
+  categoria?: FinanceEntryCategory
+  valor?: number
+  quantidade?: number | null
+  descricao?: string | null
+  dataLancamento?: string
+}
+
+export interface FinanceMonthState {
+  month: string
+  status: FinanceMonthStatus
+  closedAt?: string | null
+  closedBy?: string | null
+  reopenedAt?: string | null
+  reopenedBy?: string | null
+  createdAt: string
+  updatedAt: string
+}
+
 export interface Professor {
   id: string
   userId: string
@@ -151,6 +350,7 @@ export interface Aluno {
   id: string
   userId: string
   professorId: string
+  ativo: boolean
   sexoBiologico?: SexoBiologico | null
   telefone?: string | null
   alturaCm?: number | null
@@ -223,6 +423,10 @@ export interface UpdateAlunoDTO {
   objetivos_atuais?: string
   toma_remedio?: boolean
   remedios_uso?: string
+}
+
+export interface UpdateAlunoStatusDTO {
+  ativo: boolean
 }
 
 export interface UserAnswer {

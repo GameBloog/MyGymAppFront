@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import {
   Users,
@@ -13,29 +13,64 @@ import {
   Camera,
   Dumbbell,
   UtensilsCrossed,
+  UserCheck,
+  UserX,
 } from "lucide-react"
 import { Card, Button, Input, Badge } from "../../components/ui"
-import { useAlunos } from "../../hooks/useAlunos"
+import { useAlunos, useUpdateAlunoStatus } from "../../hooks/useAlunos"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
+
+type AlunoTab = "ATIVOS" | "INATIVOS" | "TODOS"
 
 export const ProfessorDashboard: React.FC = () => {
   const navigate = useNavigate()
   const { data: alunos, isLoading } = useAlunos()
+  const updateAlunoStatus = useUpdateAlunoStatus()
   const [searchTerm, setSearchTerm] = useState("")
+  const [activeTab, setActiveTab] = useState<AlunoTab>("ATIVOS")
 
-  const filteredAlunos =
-    alunos?.filter((aluno) => {
-      const search = searchTerm.toLowerCase()
-      const nome = aluno.user?.nome?.toLowerCase() || ""
-      const email = aluno.user?.email?.toLowerCase() || ""
+  const alunosAtivos = useMemo(
+    () => (alunos || []).filter((aluno) => aluno.ativo).length,
+    [alunos],
+  )
+  const alunosInativos = useMemo(
+    () => (alunos || []).filter((aluno) => !aluno.ativo).length,
+    [alunos],
+  )
 
-      return (
-        nome.includes(search) ||
-        email.includes(search) ||
-        aluno.id.toLowerCase().includes(search)
-      )
-    }) || []
+  const filteredAlunos = (alunos || []).filter((aluno) => {
+    const matchesTab =
+      activeTab === "TODOS"
+        ? true
+        : activeTab === "ATIVOS"
+          ? aluno.ativo
+          : !aluno.ativo
+
+    if (!matchesTab) return false
+
+    const search = searchTerm.toLowerCase()
+    const nome = aluno.user?.nome?.toLowerCase() || ""
+    const email = aluno.user?.email?.toLowerCase() || ""
+
+    return (
+      nome.includes(search) ||
+      email.includes(search) ||
+      aluno.id.toLowerCase().includes(search)
+    )
+  })
+
+  const handleToggleStatus = async (alunoId: string, ativoAtual: boolean) => {
+    const actionLabel = ativoAtual ? "inativar" : "reativar"
+    if (!window.confirm(`Deseja ${actionLabel} este aluno?`)) {
+      return
+    }
+
+    await updateAlunoStatus.mutateAsync({
+      id: alunoId,
+      data: { ativo: !ativoAtual },
+    })
+  }
 
   if (isLoading) {
     return (
@@ -54,6 +89,9 @@ export const ProfessorDashboard: React.FC = () => {
             {alunos?.length || 0} {alunos?.length === 1 ? "aluno" : "alunos"}{" "}
             cadastrado(s)
           </p>
+          <p className="text-sm text-zinc-400 mt-1">
+            {alunosAtivos} ativo(s) • {alunosInativos} inativo(s)
+          </p>
         </div>
 
         <Button icon={Plus} onClick={() => navigate("/professor/alunos/new")}>
@@ -62,7 +100,28 @@ export const ProfessorDashboard: React.FC = () => {
       </div>
 
       {alunos && alunos.length > 0 && (
-        <Card className="mb-6">
+        <Card className="mb-6 space-y-3">
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant={activeTab === "ATIVOS" ? "primary" : "secondary"}
+              onClick={() => setActiveTab("ATIVOS")}
+            >
+              Ativos ({alunosAtivos})
+            </Button>
+            <Button
+              variant={activeTab === "INATIVOS" ? "primary" : "secondary"}
+              onClick={() => setActiveTab("INATIVOS")}
+            >
+              Inativos ({alunosInativos})
+            </Button>
+            <Button
+              variant={activeTab === "TODOS" ? "primary" : "secondary"}
+              onClick={() => setActiveTab("TODOS")}
+            >
+              Todos ({alunos?.length || 0})
+            </Button>
+          </div>
+
           <Input
             icon={Search}
             placeholder="Buscar aluno por nome ou email..."
@@ -88,6 +147,11 @@ export const ProfessorDashboard: React.FC = () => {
                     <p className="text-sm text-zinc-400">
                       {aluno.user?.email || "Email não disponível"}
                     </p>
+                    <div className="mt-2">
+                      <Badge variant={aluno.ativo ? "success" : "warning"}>
+                        {aluno.ativo ? "Ativo" : "Inativo"}
+                      </Badge>
+                    </div>
                     <p className="text-xs text-zinc-500 mt-1">
                       Cadastrado em{" "}
                       {format(new Date(aluno.createdAt), "dd/MM/yyyy", {
@@ -98,6 +162,17 @@ export const ProfessorDashboard: React.FC = () => {
                 </div>
 
                 <div className="flex gap-2">
+                  <button
+                    onClick={() => handleToggleStatus(aluno.id, aluno.ativo)}
+                    className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
+                    title={aluno.ativo ? "Inativar aluno" : "Reativar aluno"}
+                  >
+                    {aluno.ativo ? (
+                      <UserX className="h-5 w-5 text-amber-300" />
+                    ) : (
+                      <UserCheck className="h-5 w-5 text-emerald-300" />
+                    )}
+                  </button>
                   <button
                     onClick={() =>
                       navigate(`/professor/alunos/${aluno.id}/evolucao`)
@@ -163,7 +238,7 @@ export const ProfessorDashboard: React.FC = () => {
                 )}
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 border-t pt-3">
+              <div className="grid grid-cols-1 sm:grid-cols-6 gap-3 border-t pt-3">
                 <Button
                   variant="secondary"
                   icon={Eye}
@@ -208,6 +283,15 @@ export const ProfessorDashboard: React.FC = () => {
                 >
                   Dieta
                 </Button>
+                <Button
+                  variant="secondary"
+                  icon={aluno.ativo ? UserX : UserCheck}
+                  onClick={() => handleToggleStatus(aluno.id, aluno.ativo)}
+                  className="w-full"
+                  disabled={updateAlunoStatus.isLoading}
+                >
+                  {aluno.ativo ? "Inativar" : "Reativar"}
+                </Button>
               </div>
             </Card>
           ))}
@@ -216,7 +300,7 @@ export const ProfessorDashboard: React.FC = () => {
         <Card className="text-center py-12">
           <Users className="h-12 w-12 text-zinc-500 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-white mb-2">
-            {searchTerm ? "Nenhum aluno encontrado" : "Nenhum aluno cadastrado"}
+            {searchTerm ? "Nenhum aluno encontrado" : "Nenhum aluno nesta aba"}
           </h3>
           <p className="text-zinc-400 mb-6">
             {searchTerm

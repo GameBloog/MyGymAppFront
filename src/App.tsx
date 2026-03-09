@@ -24,6 +24,7 @@ import { InviteCodesPage } from "./pages/admin/InviteCodesPage"
 import { LeadLinksPage } from "./pages/admin/LeadLinksPage"
 import { ProfessoresPage } from "./pages/admin/ProfessoresPage"
 import { ProfessorForm } from "./pages/admin/ProfessorForm"
+import { FinanceiroPage } from "./pages/admin/FinanceiroPage"
 
 // Professor Pages
 import { ProfessorDashboard } from "./pages/professor/ProfessorDashboard"
@@ -113,6 +114,7 @@ function AppRoutes() {
                   />
                   <Route path="invite-codes" element={<InviteCodesPage />} />
                   <Route path="lead-links" element={<LeadLinksPage />} />
+                  <Route path="financeiro" element={<FinanceiroPage />} />
                   <Route path="professores" element={<ProfessoresPage />} />
                   <Route path="professores/new" element={<ProfessorForm />} />
                   <Route

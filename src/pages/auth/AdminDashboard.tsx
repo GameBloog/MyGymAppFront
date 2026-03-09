@@ -8,6 +8,7 @@ import {
   UserCheck,
   Link2,
   MousePointerClick,
+  Wallet,
 } from "lucide-react"
 import { Card, Button } from "../../components/ui"
 import { useAlunos } from "../../hooks/useAlunos"
@@ -264,6 +265,17 @@ export const AdminDashboard: React.FC = () => {
             <Link2 className="h-6 w-6 text-indigo-600 mb-2" />
             <h3 className="font-semibold text-zinc-100">Links de Lead</h3>
             <p className="text-sm text-zinc-400">Criar links rastreáveis e acompanhar conversão</p>
+          </button>
+
+          <button
+            onClick={() => navigate("/admin/financeiro")}
+            className="p-4 border-2 border-zinc-700 bg-zinc-900 rounded-lg hover:border-amber-400 hover:bg-amber-500/10 transition-colors text-left"
+          >
+            <Wallet className="h-6 w-6 text-amber-300 mb-2" />
+            <h3 className="font-semibold text-zinc-100">Controle Financeiro</h3>
+            <p className="text-sm text-zinc-400">
+              Caixa mensal, projeção 3/6 meses e lançamentos
+            </p>
           </button>
         </div>
       </Card>
