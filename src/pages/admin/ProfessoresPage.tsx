@@ -15,6 +15,7 @@ import {
 } from "lucide-react"
 import { Card, Button, Badge } from "../../components/ui"
 import { useProfessores, useDeleteProfessor } from "../../hooks/useProfessores"
+import { useAlunos } from "../../hooks/useAlunos"
 import { showToast } from "../../utils/toast"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
@@ -22,7 +23,38 @@ import { ptBR } from "date-fns/locale"
 export const ProfessoresPage: React.FC = () => {
   const navigate = useNavigate()
   const { data: professores, isLoading, error, refetch } = useProfessores()
+  const { data: alunos } = useAlunos()
   const deleteProfessor = useDeleteProfessor()
+
+  const metricsByProfessor = React.useMemo(() => {
+    const map = new Map<
+      string,
+      {
+        total: number
+        ativos: number
+        inativos: number
+      }
+    >()
+
+    ;(alunos || []).forEach((aluno) => {
+      const current = map.get(aluno.professorId) || {
+        total: 0,
+        ativos: 0,
+        inativos: 0,
+      }
+
+      current.total += 1
+      if (aluno.ativo) {
+        current.ativos += 1
+      } else {
+        current.inativos += 1
+      }
+
+      map.set(aluno.professorId, current)
+    })
+
+    return map
+  }, [alunos])
 
   const handleDelete = async (id: string, nome: string) => {
     if (
@@ -185,6 +217,13 @@ export const ProfessoresPage: React.FC = () => {
                       </span>
                     </div>
                   )}
+                  <div className="flex items-center gap-2 text-zinc-200">
+                    <Users className="h-4 w-4 flex-shrink-0" />
+                    <span className="text-sm">
+                      Ativos: {metricsByProfessor.get(professor.id)?.ativos || 0} •
+                      Inativos: {metricsByProfessor.get(professor.id)?.inativos || 0}
+                    </span>
+                  </div>
                 </div>
 
                 <div className="flex flex-wrap gap-2">
@@ -199,6 +238,15 @@ export const ProfessoresPage: React.FC = () => {
                         : "Sem alunos"}
                     </Badge>
                   )}
+                  <Badge>
+                    Total: {metricsByProfessor.get(professor.id)?.total || 0}
+                  </Badge>
+                  <Badge variant="success">
+                    Ativos: {metricsByProfessor.get(professor.id)?.ativos || 0}
+                  </Badge>
+                  <Badge variant="warning">
+                    Inativos: {metricsByProfessor.get(professor.id)?.inativos || 0}
+                  </Badge>
                   {professor.especialidade && (
                     <Badge>{professor.especialidade}</Badge>
                   )}

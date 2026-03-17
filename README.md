@@ -21,8 +21,17 @@ Frontend web da plataforma G-Force (React + TypeScript + Vite).
 
 ## Setup local
 
+Na raiz do workspace, o caminho mais rapido e:
+
+```bash
+pnpm run setup:frontend
+```
+
+Dentro de `api-gym-frontend`, o fluxo equivalente e:
+
 ```bash
 pnpm install
+cp .env.example .env
 pnpm run dev
 ```
 
@@ -30,7 +39,7 @@ App local: `http://localhost:5173`
 
 ## Variaveis de ambiente
 
-Crie `.env` com:
+Crie `.env` a partir de `.env.example`:
 
 ```env
 VITE_API_URL=http://localhost:3333

@@ -7,7 +7,12 @@ import {
   type UseQueryOptions,
 } from "react-query"
 import { alunosApi } from "../services/api"
-import { type Aluno, type CreateAlunoDTO, type UpdateAlunoDTO } from "../types"
+import {
+  type Aluno,
+  type CreateAlunoDTO,
+  type UpdateAlunoDTO,
+  type UpdateAlunoStatusDTO,
+} from "../types"
 import { showToast } from "../utils/toast"
 
 interface UpdateAlunoContext {
@@ -187,4 +192,72 @@ export const useDeleteAluno = (): UseMutationResult<
       },
     },
   )
+}
+
+export const useUpdateAlunoStatus = (): UseMutationResult<
+  Aluno,
+  Error,
+  { id: string; data: UpdateAlunoStatusDTO },
+  UpdateAlunoContext
+> => {
+  const queryClient = useQueryClient()
+
+  return useMutation<
+    Aluno,
+    Error,
+    { id: string; data: UpdateAlunoStatusDTO },
+    UpdateAlunoContext
+  >(({ id, data }) => alunosApi.updateStatus(id, data), {
+    onMutate: async ({ id, data }): Promise<UpdateAlunoContext> => {
+      await queryClient.cancelQueries("alunos")
+      await queryClient.cancelQueries(["aluno", id])
+
+      const previousAlunos = queryClient.getQueryData<Aluno[]>("alunos")
+      const previousAluno = queryClient.getQueryData<Aluno>(["aluno", id])
+
+      if (previousAlunos) {
+        queryClient.setQueryData<Aluno[]>("alunos", (old) => {
+          if (!old) return []
+          return old.map((aluno) =>
+            aluno.id === id ? { ...aluno, ativo: data.ativo } : aluno,
+          )
+        })
+      }
+
+      if (previousAluno) {
+        queryClient.setQueryData<Aluno>(["aluno", id], {
+          ...previousAluno,
+          ativo: data.ativo,
+        })
+      }
+
+      return { previousAlunos, previousAluno }
+    },
+    onSuccess: (updatedAluno) => {
+      queryClient.setQueryData<Aluno[]>("alunos", (old) => {
+        if (!old) return [updatedAluno]
+        return old.map((aluno) =>
+          aluno.id === updatedAluno.id ? { ...aluno, ...updatedAluno } : aluno,
+        )
+      })
+
+      queryClient.setQueryData(["aluno", updatedAluno.id], updatedAluno)
+      queryClient.invalidateQueries("alunos")
+      queryClient.invalidateQueries(["aluno", updatedAluno.id])
+      showToast.success(
+        updatedAluno.ativo
+          ? "Aluno reativado com sucesso!"
+          : "Aluno inativado com sucesso!",
+      )
+    },
+    onError: (error, variables, context) => {
+      if (context?.previousAlunos) {
+        queryClient.setQueryData("alunos", context.previousAlunos)
+      }
+      if (context?.previousAluno) {
+        queryClient.setQueryData(["aluno", variables.id], context.previousAluno)
+      }
+      showToast.error(error.message || "Erro ao atualizar status do aluno")
+    },
+  })
 }
