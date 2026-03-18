@@ -17,6 +17,7 @@ import {
   useUpdateProfessor,
   useProfessor,
 } from "../../hooks/useProfessores"
+import type { CreateProfessorDTO } from "../../types"
 import { showToast } from "../../utils/toast"
 
 const initialFormState = {
@@ -88,7 +89,7 @@ export const ProfessorForm: React.FC = () => {
 
     try {
       if (isEdit) {
-        const dataToSend: any = {}
+        const dataToSend: Partial<CreateProfessorDTO> = {}
         if (formData.telefone.trim())
           dataToSend.telefone = formData.telefone.trim()
         if (formData.especialidade.trim())
@@ -98,7 +99,7 @@ export const ProfessorForm: React.FC = () => {
         showToast.success("✅ Professor atualizado com sucesso!")
         navigate("/admin/professores")
       } else {
-        const dataToSend: any = {
+        const dataToSend: CreateProfessorDTO = {
           nome: formData.nome.trim(),
           email: formData.email.trim(),
           password: formData.password,
@@ -113,8 +114,12 @@ export const ProfessorForm: React.FC = () => {
         showToast.success("✅ Professor cadastrado com sucesso!")
         navigate("/admin/professores")
       }
-    } catch (error: any) {
-      showToast.error(error.message || "Erro ao salvar professor")
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        showToast.error(error.message)
+      } else {
+        showToast.error("Erro ao salvar professor")
+      }
     }
   }
 

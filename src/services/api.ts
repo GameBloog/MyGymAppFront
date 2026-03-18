@@ -316,6 +316,11 @@ export const alunosApi = {
     return response.data
   },
 
+  getMe: async (): Promise<Aluno> => {
+    const response = await api.get<Aluno>("/alunos/me")
+    return response.data
+  },
+
   getById: async (id: string): Promise<Aluno> => {
     const response = await api.get<Aluno>(`/alunos/${id}`)
     return response.data

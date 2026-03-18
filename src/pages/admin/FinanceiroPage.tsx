@@ -15,6 +15,7 @@ import {
   Unlock,
   Users,
 } from "lucide-react"
+import { ConfirmModal } from "../../components/ConfirmModal"
 import { Button, Card } from "../../components/ui"
 import {
   useCloseFinanceMonth,
@@ -39,10 +40,29 @@ import {
 
 type FinanceViewMode = "METRICAS" | "GRAFICOS"
 type EntryFilter = "ALL" | FinanceEntryType
+type ConfirmDialogState = {
+  isOpen: boolean
+  title: string
+  message: string
+  confirmText: string
+  cancelText: string
+  variant: "danger" | "warning" | "info"
+  onConfirm: null | (() => Promise<void>)
+}
 
 const brl = new Intl.NumberFormat("pt-BR", {
   style: "currency",
   currency: "BRL",
+})
+
+const createInitialConfirmDialog = (): ConfirmDialogState => ({
+  isOpen: false,
+  title: "",
+  message: "",
+  confirmText: "Confirmar",
+  cancelText: "Cancelar",
+  variant: "warning",
+  onConfirm: null,
 })
 
 const formatMonthLabel = (month: string) => {
@@ -142,6 +162,9 @@ export const FinanceiroPage: React.FC = () => {
 
   const [activeMonth, setActiveMonth] = useState(initialToMonth)
   const [entryFilter, setEntryFilter] = useState<EntryFilter>("ALL")
+  const [confirmDialog, setConfirmDialog] = useState<ConfirmDialogState>(
+    createInitialConfirmDialog,
+  )
 
   const [renewalForm, setRenewalForm] = useState({
     alunoId: "",
@@ -357,24 +380,80 @@ export const FinanceiroPage: React.FC = () => {
     })
   }
 
-  const handleDeleteRenewal = async (renewalId: string) => {
-    if (!window.confirm("Deseja remover esta renovação?")) return
-    await deleteRenewal.mutateAsync(renewalId)
+  const closeConfirmDialog = () => {
+    setConfirmDialog(createInitialConfirmDialog())
   }
 
-  const handleDeleteEntry = async (entryId: string) => {
-    if (!window.confirm("Deseja remover este lançamento?")) return
-    await deleteEntry.mutateAsync(entryId)
+  const handleConfirmAction = async () => {
+    if (!confirmDialog.onConfirm) {
+      return
+    }
+
+    try {
+      await confirmDialog.onConfirm()
+    } finally {
+      closeConfirmDialog()
+    }
   }
 
-  const handleCloseMonth = async () => {
-    if (!window.confirm(`Fechar o mês ${activeMonth}?`)) return
-    await closeMonth.mutateAsync(activeMonth)
+  const handleDeleteRenewal = (renewalId: string) => {
+    setConfirmDialog({
+      isOpen: true,
+      title: "Remover Renovação",
+      message: "Deseja remover esta renovação?",
+      confirmText: "Sim, Remover",
+      cancelText: "Cancelar",
+      variant: "danger",
+      onConfirm: async () => {
+        await deleteRenewal.mutateAsync(renewalId)
+      },
+    })
   }
 
-  const handleReopenMonth = async () => {
-    if (!window.confirm(`Reabrir o mês ${activeMonth}?`)) return
-    await reopenMonth.mutateAsync(activeMonth)
+  const handleDeleteEntry = (entryId: string) => {
+    setConfirmDialog({
+      isOpen: true,
+      title: "Remover Lançamento",
+      message: "Deseja remover este lançamento?",
+      confirmText: "Sim, Remover",
+      cancelText: "Cancelar",
+      variant: "danger",
+      onConfirm: async () => {
+        await deleteEntry.mutateAsync(entryId)
+      },
+    })
+  }
+
+  const handleCloseMonth = () => {
+    const monthLabel = formatMonthLabel(activeMonth)
+
+    setConfirmDialog({
+      isOpen: true,
+      title: "Fechar Mês",
+      message: `Deseja fechar o mês ${monthLabel}?\n\nCriação, edição e exclusão de registros ficarão bloqueadas até reabrir.`,
+      confirmText: "Sim, Fechar Mês",
+      cancelText: "Cancelar",
+      variant: "warning",
+      onConfirm: async () => {
+        await closeMonth.mutateAsync(activeMonth)
+      },
+    })
+  }
+
+  const handleReopenMonth = () => {
+    const monthLabel = formatMonthLabel(activeMonth)
+
+    setConfirmDialog({
+      isOpen: true,
+      title: "Reabrir Mês",
+      message: `Deseja reabrir o mês ${monthLabel}?\n\nRenovações e lançamentos voltarão a poder ser alterados.`,
+      confirmText: "Sim, Reabrir Mês",
+      cancelText: "Cancelar",
+      variant: "info",
+      onConfirm: async () => {
+        await reopenMonth.mutateAsync(activeMonth)
+      },
+    })
   }
 
   const isMutating =
@@ -1143,6 +1222,23 @@ export const FinanceiroPage: React.FC = () => {
           </div>
         </div>
       </Card>
+
+      <ConfirmModal
+        isOpen={confirmDialog.isOpen}
+        title={confirmDialog.title}
+        message={confirmDialog.message}
+        confirmText={confirmDialog.confirmText}
+        cancelText={confirmDialog.cancelText}
+        variant={confirmDialog.variant}
+        onConfirm={handleConfirmAction}
+        onCancel={closeConfirmDialog}
+        isLoading={
+          deleteRenewal.isLoading ||
+          deleteEntry.isLoading ||
+          closeMonth.isLoading ||
+          reopenMonth.isLoading
+        }
+      />
     </div>
   )
 }

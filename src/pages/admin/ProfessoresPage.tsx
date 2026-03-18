@@ -13,6 +13,7 @@ import {
   Briefcase,
   UserCheck,
 } from "lucide-react"
+import { ConfirmModal } from "../../components/ConfirmModal"
 import { Card, Button, Badge } from "../../components/ui"
 import { useProfessores, useDeleteProfessor } from "../../hooks/useProfessores"
 import { useAlunos } from "../../hooks/useAlunos"
@@ -20,11 +21,34 @@ import { showToast } from "../../utils/toast"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
 
+type ConfirmDialogState = {
+  isOpen: boolean
+  title: string
+  message: string
+  confirmText: string
+  cancelText: string
+  variant: "danger" | "warning" | "info"
+  onConfirm: null | (() => Promise<void>)
+}
+
+const createInitialConfirmDialog = (): ConfirmDialogState => ({
+  isOpen: false,
+  title: "",
+  message: "",
+  confirmText: "Confirmar",
+  cancelText: "Cancelar",
+  variant: "danger",
+  onConfirm: null,
+})
+
 export const ProfessoresPage: React.FC = () => {
   const navigate = useNavigate()
   const { data: professores, isLoading, error, refetch } = useProfessores()
   const { data: alunos } = useAlunos()
   const deleteProfessor = useDeleteProfessor()
+  const [confirmDialog, setConfirmDialog] = React.useState<ConfirmDialogState>(
+    createInitialConfirmDialog,
+  )
 
   const metricsByProfessor = React.useMemo(() => {
     const map = new Map<
@@ -56,23 +80,47 @@ export const ProfessoresPage: React.FC = () => {
     return map
   }, [alunos])
 
-  const handleDelete = async (id: string, nome: string) => {
-    if (
-      window.confirm(
-        `Deseja realmente excluir o professor ${nome}?\n\n⚠️ Isso só é possível se ele não tiver alunos vinculados.`
-      )
-    ) {
-      const toastId = showToast.loading("Excluindo professor...")
+  const closeConfirmDialog = () => {
+    setConfirmDialog(createInitialConfirmDialog())
+  }
 
-      try {
-        await deleteProfessor.mutateAsync(id)
-        showToast.dismiss(toastId)
-        showToast.success("Professor excluído com sucesso!")
-      } catch (error: any) {
-        showToast.dismiss(toastId)
-        showToast.error(error.message || "Erro ao excluir professor")
-      }
+  const handleConfirmAction = async () => {
+    if (!confirmDialog.onConfirm) {
+      return
     }
+
+    try {
+      await confirmDialog.onConfirm()
+    } finally {
+      closeConfirmDialog()
+    }
+  }
+
+  const handleDelete = (id: string, nome: string) => {
+    setConfirmDialog({
+      isOpen: true,
+      title: "Excluir Professor",
+      message: `Deseja realmente excluir o professor ${nome}?\n\nIsso só é possível se ele não tiver alunos vinculados.`,
+      confirmText: "Sim, Excluir",
+      cancelText: "Cancelar",
+      variant: "danger",
+      onConfirm: async () => {
+        const toastId = showToast.loading("Excluindo professor...")
+
+        try {
+          await deleteProfessor.mutateAsync(id)
+          showToast.dismiss(toastId)
+          showToast.success("Professor excluído com sucesso!")
+        } catch (error: unknown) {
+          showToast.dismiss(toastId)
+          if (error instanceof Error) {
+            showToast.error(error.message)
+          } else {
+            showToast.error("Erro ao excluir professor")
+          }
+        }
+      },
+    })
   }
 
   if (isLoading) {
@@ -272,6 +320,18 @@ export const ProfessoresPage: React.FC = () => {
           </Card>
         )}
       </div>
+
+      <ConfirmModal
+        isOpen={confirmDialog.isOpen}
+        title={confirmDialog.title}
+        message={confirmDialog.message}
+        confirmText={confirmDialog.confirmText}
+        cancelText={confirmDialog.cancelText}
+        variant={confirmDialog.variant}
+        onConfirm={handleConfirmAction}
+        onCancel={closeConfirmDialog}
+        isLoading={deleteProfessor.isLoading}
+      />
     </div>
   )
 }

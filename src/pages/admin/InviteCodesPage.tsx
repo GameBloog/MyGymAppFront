@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { Ticket, Plus, Copy, Check, ArrowLeft } from "lucide-react"
 import { Card, Button, Badge } from "../../components/ui"
 import { useInviteCodes, useCreateInviteCode } from "../../hooks/useInviteCodes"
-import { CreateInviteCodeDTO } from "../../types"
+import type { CreateInviteCodeDTO, InviteCode } from "../../types"
 import { showToast } from "../../utils/toast"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
@@ -43,9 +43,9 @@ export const InviteCodesPage: React.FC = () => {
       setShowModal(false)
 
       handleCopyCode(newCode.code)
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("❌ Erro ao criar código:", error)
-      showToast.error(error.message || "Erro ao criar código")
+      showToast.error(error instanceof Error ? error.message : "Erro ao criar código")
     }
   }
 
@@ -64,7 +64,7 @@ export const InviteCodesPage: React.FC = () => {
     setShowModal(false)
   }
 
-  const getStatusBadge = (code: any) => {
+  const getStatusBadge = (code: InviteCode) => {
     if (code.usedBy) {
       return <Badge variant="success">✅ Usado</Badge>
     }

@@ -74,9 +74,13 @@ export const useCreateHistorico = (): UseMutationResult<
         ])
         showToast.success("Registro de evolução adicionado com sucesso!")
       },
-      onError: (error: any) => {
+      onError: (error: unknown) => {
         console.error("❌ Erro ao criar histórico:", error)
-        showToast.error(error.message || "Erro ao adicionar registro")
+        if (error instanceof Error) {
+          showToast.error(error.message)
+        } else {
+          showToast.error("Erro ao adicionar registro")
+        }
       },
     }
   )
@@ -99,9 +103,13 @@ export const useUpdateHistorico = (): UseMutationResult<
       queryClient.invalidateQueries(["historico-ultimo", variables.alunoId])
       showToast.success("Registro atualizado com sucesso!")
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error("❌ Erro ao atualizar histórico:", error)
-      showToast.error(error.message || "Erro ao atualizar registro")
+      if (error instanceof Error) {
+        showToast.error(error.message)
+      } else {
+        showToast.error("Erro ao atualizar registro")
+      }
     },
   })
 }
@@ -121,9 +129,13 @@ export const useDeleteHistorico = (): UseMutationResult<
         queryClient.invalidateQueries(["historico-ultimo", variables.alunoId])
         showToast.success("Registro excluído com sucesso!")
       },
-      onError: (error: any) => {
+      onError: (error: unknown) => {
         console.error("❌ Erro ao deletar histórico:", error)
-        showToast.error(error.message || "Erro ao excluir registro")
+        if (error instanceof Error) {
+          showToast.error(error.message)
+        } else {
+          showToast.error("Erro ao excluir registro")
+        }
       },
     }
   )

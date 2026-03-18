@@ -19,6 +19,7 @@ import {
   UserCheck,
   UserX,
 } from "lucide-react"
+import { ConfirmModal } from "../components/ConfirmModal"
 import { Card, Badge, Input, Button } from "../components/ui"
 import {
   useAlunos,
@@ -30,12 +31,35 @@ import { showToast } from "../utils/toast"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
 
+type ConfirmDialogState = {
+  isOpen: boolean
+  title: string
+  message: string
+  confirmText: string
+  cancelText: string
+  variant: "danger" | "warning" | "info"
+  onConfirm: null | (() => Promise<void>)
+}
+
+const createInitialConfirmDialog = (): ConfirmDialogState => ({
+  isOpen: false,
+  title: "",
+  message: "",
+  confirmText: "Confirmar",
+  cancelText: "Cancelar",
+  variant: "warning",
+  onConfirm: null,
+})
+
 export const AnswersList: React.FC = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
   const [searchTerm, setSearchTerm] = useState("")
   const [activeTab, setActiveTab] = useState<"ATIVOS" | "INATIVOS" | "TODOS">(
     "ATIVOS",
+  )
+  const [confirmDialog, setConfirmDialog] = useState<ConfirmDialogState>(
+    createInitialConfirmDialog,
   )
   const { data: alunos, isLoading, error, refetch } = useAlunos()
   const deleteAluno = useDeleteAluno()
@@ -93,43 +117,71 @@ export const AnswersList: React.FC = () => {
     [alunos],
   )
 
-  const handleDelete = async (id: string, nome: string) => {
-    if (
-      window.confirm(
-        `Deseja realmente excluir o aluno ${nome}?\n\nEsta ação não pode ser desfeita.`,
-      )
-    ) {
-      const toastId = showToast.loading("Excluindo aluno...")
-
-      try {
-        await deleteAluno.mutateAsync(id)
-        showToast.dismiss(toastId)
-        showToast.success("Aluno excluído com sucesso!")
-      } catch (error) {
-        showToast.dismiss(toastId)
-        if (error instanceof Error) {
-          showToast.error(error.message)
-        } else {
-          showToast.error("Erro ao excluir aluno")
-        }
-      }
-    }
+  const closeConfirmDialog = () => {
+    setConfirmDialog(createInitialConfirmDialog())
   }
 
-  const handleToggleStatus = async (id: string, ativoAtual: boolean) => {
-    const actionLabel = ativoAtual ? "inativar" : "reativar"
-    if (!window.confirm(`Deseja ${actionLabel} este aluno?`)) {
+  const handleConfirmAction = async () => {
+    if (!confirmDialog.onConfirm) {
       return
     }
 
     try {
-      await updateAlunoStatus.mutateAsync({
-        id,
-        data: { ativo: !ativoAtual },
-      })
-    } catch (error) {
-      console.error(error)
+      await confirmDialog.onConfirm()
+    } finally {
+      closeConfirmDialog()
     }
+  }
+
+  const handleDelete = (id: string, nome: string) => {
+    setConfirmDialog({
+      isOpen: true,
+      title: "Excluir Aluno",
+      message: `Deseja realmente excluir o aluno ${nome}?\n\nEsta ação não pode ser desfeita.`,
+      confirmText: "Sim, Excluir",
+      cancelText: "Cancelar",
+      variant: "danger",
+      onConfirm: async () => {
+        const toastId = showToast.loading("Excluindo aluno...")
+
+        try {
+          await deleteAluno.mutateAsync(id)
+          showToast.dismiss(toastId)
+          showToast.success("Aluno excluído com sucesso!")
+        } catch (error) {
+          showToast.dismiss(toastId)
+          if (error instanceof Error) {
+            showToast.error(error.message)
+          } else {
+            showToast.error("Erro ao excluir aluno")
+          }
+        }
+      },
+    })
+  }
+
+  const handleToggleStatus = (id: string, ativoAtual: boolean) => {
+    const actionLabel = ativoAtual ? "inativar" : "reativar"
+    const confirmText = ativoAtual ? "Sim, Inativar" : "Sim, Reativar"
+
+    setConfirmDialog({
+      isOpen: true,
+      title: ativoAtual ? "Inativar Aluno" : "Reativar Aluno",
+      message: `Deseja ${actionLabel} este aluno?`,
+      confirmText,
+      cancelText: "Cancelar",
+      variant: ativoAtual ? "warning" : "info",
+      onConfirm: async () => {
+        try {
+          await updateAlunoStatus.mutateAsync({
+            id,
+            data: { ativo: !ativoAtual },
+          })
+        } catch (error) {
+          console.error(error)
+        }
+      },
+    })
   }
 
   const filteredAlunos =
@@ -555,6 +607,18 @@ export const AnswersList: React.FC = () => {
           )}
         </Card>
       )}
+
+      <ConfirmModal
+        isOpen={confirmDialog.isOpen}
+        title={confirmDialog.title}
+        message={confirmDialog.message}
+        confirmText={confirmDialog.confirmText}
+        cancelText={confirmDialog.cancelText}
+        variant={confirmDialog.variant}
+        onConfirm={handleConfirmAction}
+        onCancel={closeConfirmDialog}
+        isLoading={deleteAluno.isLoading || updateAlunoStatus.isLoading}
+      />
     </div>
   )
 }

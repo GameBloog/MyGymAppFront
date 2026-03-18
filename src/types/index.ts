@@ -469,7 +469,7 @@ export interface CreateUserAnswerDTO {
   frequencia_horarios_refeicoes?: string
 }
 
-export interface UpdateUserAnswerDTO extends Partial<CreateUserAnswerDTO> {}
+export type UpdateUserAnswerDTO = Partial<CreateUserAnswerDTO>
 
 export interface ApiError {
   error: string
