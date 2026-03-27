@@ -23,6 +23,10 @@ import {
   useTreinoCheckins,
   useUpsertPlanoTreino,
 } from "../../hooks/useTreino"
+import {
+  useCreateTreinoModelo,
+  useTreinoModelos,
+} from "../../modules/treino-modelos/hooks/useTreinoModelos"
 import { showToast } from "../../utils/toast"
 import { diasSemanaOptions, formatDiaSemana, grupamentoLabels } from "../../utils/treino"
 import { useAuth } from "../../hooks/useAuth"
@@ -33,6 +37,7 @@ import type {
   TreinoCheckin,
   UpsertPlanoTreinoDTO,
 } from "../../types"
+import type { TreinoModelo } from "../../modules/treino-modelos/types"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
 
@@ -97,6 +102,49 @@ const parseOptionalInt = (value: string): number | undefined => {
   return Math.trunc(parsed)
 }
 
+const buildTreinoDiasPayload = (dias: DraftDay[]): UpsertPlanoTreinoDTO["dias"] =>
+  dias.map((day, dayIndex) => ({
+    titulo: day.titulo.trim(),
+    ordem: dayIndex + 1,
+    diaSemana: day.diaSemana,
+    observacoes: day.observacoes?.trim() || undefined,
+    metodo: day.metodo?.trim() || undefined,
+    exercicios: day.exercicios.map((item, itemIndex) => ({
+      exercicioId: item.exercicioId,
+      ordem: itemIndex + 1,
+      series: item.series || undefined,
+      repeticoes: item.repeticoes?.trim() || undefined,
+      cargaSugerida: item.cargaSugerida || undefined,
+      observacoes: item.observacoes?.trim() || undefined,
+      metodo: item.metodo?.trim() || undefined,
+    })),
+  }))
+
+const mapModeloToDraftDays = (modelo: TreinoModelo): DraftDay[] =>
+  modelo.dias
+    .sort((a, b) => a.ordem - b.ordem)
+    .map((dia, dayIndex) => ({
+      localId: createLocalId(),
+      titulo: dia.titulo,
+      ordem: dayIndex + 1,
+      diaSemana: dia.diaSemana || undefined,
+      observacoes: dia.observacoes || "",
+      metodo: dia.metodo || "",
+      exercicios: dia.exercicios
+        .sort((a, b) => a.ordem - b.ordem)
+        .map((item, itemIndex) => ({
+          localId: createLocalId(),
+          exercicioId: item.exercicioId,
+          ordem: itemIndex + 1,
+          series: item.series || undefined,
+          repeticoes: item.repeticoes || undefined,
+          cargaSugerida: item.cargaSugerida || undefined,
+          observacoes: item.observacoes || undefined,
+          metodo: item.metodo || undefined,
+          exercicio: item.exercicio,
+        })),
+    }))
+
 export const PlanoTreinoEditorPage: React.FC = () => {
   const navigate = useNavigate()
   const { id: alunoId } = useParams<{ id: string }>()
@@ -143,8 +191,10 @@ export const PlanoTreinoEditorPage: React.FC = () => {
     15,
     !!alunoId,
   )
+  const { data: modelos, isLoading: loadingModelos } = useTreinoModelos(!isAdmin)
 
   const upsertPlano = useUpsertPlanoTreino()
+  const createTreinoModelo = useCreateTreinoModelo()
   const createExercicio = useCreateExercicio()
   const importExercicioExterno = useImportExercicioExterno()
   const comentarCheckinProfessor = useComentarCheckinProfessor()
@@ -492,6 +542,52 @@ export const PlanoTreinoEditorPage: React.FC = () => {
     }
   }
 
+  const handleSaveModelo = async () => {
+    if (!nomePlano.trim() || nomePlano.trim().length < 2) {
+      showToast.error("Informe um nome válido para salvar o molde")
+      return
+    }
+
+    if (dias.length === 0) {
+      showToast.error("Adicione pelo menos um dia de treino")
+      return
+    }
+
+    const invalidDay = dias.find(
+      (day) => !day.titulo.trim() || day.exercicios.length === 0,
+    )
+    if (invalidDay) {
+      showToast.error(
+        "Cada dia precisa ter título e pelo menos um exercício cadastrado",
+      )
+      return
+    }
+
+    await createTreinoModelo.mutateAsync({
+      nome: nomePlano.trim(),
+      observacoes: observacoesPlano.trim() || undefined,
+      dias: buildTreinoDiasPayload(dias),
+    })
+  }
+
+  const handleApplyModelo = (modelo: TreinoModelo) => {
+    if (
+      dias.length > 0 &&
+      !window.confirm(
+        "Aplicar este molde substituirá o rascunho atual do treino. Deseja continuar?",
+      )
+    ) {
+      return
+    }
+
+    const diasMapeados = mapModeloToDraftDays(modelo)
+    setNomePlano(modelo.nome)
+    setObservacoesPlano(modelo.observacoes || "")
+    setDias(diasMapeados)
+    setSelectedDayId(diasMapeados[0]?.localId || "")
+    showToast.success("Molde aplicado ao editor")
+  }
+
   const handleSavePlano = async () => {
     if (!alunoId) {
       showToast.error("Aluno inválido")
@@ -522,22 +618,7 @@ export const PlanoTreinoEditorPage: React.FC = () => {
       alunoId,
       nome: nomePlano.trim(),
       observacoes: observacoesPlano.trim() || undefined,
-      dias: dias.map((day, dayIndex) => ({
-        titulo: day.titulo.trim(),
-        ordem: dayIndex + 1,
-        diaSemana: day.diaSemana,
-        observacoes: day.observacoes?.trim() || undefined,
-        metodo: day.metodo?.trim() || undefined,
-        exercicios: day.exercicios.map((item, itemIndex) => ({
-          exercicioId: item.exercicioId,
-          ordem: itemIndex + 1,
-          series: item.series || undefined,
-          repeticoes: item.repeticoes?.trim() || undefined,
-          cargaSugerida: item.cargaSugerida || undefined,
-          observacoes: item.observacoes?.trim() || undefined,
-          metodo: item.metodo?.trim() || undefined,
-        })),
-      })),
+      dias: buildTreinoDiasPayload(dias),
     }
 
     await upsertPlano.mutateAsync(payload)
@@ -613,13 +694,24 @@ export const PlanoTreinoEditorPage: React.FC = () => {
           </div>
         </div>
 
-        <Button
-          icon={Save}
-          onClick={handleSavePlano}
-          isLoading={upsertPlano.isLoading}
-        >
-          Salvar Plano
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          {!isAdmin && (
+            <Button
+              variant="secondary"
+              onClick={handleSaveModelo}
+              isLoading={createTreinoModelo.isLoading}
+            >
+              Salvar como molde
+            </Button>
+          )}
+          <Button
+            icon={Save}
+            onClick={handleSavePlano}
+            isLoading={upsertPlano.isLoading}
+          >
+            Salvar Plano
+          </Button>
+        </div>
       </div>
 
       <Card>
@@ -640,6 +732,69 @@ export const PlanoTreinoEditorPage: React.FC = () => {
           />
         </div>
       </Card>
+
+      {!isAdmin && (
+        <Card>
+          <div className="flex items-center justify-between gap-3 mb-4">
+            <div>
+              <h2 className="text-lg font-semibold">Moldes de treino</h2>
+              <p className="text-sm text-zinc-300">
+                Use um molde salvo para substituir o rascunho atual e continuar editando.
+              </p>
+            </div>
+            <Button
+              variant="secondary"
+              onClick={handleSaveModelo}
+              isLoading={createTreinoModelo.isLoading}
+            >
+              Salvar treino atual
+            </Button>
+          </div>
+
+          {loadingModelos ? (
+            <div className="flex items-center gap-2 text-zinc-300">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Carregando moldes...
+            </div>
+          ) : !modelos?.length ? (
+            <p className="text-sm text-zinc-400">
+              Nenhum molde salvo ainda para este professor.
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+              {modelos.map((modelo) => (
+                <div
+                  key={modelo.id}
+                  className="border border-zinc-700 rounded-lg p-4 bg-zinc-900"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-semibold text-white">{modelo.nome}</p>
+                      <p className="text-xs text-zinc-400 mt-1">
+                        {modelo.dias.length} dia(s) • atualizado em{" "}
+                        {format(new Date(modelo.updatedAt), "dd/MM/yyyy HH:mm", {
+                          locale: ptBR,
+                        })}
+                      </p>
+                      {modelo.observacoes && (
+                        <p className="text-sm text-zinc-300 mt-2">
+                          {modelo.observacoes}
+                        </p>
+                      )}
+                    </div>
+                    <Button
+                      variant="secondary"
+                      onClick={() => handleApplyModelo(modelo)}
+                    >
+                      Aplicar
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
+      )}
 
       <Card>
         <div className="flex items-center justify-between mb-4">

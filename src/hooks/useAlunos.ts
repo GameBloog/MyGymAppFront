@@ -24,6 +24,27 @@ interface DeleteAlunoContext {
   previousAlunos?: Aluno[]
 }
 
+const mergeAlunoWithUpdate = (aluno: Aluno, data: UpdateAlunoDTO): Aluno => {
+  const { nome, email } = data
+  const alunoData: UpdateAlunoDTO = { ...data }
+
+  delete alunoData.nome
+  delete alunoData.email
+  delete alunoData.password
+
+  return {
+    ...aluno,
+    ...alunoData,
+    user: aluno.user
+      ? {
+          ...aluno.user,
+          ...(nome !== undefined && { nome }),
+          ...(email !== undefined && { email }),
+        }
+      : aluno.user,
+  }
+}
+
 export const useAlunos = (): UseQueryResult<Aluno[], Error> => {
   return useQuery<Aluno[], Error>("alunos", alunosApi.getAll, {
     staleTime: 30000,
@@ -100,20 +121,17 @@ export const useUpdateAluno = (): UseMutationResult<
       if (previousAlunos) {
         queryClient.setQueryData<Aluno[]>("alunos", (old) => {
           if (!old) return []
-          return old.map((aluno) => {
-            if (aluno.id === id) {
-              return { ...aluno, ...data }
-            }
-            return aluno
-          })
+          return old.map((aluno) =>
+            aluno.id === id ? mergeAlunoWithUpdate(aluno, data) : aluno,
+          )
         })
       }
 
       if (previousAluno) {
-        queryClient.setQueryData<Aluno>(["aluno", id], {
-          ...previousAluno,
-          ...data,
-        })
+        queryClient.setQueryData<Aluno>(
+          ["aluno", id],
+          mergeAlunoWithUpdate(previousAluno, data),
+        )
       }
 
       return { previousAlunos, previousAluno }

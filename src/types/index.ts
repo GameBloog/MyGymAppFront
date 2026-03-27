@@ -346,6 +346,14 @@ export interface CreateProfessorDTO {
   especialidade?: string
 }
 
+export interface UpdateProfessorDTO {
+  nome?: string
+  email?: string
+  password?: string
+  telefone?: string
+  especialidade?: string
+}
+
 export interface Aluno {
   id: string
   userId: string
@@ -405,6 +413,9 @@ export interface CreateAlunoDTO {
 }
 
 export interface UpdateAlunoDTO {
+  nome?: string
+  email?: string
+  password?: string
   sexoBiologico?: SexoBiologico
   telefone?: string
   alturaCm?: number

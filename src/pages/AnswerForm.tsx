@@ -64,11 +64,14 @@ export const AnswerForm: React.FC = () => {
   const isProfessor = user?.role === "PROFESSOR"
   const isEdit = Boolean(id) || isAluno
   const isCreating = !id && !isAluno
+  const isAdminEditing = isEdit && isAdmin && !isAluno
 
   const createAluno = useCreateAluno()
   const updateAluno = useUpdateAluno()
 
-  const { data: professores, isLoading: loadingProfessores } = useProfessores()
+  const { data: professores, isLoading: loadingProfessores } = useProfessores({
+    enabled: isAdmin,
+  })
 
   const shouldFetchById = Boolean(id) && !isAluno
   const { data: editingAluno, isLoading: loadingEditAluno } = useAluno(
@@ -96,18 +99,11 @@ export const AnswerForm: React.FC = () => {
     return "/aluno/dashboard"
   }
 
-  useEffect(() => {}, [isProfessor, isCreating, professores, user])
-
   useEffect(() => {
     if (isEdit && existingAluno) {
-      console.log(
-        "✅ Preenchendo formulário com dados do aluno:",
-        existingAluno
-      )
-
       setFormData({
-        nome: "",
-        email: "",
+        nome: existingAluno.user?.nome || "",
+        email: existingAluno.user?.email || "",
         password: "",
         professorId: existingAluno.professorId || "",
         sexoBiologico: existingAluno.sexoBiologico || "",
@@ -137,7 +133,7 @@ export const AnswerForm: React.FC = () => {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {}
 
-    if (isCreating) {
+    if (isCreating || isAdminEditing) {
       if (!formData.nome.trim()) {
         newErrors.nome = "Nome é obrigatório"
       } else if (formData.nome.trim().length < 2) {
@@ -150,13 +146,13 @@ export const AnswerForm: React.FC = () => {
         newErrors.email = "Email inválido"
       }
 
-      if (!formData.password) {
+      if (isCreating && !formData.password) {
         newErrors.password = "Senha é obrigatória"
-      } else if (formData.password.length < 6) {
+      } else if (formData.password && formData.password.length < 6) {
         newErrors.password = "Senha deve ter pelo menos 6 caracteres"
       }
 
-      if (isAdmin && !formData.professorId) {
+      if (isCreating && isAdmin && !formData.professorId) {
         newErrors.professorId = "Selecione um professor"
       }
     }
@@ -205,6 +201,12 @@ export const AnswerForm: React.FC = () => {
         }
 
         const dataToSend: UpdateAlunoDTO = {}
+
+        if (isAdminEditing) {
+          dataToSend.nome = formData.nome.trim()
+          dataToSend.email = formData.email.trim()
+          if (formData.password) dataToSend.password = formData.password
+        }
 
         if (formData.telefone.trim())
           dataToSend.telefone = formData.telefone.trim()
@@ -563,6 +565,60 @@ export const AnswerForm: React.FC = () => {
               </p>
             </div>
           )}
+        </Card>
+      )}
+
+      {isAdminEditing && (
+        <Card className="mb-6">
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <Lock className="h-5 w-5" />
+            Dados de Acesso
+          </h2>
+
+          <p className="text-sm text-zinc-200 mb-4">
+            Atualize nome, email e senha quando necessário. Deixe a senha em
+            branco para manter a atual.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label="Nome Completo *"
+              icon={User}
+              value={formData.nome}
+              onChange={(e) => {
+                setFormData({ ...formData, nome: e.target.value })
+                setErrors({ ...errors, nome: "" })
+              }}
+              placeholder="João Silva"
+              error={errors.nome}
+              required
+            />
+            <Input
+              label="Email *"
+              icon={Mail}
+              type="email"
+              value={formData.email}
+              onChange={(e) => {
+                setFormData({ ...formData, email: e.target.value })
+                setErrors({ ...errors, email: "" })
+              }}
+              placeholder="joao@email.com"
+              error={errors.email}
+              required
+            />
+            <Input
+              label="Nova Senha"
+              icon={Lock}
+              type="password"
+              value={formData.password}
+              onChange={(e) => {
+                setFormData({ ...formData, password: e.target.value })
+                setErrors({ ...errors, password: "" })
+              }}
+              placeholder="Deixe em branco para manter a atual"
+              error={errors.password}
+            />
+          </div>
         </Card>
       )}
 

@@ -576,7 +576,7 @@ export const AlunoDashboardPage: React.FC = () => {
                 <a
                   href={youtubeContent.video.watchUrl}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="inline-flex"
                 >
                   <Button icon={PlayCircle}>Assistir no YouTube</Button>
@@ -585,7 +585,7 @@ export const AlunoDashboardPage: React.FC = () => {
               <a
                 href={youtubeChannelUrl}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="inline-flex"
               >
                 <Button variant="secondary" icon={ExternalLink}>
@@ -599,7 +599,7 @@ export const AlunoDashboardPage: React.FC = () => {
             <a
               href={youtubeContent.video.watchUrl}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="group block"
               aria-label={`Abrir vídeo ${youtubeContent.video.title} no YouTube`}
             >
@@ -707,7 +707,7 @@ export const AlunoDashboardPage: React.FC = () => {
                 <a
                   href={ultimaDietaPdf.url}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="inline-flex"
                 >
                   <Button icon={FileText}>Abrir última dieta em PDF</Button>
@@ -756,7 +756,7 @@ export const AlunoDashboardPage: React.FC = () => {
                 <a
                   href={ultimoTreinoPdf.url}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="inline-flex"
                 >
                   <Button icon={FileText}>Abrir último treino em PDF</Button>

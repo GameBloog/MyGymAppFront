@@ -14,6 +14,7 @@ import {
   type LeadAnalytics,
   type Professor,
   type CreateProfessorDTO,
+  type UpdateProfessorDTO,
   type Aluno,
   type CreateAlunoDTO,
   type UpdateAlunoDTO,
@@ -41,6 +42,22 @@ export const api = axios.create({
   },
   timeout: 10000,
 })
+
+const shouldLogApiErrors = import.meta.env.DEV
+
+const cleanPayload = <T extends object>(data: T): Record<string, unknown> =>
+  Object.entries(data as Record<string, unknown>).reduce(
+    (acc, [key, value]) => {
+      if (value !== undefined && value !== "" && value !== null) {
+        if (Array.isArray(value) && value.length === 0) {
+          return acc
+        }
+        acc[key] = value
+      }
+      return acc
+    },
+    {} as Record<string, unknown>,
+  )
 
 let isRedirecting = false
 
@@ -78,7 +95,9 @@ api.interceptors.request.use(
     return config
   },
   (error) => {
-    console.error("❌ Request Error:", error)
+    if (shouldLogApiErrors) {
+      console.error("Request Error:", error)
+    }
     return Promise.reject(error)
   },
 )
@@ -86,11 +105,12 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error: AxiosError<ApiError>) => {
-    console.error("❌ API Error:", {
-      status: error.response?.status,
-      data: error.response?.data,
-      url: error.config?.url,
-    })
+    if (shouldLogApiErrors) {
+      console.error("API Error:", {
+        status: error.response?.status,
+        url: error.config?.url,
+      })
+    }
 
     if (!error.response) {
       return Promise.reject(
@@ -102,7 +122,6 @@ api.interceptors.response.use(
     const errorMessage = error.response.data?.error || "Erro desconhecido"
 
     if (status === 401) {
-      console.log("🔒 Token inválido/expirado - redirecionando para landing")
       redirectToPublicEntry()
       return Promise.reject(new Error("Sessão expirada. Faça login novamente."))
     }
@@ -189,8 +208,7 @@ export const authApi = {
     try {
       await api.get("/auth/me")
       return true
-    } catch (error) {
-      console.log(error)
+    } catch {
       return false
     }
   },
@@ -266,11 +284,11 @@ export const professoresApi = {
     return response.data
   },
 
-  update: async (
-    id: string,
-    data: Partial<CreateProfessorDTO>,
-  ): Promise<Professor> => {
-    const response = await api.put<Professor>(`/professores/${id}`, data)
+  update: async (id: string, data: UpdateProfessorDTO): Promise<Professor> => {
+    const response = await api.put<Professor>(
+      `/professores/${id}`,
+      cleanPayload(data),
+    )
     return response.data
   },
 
@@ -327,36 +345,12 @@ export const alunosApi = {
   },
 
   create: async (data: CreateAlunoDTO): Promise<Aluno> => {
-    const cleanData = Object.entries(data).reduce(
-      (acc, [key, value]) => {
-        if (value !== undefined && value !== "" && value !== null) {
-          if (Array.isArray(value) && value.length === 0) {
-            return acc
-          }
-          acc[key] = value
-        }
-        return acc
-      },
-      {} as Record<string, unknown>,
-    )
-
-    const response = await api.post<Aluno>("/alunos", cleanData)
+    const response = await api.post<Aluno>("/alunos", cleanPayload(data))
     return response.data
   },
 
   update: async (id: string, data: UpdateAlunoDTO): Promise<Aluno> => {
-    const cleanData = Object.entries(data).reduce(
-      (acc, [key, value]) => {
-        if (value !== undefined && value !== "" && value !== null) {
-          if (Array.isArray(value) && value.length === 0) {
-            return acc
-          }
-          acc[key] = value
-        }
-        return acc
-      },
-      {} as Record<string, unknown>,
-    )
+    const cleanData = cleanPayload(data)
 
     if (Object.keys(cleanData).length === 0) {
       throw new Error("Nenhum campo foi enviado para atualização")
