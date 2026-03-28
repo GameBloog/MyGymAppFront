@@ -17,6 +17,7 @@ import {
   useUpdateProfessor,
   useProfessor,
 } from "../../hooks/useProfessores"
+import type { CreateProfessorDTO, UpdateProfessorDTO } from "../../types"
 import { showToast } from "../../utils/toast"
 
 const initialFormState = {
@@ -56,24 +57,22 @@ export const ProfessorForm: React.FC = () => {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {}
 
-    if (!isEdit) {
-      if (!formData.nome.trim()) {
-        newErrors.nome = "Nome é obrigatório"
-      } else if (formData.nome.trim().length < 2) {
-        newErrors.nome = "Nome deve ter pelo menos 2 caracteres"
-      }
+    if (!formData.nome.trim()) {
+      newErrors.nome = "Nome é obrigatório"
+    } else if (formData.nome.trim().length < 2) {
+      newErrors.nome = "Nome deve ter pelo menos 2 caracteres"
+    }
 
-      if (!formData.email.trim()) {
-        newErrors.email = "Email é obrigatório"
-      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-        newErrors.email = "Email inválido"
-      }
+    if (!formData.email.trim()) {
+      newErrors.email = "Email é obrigatório"
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Email inválido"
+    }
 
-      if (!formData.password) {
-        newErrors.password = "Senha é obrigatória"
-      } else if (formData.password.length < 6) {
-        newErrors.password = "Senha deve ter pelo menos 6 caracteres"
-      }
+    if (!isEdit && !formData.password) {
+      newErrors.password = "Senha é obrigatória"
+    } else if (formData.password && formData.password.length < 6) {
+      newErrors.password = "Senha deve ter pelo menos 6 caracteres"
     }
 
     setErrors(newErrors)
@@ -88,7 +87,12 @@ export const ProfessorForm: React.FC = () => {
 
     try {
       if (isEdit) {
-        const dataToSend: any = {}
+        const dataToSend: UpdateProfessorDTO = {
+          nome: formData.nome.trim(),
+          email: formData.email.trim(),
+        }
+
+        if (formData.password) dataToSend.password = formData.password
         if (formData.telefone.trim())
           dataToSend.telefone = formData.telefone.trim()
         if (formData.especialidade.trim())
@@ -98,7 +102,7 @@ export const ProfessorForm: React.FC = () => {
         showToast.success("✅ Professor atualizado com sucesso!")
         navigate("/admin/professores")
       } else {
-        const dataToSend: any = {
+        const dataToSend: CreateProfessorDTO = {
           nome: formData.nome.trim(),
           email: formData.email.trim(),
           password: formData.password,
@@ -113,8 +117,12 @@ export const ProfessorForm: React.FC = () => {
         showToast.success("✅ Professor cadastrado com sucesso!")
         navigate("/admin/professores")
       }
-    } catch (error: any) {
-      showToast.error(error.message || "Erro ao salvar professor")
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        showToast.error(error.message)
+      } else {
+        showToast.error("Erro ao salvar professor")
+      }
     }
   }
 
@@ -149,72 +157,56 @@ export const ProfessorForm: React.FC = () => {
       <Card className="mb-6">
         <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
           <User className="h-5 w-5" />
-          {isEdit ? "Dados do Professor" : "Dados de Acesso"}
+          {isEdit ? "Dados do Professor e Acesso" : "Dados de Acesso"}
         </h2>
 
-        {!isEdit && (
-          <p className="text-sm text-zinc-200 mb-4">
-            O professor usará essas credenciais para fazer login no sistema.
-          </p>
-        )}
+        <p className="text-sm text-zinc-200 mb-4">
+          {isEdit
+            ? "Atualize nome, email e senha quando necessário. Deixe a senha em branco para manter a atual."
+            : "O professor usará essas credenciais para fazer login no sistema."}
+        </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {!isEdit && (
-            <>
-              <Input
-                label="Nome Completo *"
-                icon={User}
-                value={formData.nome}
-                onChange={(e) => {
-                  setFormData({ ...formData, nome: e.target.value })
-                  setErrors({ ...errors, nome: "" })
-                }}
-                placeholder="Carlos Silva"
-                error={errors.nome}
-                required
-              />
-              <Input
-                label="Email *"
-                icon={Mail}
-                type="email"
-                value={formData.email}
-                onChange={(e) => {
-                  setFormData({ ...formData, email: e.target.value })
-                  setErrors({ ...errors, email: "" })
-                }}
-                placeholder="carlos@gym.com"
-                error={errors.email}
-                required
-              />
-              <Input
-                label="Senha *"
-                icon={Lock}
-                type="password"
-                value={formData.password}
-                onChange={(e) => {
-                  setFormData({ ...formData, password: e.target.value })
-                  setErrors({ ...errors, password: "" })
-                }}
-                placeholder="Mínimo 6 caracteres"
-                error={errors.password}
-                required
-              />
-            </>
-          )}
-
-          {isEdit && (
-            <div className="md:col-span-2 p-4 bg-blue-950/40 rounded-lg border border-blue-500/30 mb-4">
-              <p className="text-sm text-white">
-                <strong>Nome:</strong> {existingProfessor?.user?.nome}
-                <br />
-                <strong>Email:</strong> {existingProfessor?.user?.email}
-              </p>
-              <p className="text-xs text-zinc-200 mt-2">
-                ℹ️ Nome e email não podem ser alterados aqui. Entre em contato
-                com o administrador do sistema.
-              </p>
-            </div>
-          )}
+          <Input
+            label="Nome Completo *"
+            icon={User}
+            value={formData.nome}
+            onChange={(e) => {
+              setFormData({ ...formData, nome: e.target.value })
+              setErrors({ ...errors, nome: "" })
+            }}
+            placeholder="Carlos Silva"
+            error={errors.nome}
+            required
+          />
+          <Input
+            label="Email *"
+            icon={Mail}
+            type="email"
+            value={formData.email}
+            onChange={(e) => {
+              setFormData({ ...formData, email: e.target.value })
+              setErrors({ ...errors, email: "" })
+            }}
+            placeholder="carlos@gym.com"
+            error={errors.email}
+            required
+          />
+          <Input
+            label={isEdit ? "Nova Senha" : "Senha *"}
+            icon={Lock}
+            type="password"
+            value={formData.password}
+            onChange={(e) => {
+              setFormData({ ...formData, password: e.target.value })
+              setErrors({ ...errors, password: "" })
+            }}
+            placeholder={
+              isEdit ? "Deixe em branco para manter a atual" : "Mínimo 6 caracteres"
+            }
+            error={errors.password}
+            required={!isEdit}
+          />
 
           <Input
             label="Telefone"

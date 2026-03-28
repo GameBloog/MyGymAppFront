@@ -17,8 +17,9 @@ import { ModalEnviarArquivo } from "../components/ModalEnviarArquivo"
 import { ConfirmModal } from "../components/ConfirmModal"
 import { useFotoShape } from "../hooks/useFotoShape"
 import { useArquivoAluno } from "../hooks/useArquivoAluno"
-import { useAluno, useAlunos } from "../hooks/useAlunos"
+import { useAluno } from "../hooks/useAlunos"
 import { useAuth } from "../hooks/useAuth"
+import { useMyAluno } from "../hooks/useMyAluno"
 import { showToast } from "../utils/toast"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
@@ -44,10 +45,7 @@ export const FotosArquivosPage: React.FC = () => {
   const podeDeletarFoto = isAluno || isAdmin
   const podeDeletarArquivo = isAdmin || isProfessor
 
-  const { data: alunos } = useAlunos()
-  const meuAlunoRegistro = isAluno
-    ? alunos?.find((a) => a.userId === user?.id)
-    : null
+  const { data: meuAlunoRegistro } = useMyAluno()
 
   const alunoId =
     isAluno && meuAlunoRegistro ? meuAlunoRegistro.id : alunoIdParam

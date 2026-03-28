@@ -21,7 +21,7 @@ import {
   shouldTrackLeadOnThisLoad,
 } from "../utils/leadTracking"
 
-const WHATSAPP_NUMBER = "5511953693554"
+const WHATSAPP_NUMBER = "5511978439205"
 
 const LandingPage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)

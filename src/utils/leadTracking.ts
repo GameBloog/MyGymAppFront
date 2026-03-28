@@ -62,7 +62,7 @@ export function getStoredLeadSlug(now = Date.now()): string | null {
     }
 
     return normalized
-  } catch (_error) {
+  } catch {
     localStorage.removeItem(STORAGE_KEY)
     return null
   }

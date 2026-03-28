@@ -16,12 +16,32 @@ import {
   UserCheck,
   UserX,
 } from "lucide-react"
+import { ConfirmModal } from "../../components/ConfirmModal"
 import { Card, Button, Input, Badge } from "../../components/ui"
 import { useAlunos, useUpdateAlunoStatus } from "../../hooks/useAlunos"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
 
 type AlunoTab = "ATIVOS" | "INATIVOS" | "TODOS"
+type ConfirmDialogState = {
+  isOpen: boolean
+  title: string
+  message: string
+  confirmText: string
+  cancelText: string
+  variant: "danger" | "warning" | "info"
+  onConfirm: null | (() => Promise<void>)
+}
+
+const createInitialConfirmDialog = (): ConfirmDialogState => ({
+  isOpen: false,
+  title: "",
+  message: "",
+  confirmText: "Confirmar",
+  cancelText: "Cancelar",
+  variant: "warning",
+  onConfirm: null,
+})
 
 export const ProfessorDashboard: React.FC = () => {
   const navigate = useNavigate()
@@ -29,6 +49,9 @@ export const ProfessorDashboard: React.FC = () => {
   const updateAlunoStatus = useUpdateAlunoStatus()
   const [searchTerm, setSearchTerm] = useState("")
   const [activeTab, setActiveTab] = useState<AlunoTab>("ATIVOS")
+  const [confirmDialog, setConfirmDialog] = useState<ConfirmDialogState>(
+    createInitialConfirmDialog,
+  )
 
   const alunosAtivos = useMemo(
     () => (alunos || []).filter((aluno) => aluno.ativo).length,
@@ -60,15 +83,42 @@ export const ProfessorDashboard: React.FC = () => {
     )
   })
 
-  const handleToggleStatus = async (alunoId: string, ativoAtual: boolean) => {
-    const actionLabel = ativoAtual ? "inativar" : "reativar"
-    if (!window.confirm(`Deseja ${actionLabel} este aluno?`)) {
+  const closeConfirmDialog = () => {
+    setConfirmDialog(createInitialConfirmDialog())
+  }
+
+  const handleConfirmAction = async () => {
+    if (!confirmDialog.onConfirm) {
       return
     }
 
-    await updateAlunoStatus.mutateAsync({
-      id: alunoId,
-      data: { ativo: !ativoAtual },
+    try {
+      await confirmDialog.onConfirm()
+    } finally {
+      closeConfirmDialog()
+    }
+  }
+
+  const handleToggleStatus = (alunoId: string, ativoAtual: boolean) => {
+    const actionLabel = ativoAtual ? "inativar" : "reativar"
+
+    setConfirmDialog({
+      isOpen: true,
+      title: ativoAtual ? "Inativar Aluno" : "Reativar Aluno",
+      message: `Deseja ${actionLabel} este aluno?`,
+      confirmText: ativoAtual ? "Sim, Inativar" : "Sim, Reativar",
+      cancelText: "Cancelar",
+      variant: ativoAtual ? "warning" : "info",
+      onConfirm: async () => {
+        try {
+          await updateAlunoStatus.mutateAsync({
+            id: alunoId,
+            data: { ativo: !ativoAtual },
+          })
+        } catch (error) {
+          console.error(error)
+        }
+      },
     })
   }
 
@@ -321,6 +371,18 @@ export const ProfessorDashboard: React.FC = () => {
           )}
         </Card>
       )}
+
+      <ConfirmModal
+        isOpen={confirmDialog.isOpen}
+        title={confirmDialog.title}
+        message={confirmDialog.message}
+        confirmText={confirmDialog.confirmText}
+        cancelText={confirmDialog.cancelText}
+        variant={confirmDialog.variant}
+        onConfirm={handleConfirmAction}
+        onCancel={closeConfirmDialog}
+        isLoading={updateAlunoStatus.isLoading}
+      />
     </div>
   )
 }

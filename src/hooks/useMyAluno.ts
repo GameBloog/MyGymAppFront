@@ -9,17 +9,7 @@ export const useMyAluno = (): UseQueryResult<Aluno, Error> => {
 
   return useQuery<Aluno, Error>(
     ["myAluno", user?.id],
-    async () => {
-      const alunos = await alunosApi.getAll()
-
-      const meuAluno = alunos.find((aluno) => aluno.userId === user?.id)
-
-      if (!meuAluno) {
-        throw new Error("Registro de aluno não encontrado para este usuário")
-      }
-
-      return meuAluno
-    },
+    () => alunosApi.getMe(),
     {
       enabled: isAuthenticated && isAluno && !!user?.id,
       staleTime: 30000,

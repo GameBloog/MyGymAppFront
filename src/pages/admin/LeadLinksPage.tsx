@@ -40,7 +40,7 @@ export const LeadLinksPage: React.FC = () => {
   const createLeadLink = useCreateLeadLink()
   const updateLeadLink = useUpdateLeadLink()
 
-  const items = data?.items ?? []
+  const items = useMemo(() => data?.items ?? [], [data?.items])
 
   const totals = useMemo(() => {
     return items.reduce(

@@ -135,6 +135,8 @@ export const PlanoDietaEditorPage: React.FC = () => {
   const [dias, setDias] = useState<DraftDay[]>([])
   const [selectedDayId, setSelectedDayId] = useState("")
   const [selectedMealId, setSelectedMealId] = useState("")
+  const [copySourceDayId, setCopySourceDayId] = useState("")
+  const [copyTargetDayIds, setCopyTargetDayIds] = useState<string[]>([])
   const [filtroAlimento, setFiltroAlimento] = useState("")
   const [buscaExterna, setBuscaExterna] = useState("")
   const [fonteExterna, setFonteExterna] = useState<"USDA" | "TACO" | "ALL">("ALL")
@@ -284,8 +286,23 @@ export const PlanoDietaEditorPage: React.FC = () => {
     }
   }, [recomendacao, caloriasMetaInput, proteinaMetaInput, carboMetaInput, gorduraMetaInput, fatorAtividadeInput])
 
+  useEffect(() => {
+    if (!dias.length) {
+      setCopySourceDayId("")
+      setCopyTargetDayIds([])
+      return
+    }
+
+    if (!copySourceDayId || !dias.some((day) => day.localId === copySourceDayId)) {
+      setCopySourceDayId(selectedDayId || dias[0].localId)
+    }
+
+    setCopyTargetDayIds((prev) => prev.filter((id) => dias.some((day) => day.localId === id)))
+  }, [copySourceDayId, dias, selectedDayId])
+
   const selectedDay = dias.find((day) => day.localId === selectedDayId)
   const selectedMeal = selectedDay?.refeicoes.find((meal) => meal.localId === selectedMealId)
+  const copySourceDay = dias.find((day) => day.localId === copySourceDayId)
 
   const ensureSelectedMeal = () => {
     if (selectedMealId && selectedMeal) return selectedMealId
@@ -554,6 +571,73 @@ export const PlanoDietaEditorPage: React.FC = () => {
     }
   }
 
+  const toggleCopyTargetDay = (dayId: string) => {
+    setCopyTargetDayIds((prev) =>
+      prev.includes(dayId) ? prev.filter((id) => id !== dayId) : [...prev, dayId],
+    )
+  }
+
+  const handleApplyDayCopy = () => {
+    if (!copySourceDay) {
+      showToast.error("Selecione o dia de origem para a cópia")
+      return
+    }
+
+    if (copySourceDay.refeicoes.length === 0) {
+      showToast.error("O dia de origem precisa ter refeições para ser copiado")
+      return
+    }
+
+    if (copyTargetDayIds.length === 0) {
+      showToast.error("Selecione ao menos um dia-alvo vazio")
+      return
+    }
+
+    let copiedCount = 0
+
+    setDias((prev) =>
+      prev.map((day) => {
+        if (!copyTargetDayIds.includes(day.localId) || day.localId === copySourceDay.localId) {
+          return day
+        }
+
+        if (day.refeicoes.length > 0) {
+          return day
+        }
+
+        copiedCount += 1
+
+        return {
+          ...day,
+          observacoes: copySourceDay.observacoes || "",
+          refeicoes: copySourceDay.refeicoes.map((meal, mealIndex) => ({
+            localId: createLocalId(),
+            nome: meal.nome,
+            ordem: mealIndex + 1,
+            horario: meal.horario || "",
+            observacoes: meal.observacoes || "",
+            itens: meal.itens.map((item, itemIndex) => ({
+              localId: createLocalId(),
+              alimentoId: item.alimentoId,
+              alimento: item.alimento,
+              ordem: itemIndex + 1,
+              quantidadeGramas: item.quantidadeGramas,
+              observacoes: item.observacoes || "",
+            })),
+          })),
+        }
+      }),
+    )
+
+    if (copiedCount === 0) {
+      showToast.error("Os dias selecionados já possuem refeições e não podem ser sobrescritos")
+      return
+    }
+
+    setCopyTargetDayIds([])
+    showToast.success(`Dia copiado para ${copiedCount} dia(s) vazio(s)`)
+  }
+
   const handleSavePlano = async () => {
     if (!alunoId) return
     if (!nomePlano.trim()) {
@@ -818,6 +902,79 @@ export const PlanoDietaEditorPage: React.FC = () => {
           <Button variant="secondary" icon={Plus} onClick={addDay}>
             Adicionar dia
           </Button>
+        </div>
+
+        <div className="mb-4 rounded-lg border border-zinc-700 bg-zinc-900 p-4">
+          <div className="flex flex-col gap-4">
+            <div>
+              <h3 className="font-semibold text-white">Copiar dia montado</h3>
+              <p className="text-sm text-zinc-300">
+                Copia refeições, itens e observações para os dias-alvo vazios selecionados.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-zinc-200 mb-1">
+                  Dia de origem
+                </label>
+                <select
+                  value={copySourceDayId}
+                  onChange={(e) => {
+                    setCopySourceDayId(e.target.value)
+                    setCopyTargetDayIds([])
+                  }}
+                  className="w-full px-3 py-2 bg-zinc-900 text-white border border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-300 focus:border-transparent"
+                >
+                  {dias.map((day) => (
+                    <option key={day.localId} value={day.localId}>
+                      {day.titulo}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="md:col-span-2">
+                <p className="text-sm font-medium text-zinc-200 mb-2">Dias-alvo vazios</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {dias
+                    .filter((day) => day.localId !== copySourceDayId)
+                    .map((day) => {
+                      const isEmpty = day.refeicoes.length === 0
+                      return (
+                        <label
+                          key={day.localId}
+                          className={`flex items-center justify-between gap-3 rounded-lg border px-3 py-2 ${
+                            isEmpty
+                              ? "border-zinc-700 bg-zinc-950"
+                              : "border-zinc-800 bg-zinc-950/60 opacity-60"
+                          }`}
+                        >
+                          <div>
+                            <p className="text-sm text-white">{day.titulo}</p>
+                            <p className="text-xs text-zinc-400">
+                              {isEmpty ? "Sem refeições cadastradas" : "Já possui refeições"}
+                            </p>
+                          </div>
+                          <input
+                            type="checkbox"
+                            checked={copyTargetDayIds.includes(day.localId)}
+                            disabled={!isEmpty}
+                            onChange={() => toggleCopyTargetDay(day.localId)}
+                          />
+                        </label>
+                      )
+                    })}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <Button variant="secondary" onClick={handleApplyDayCopy}>
+                Aplicar cópia
+              </Button>
+            </div>
+          </div>
         </div>
 
         <div className="space-y-4">

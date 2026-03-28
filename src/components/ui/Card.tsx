@@ -1,4 +1,4 @@
-import React, { ReactNode, MouseEvent } from "react"
+import React, { type MouseEvent, type ReactNode } from "react"
 
 interface CardProps {
   children: ReactNode

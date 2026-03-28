@@ -12,8 +12,9 @@ import { GraficoEvolucao } from "../components/GraficoEvolucao"
 import { HistoricoForm } from "../components/HistoricoForm"
 import { ConfirmModal } from "../components/ConfirmModal"
 import { useHistorico, useDeleteHistorico } from "../hooks/useHistorico"
-import { useAluno, useAlunos } from "../hooks/useAlunos"
+import { useAluno } from "../hooks/useAlunos"
 import { useAuth } from "../hooks/useAuth"
+import { useMyAluno } from "../hooks/useMyAluno"
 import { showToast } from "../utils/toast"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
@@ -37,10 +38,7 @@ export const EvolucaoPage: React.FC = () => {
   const isAluno = user?.role === "ALUNO"
   const podeEditar = isAdmin || isProfessor
 
-  const { data: alunos } = useAlunos()
-  const meuAlunoRegistro = isAluno
-    ? alunos?.find((a) => a.userId === user?.id)
-    : null
+  const { data: meuAlunoRegistro } = useMyAluno()
 
   const alunoId =
     isAluno && meuAlunoRegistro ? meuAlunoRegistro.id : alunoIdParam
@@ -76,8 +74,12 @@ export const EvolucaoPage: React.FC = () => {
       })
       setConfirmDelete({ isOpen: false, id: "" })
       refetch()
-    } catch (error: any) {
-      showToast.error(error.message || "Erro ao excluir registro")
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        showToast.error(error.message)
+      } else {
+        showToast.error("Erro ao excluir registro")
+      }
     }
   }
 

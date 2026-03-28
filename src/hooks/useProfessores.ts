@@ -7,10 +7,16 @@ import {
   type UseQueryOptions,
 } from "react-query"
 import { professoresApi } from "../services/api"
-import { type Professor, type CreateProfessorDTO } from "../types"
+import {
+  type Professor,
+  type CreateProfessorDTO,
+  type UpdateProfessorDTO,
+} from "../types"
 import { showToast } from "../utils/toast"
 
-export const useProfessores = (): UseQueryResult<Professor[], Error> => {
+export const useProfessores = (
+  options?: UseQueryOptions<Professor[], Error>,
+): UseQueryResult<Professor[], Error> => {
   return useQuery<Professor[], Error>("professores", professoresApi.getAll, {
     staleTime: 60000,
     cacheTime: 300000,
@@ -21,6 +27,7 @@ export const useProfessores = (): UseQueryResult<Professor[], Error> => {
       console.error("❌ Erro ao buscar professores:", error)
       showToast.error("Erro ao carregar professores")
     },
+    ...options,
   })
 }
 
@@ -75,14 +82,14 @@ export const useCreateProfessor = (): UseMutationResult<
 export const useUpdateProfessor = (): UseMutationResult<
   Professor,
   Error,
-  { id: string; data: Partial<CreateProfessorDTO> }
+  { id: string; data: UpdateProfessorDTO }
 > => {
   const queryClient = useQueryClient()
 
   return useMutation<
     Professor,
     Error,
-    { id: string; data: Partial<CreateProfessorDTO> }
+    { id: string; data: UpdateProfessorDTO }
   >(({ id, data }) => professoresApi.update(id, data), {
     onSuccess: (updatedProfessor) => {
       queryClient.setQueryData<Professor[]>("professores", (old) => {
