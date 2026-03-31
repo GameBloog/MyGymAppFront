@@ -16,8 +16,9 @@ Frontend web da plataforma G-Force (React + TypeScript + Vite).
 
 ## Requisitos
 
-- Node.js 20+
-- pnpm 10+
+- Linux ou macOS com shell `bash`
+- Node.js `20.19.4` recomendado
+- `corepack` habilitado com `pnpm@10.13.1`
 
 ## Setup local
 
@@ -37,6 +38,8 @@ pnpm run dev
 
 App local: `http://localhost:5173`
 
+Dependencia obrigatoria: o backend precisa estar rodando e acessivel na URL configurada em `VITE_API_URL`. No setup padrao do workspace, a API sobe em `http://localhost:3333`.
+
 ## Variaveis de ambiente
 
 Crie `.env` a partir de `.env.example`:
@@ -46,6 +49,7 @@ VITE_API_URL=http://localhost:3333
 ```
 
 Para producao (Vercel), configure `VITE_API_URL` para a URL publica do backend.
+Se voce mudar host ou porta do backend no local, ajuste este valor antes de subir o frontend.
 
 ## Build
 
@@ -103,3 +107,10 @@ Arquivos principais:
 
 - Projeto preparado para Vercel (`vercel.json`)
 - Garanta `VITE_API_URL` configurada no ambiente do deploy
+
+## Troubleshooting
+
+- `VITE_API_URL nao definido`: recrie `.env` a partir de `.env.example` ou ajuste o valor manualmente.
+- `Servidor nao respondeu`: confirme que `pnpm run dev:backend` esta ativo em `http://localhost:3333`.
+- Erro de Node ao instalar ou rodar Vite: use Node `20.19.4` e `pnpm@10.13.1`.
+- Se precisar expor o frontend em rede local ou tunel, rode `pnpm run dev -- --host`.

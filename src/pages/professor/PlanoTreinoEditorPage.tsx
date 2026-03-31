@@ -4,6 +4,7 @@ import {
   ArrowLeft,
   ClipboardList,
   GripVertical,
+  Image as ImageIcon,
   Loader2,
   Plus,
   Save,
@@ -15,6 +16,7 @@ import { useAluno } from "../../hooks/useAlunos"
 import {
   useComentarCheckinProfessor,
   useCreateExercicio,
+  useClearExercicioMedia,
   useExercicios,
   useExerciciosExternos,
   useGrupamentosExercicios,
@@ -22,6 +24,7 @@ import {
   usePlanoTreinoAtivo,
   useTreinoCheckins,
   useUpsertPlanoTreino,
+  useUploadExercicioMedia,
 } from "../../hooks/useTreino"
 import {
   useCreateTreinoModelo,
@@ -33,6 +36,7 @@ import { useAuth } from "../../hooks/useAuth"
 import type {
   Exercicio,
   ExercicioExterno,
+  ExercicioMediaKind,
   GrupamentoMuscular,
   TreinoCheckin,
   UpsertPlanoTreinoDTO,
@@ -40,6 +44,7 @@ import type {
 import type { TreinoModelo } from "../../modules/treino-modelos/types"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
+import { ExercicioMediaModal } from "../../modules/exercise-media/components/ExercicioMediaModal"
 
 type PlanoDiaPayload = UpsertPlanoTreinoDTO["dias"][number]
 type PlanoDiaExercicioPayload = PlanoDiaPayload["exercicios"][number]
@@ -165,6 +170,7 @@ export const PlanoTreinoEditorPage: React.FC = () => {
   const [filtroGrupamento, setFiltroGrupamento] = useState<GrupamentoMuscular | "">("")
   const [buscaExterna, setBuscaExterna] = useState("")
   const [comentariosProfessor, setComentariosProfessor] = useState<Record<string, string>>({})
+  const [mediaExercise, setMediaExercise] = useState<Exercicio | null>(null)
   const [initializedFromBackend, setInitializedFromBackend] = useState(false)
 
   const { data: aluno, isLoading: loadingAluno } = useAluno(alunoId || "", {
@@ -198,6 +204,8 @@ export const PlanoTreinoEditorPage: React.FC = () => {
   const createExercicio = useCreateExercicio()
   const importExercicioExterno = useImportExercicioExterno()
   const comentarCheckinProfessor = useComentarCheckinProfessor()
+  const uploadExercicioMedia = useUploadExercicioMedia()
+  const clearExercicioMedia = useClearExercicioMedia()
 
   const erroPlanoNaoEncontrado =
     erroPlanoAtivo?.message?.toLowerCase().includes("não encontrado") ||
@@ -639,6 +647,56 @@ export const PlanoTreinoEditorPage: React.FC = () => {
     })
   }
 
+  const replaceExerciseReferences = (updatedExercise: Exercicio) => {
+    setDias((prev) =>
+      prev.map((day) => ({
+        ...day,
+        exercicios: day.exercicios.map((item) =>
+          item.exercicioId === updatedExercise.id
+            ? {
+                ...item,
+                exercicio: updatedExercise,
+              }
+            : item,
+        ),
+      })),
+    )
+
+    setMediaExercise((prev) =>
+      prev?.id === updatedExercise.id ? updatedExercise : prev,
+    )
+  }
+
+  const handleUploadExerciseMedia = async (
+    kind: ExercicioMediaKind,
+    file: File,
+  ) => {
+    if (!mediaExercise) {
+      return
+    }
+
+    const updatedExercise = await uploadExercicioMedia.mutateAsync({
+      exercicioId: mediaExercise.id,
+      kind,
+      file,
+    })
+    replaceExerciseReferences(updatedExercise)
+    showToast.success("Mídia do exercício atualizada")
+  }
+
+  const handleClearExerciseMedia = async (kind: ExercicioMediaKind) => {
+    if (!mediaExercise) {
+      return
+    }
+
+    const updatedExercise = await clearExercicioMedia.mutateAsync({
+      exercicioId: mediaExercise.id,
+      kind,
+    })
+    replaceExerciseReferences(updatedExercise)
+    showToast.success("Mídia do exercício removida")
+  }
+
   if (!alunoId) {
     return (
       <Card className="bg-red-950/40 border-2 border-red-500/30">
@@ -925,6 +983,10 @@ export const PlanoTreinoEditorPage: React.FC = () => {
                           </h4>
                           <Badge>{grupamentoLabels[item.exercicio.grupamentoMuscular]}</Badge>
                           <Badge variant="warning">{formatDiaSemana(day.diaSemana)}</Badge>
+                          {(item.exercicio.executionGifUrl ||
+                            item.exercicio.equipmentImageUrl) && (
+                            <Badge variant="success">Com mídia</Badge>
+                          )}
                         </div>
                         {item.exercicio.descricao && (
                           <p className="text-xs text-zinc-300 mb-3">
@@ -992,6 +1054,16 @@ export const PlanoTreinoEditorPage: React.FC = () => {
                             }
                             placeholder="Execução, respiração, tempo"
                           />
+                        </div>
+
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          <Button
+                            variant="secondary"
+                            onClick={() => setMediaExercise(item.exercicio)}
+                          >
+                            <ImageIcon className="h-4 w-4" />
+                            Gerenciar mídia
+                          </Button>
                         </div>
                       </div>
 
@@ -1078,18 +1150,32 @@ export const PlanoTreinoEditorPage: React.FC = () => {
                     className="p-3 border-b last:border-b-0 flex items-start justify-between gap-3"
                   >
                     <div>
-                      <p className="font-medium text-white">{exercise.nome}</p>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="font-medium text-white">{exercise.nome}</p>
+                        {(exercise.executionGifUrl || exercise.equipmentImageUrl) && (
+                          <Badge variant="success">Visual</Badge>
+                        )}
+                      </div>
                       <p className="text-xs text-zinc-300 mt-1">
                         {grupamentoLabels[exercise.grupamentoMuscular]}
                       </p>
                     </div>
-                    <Button
-                      variant="secondary"
-                      onClick={() => handleAddExerciseClick(exercise)}
-                      disabled={!selectedDay}
-                    >
-                      Adicionar
-                    </Button>
+                    <div className="flex flex-wrap gap-2 justify-end">
+                      <Button
+                        variant="secondary"
+                        onClick={() => setMediaExercise(exercise)}
+                      >
+                        <ImageIcon className="h-4 w-4" />
+                        Mídia
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        onClick={() => handleAddExerciseClick(exercise)}
+                        disabled={!selectedDay}
+                      >
+                        Adicionar
+                      </Button>
+                    </div>
                   </div>
                 ))
               )}
@@ -1305,6 +1391,17 @@ export const PlanoTreinoEditorPage: React.FC = () => {
           })}
         </div>
       </Card>
+
+      <ExercicioMediaModal
+        exercicio={mediaExercise}
+        isOpen={!!mediaExercise}
+        isUploading={
+          uploadExercicioMedia.isLoading || clearExercicioMedia.isLoading
+        }
+        onClose={() => setMediaExercise(null)}
+        onUpload={handleUploadExerciseMedia}
+        onClear={handleClearExerciseMedia}
+      />
     </div>
   )
 }

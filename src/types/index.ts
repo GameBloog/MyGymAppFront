@@ -510,6 +510,10 @@ export interface Exercicio {
   nome: string
   descricao?: string | null
   grupamentoMuscular: GrupamentoMuscular
+  executionGifUrl?: string | null
+  executionGifPublicId?: string | null
+  equipmentImageUrl?: string | null
+  equipmentImagePublicId?: string | null
   origem: OrigemExercicio
   externalId?: string | null
   externalSource?: string | null
@@ -641,6 +645,8 @@ export interface ImportExercicioExternoDTO {
   grupamentoMuscular: GrupamentoMuscular
   externalSource: string
 }
+
+export type ExercicioMediaKind = "execucao" | "aparelho"
 
 export interface UpsertPlanoTreinoDTO {
   alunoId: string

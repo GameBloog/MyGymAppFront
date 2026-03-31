@@ -4,6 +4,7 @@ import type {
   CreateExercicioDTO,
   Exercicio,
   ExercicioExterno,
+  ExercicioMediaKind,
   FinalizeCheckinDTO,
   GrupamentoMuscular,
   ImportExercicioExternoDTO,
@@ -51,6 +52,36 @@ export const exerciciosApi = {
 
   importExternal: async (data: ImportExercicioExternoDTO): Promise<Exercicio> => {
     const response = await api.post<Exercicio>("/exercicios/importar", data)
+    return response.data
+  },
+
+  uploadMedia: async (
+    exercicioId: string,
+    kind: ExercicioMediaKind,
+    file: File,
+  ): Promise<Exercicio> => {
+    const formData = new FormData()
+    formData.append("file", file)
+
+    const response = await api.post<Exercicio>(
+      `/exercicios/${exercicioId}/midia/${kind}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    )
+    return response.data
+  },
+
+  clearMedia: async (
+    exercicioId: string,
+    kind: ExercicioMediaKind,
+  ): Promise<Exercicio> => {
+    const response = await api.delete<Exercicio>(
+      `/exercicios/${exercicioId}/midia/${kind}`,
+    )
     return response.data
   },
 }

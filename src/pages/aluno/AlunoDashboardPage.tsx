@@ -43,6 +43,14 @@ interface NextWorkout {
   diaTitulo: string
 }
 
+interface WorkoutScheduleItem {
+  id: string
+  diaTitulo: string
+  diaSemanaLabel: string
+  exerciciosCount: number
+  isNext: boolean
+}
+
 interface FeedEvent {
   id: string
   dataHora: string
@@ -208,6 +216,22 @@ export const AlunoDashboardPage: React.FC = () => {
     candidates.sort((a, b) => a.dataHora.getTime() - b.dataHora.getTime())
     return candidates[0]
   }, [planoTreino, treinoCheckins])
+
+  const cronogramaTreino = useMemo<WorkoutScheduleItem[]>(() => {
+    if (!planoTreino?.dias?.length) {
+      return []
+    }
+
+    return [...planoTreino.dias]
+      .sort((a, b) => a.ordem - b.ordem)
+      .map((dia) => ({
+        id: dia.id,
+        diaTitulo: dia.titulo,
+        diaSemanaLabel: dia.diaSemana ? formatDiaSemana(dia.diaSemana) : "Agenda flexível",
+        exerciciosCount: dia.exercicios.length,
+        isNext: proximoTreino?.diaTitulo === dia.titulo,
+      }))
+  }, [planoTreino, proximoTreino])
 
   const proximaRefeicao = useMemo<NextMeal | null>(() => {
     if (!planoDieta?.dias?.length) {
@@ -506,10 +530,11 @@ export const AlunoDashboardPage: React.FC = () => {
   const valoresPeso = seriePeso.map((item) => item.pesoKg as number)
   const minPeso = valoresPeso.length > 0 ? Math.min(...valoresPeso) : 0
   const maxPeso = valoresPeso.length > 0 ? Math.max(...valoresPeso) : 0
+  const mobileDashboardButtonClass = "w-full justify-center text-center sm:w-auto"
 
   return (
-    <div className="space-y-6">
-      <Card className="relative overflow-hidden bg-gradient-to-r from-blue-800 to-cyan-800 border border-blue-500/30 text-white">
+    <div className="min-w-0 space-y-6">
+      <Card className="relative overflow-hidden border border-[#d4a548]/20 bg-[linear-gradient(120deg,_rgba(212,165,72,0.22),_rgba(12,12,12,0.96)_38%,_rgba(73,180,166,0.18))] text-white">
         <div className="absolute inset-0 bg-black/30" />
         <div className="relative flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
@@ -528,6 +553,176 @@ export const AlunoDashboardPage: React.FC = () => {
               {checkinsTreinoSemana} treino(s) / {checkinsDietaSemana} dieta(s)
             </Badge>
           </div>
+        </div>
+      </Card>
+
+      <div className="grid grid-cols-1 xl:grid-cols-[0.95fr_1.05fr] gap-6">
+        <Card className="border border-[#49b4a6]/20 bg-[#0f1716]">
+          <div className="flex items-center gap-2 mb-4">
+            <MessageSquareText className="h-5 w-5 text-[#7de0d3]" />
+            <h2 className="text-lg font-semibold">Recados do professor</h2>
+          </div>
+
+          {comentariosProfessor.length === 0 && (
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+              <p className="text-sm text-zinc-300">
+                Quando houver feedback no treino ou na dieta, ele aparece aqui com prioridade.
+              </p>
+            </div>
+          )}
+
+          <div className="space-y-3">
+            {comentariosProfessor.map((comment, index) => (
+              <div
+                key={comment.id}
+                className={`rounded-2xl border p-4 ${
+                  index === 0
+                    ? "border-[#49b4a6]/40 bg-[#12302c]"
+                    : "border-white/10 bg-white/[0.03]"
+                }`}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <Badge>{comment.origem}</Badge>
+                  <span className="text-xs text-zinc-300">
+                    {format(new Date(comment.dataHora), "dd/MM HH:mm", {
+                      locale: ptBR,
+                    })}
+                  </span>
+                </div>
+                <p className="text-sm text-white mt-3 leading-7">{comment.texto}</p>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="border border-[#d4a548]/20 bg-[#171208]">
+          <div className="flex items-center gap-2 mb-4">
+            <CalendarDays className="h-5 w-5 text-[#f1d38b]" />
+            <h2 className="text-lg font-semibold">Cronograma de treino</h2>
+          </div>
+
+          {loadingTreino && (
+            <p className="text-sm text-zinc-300">Carregando agenda de treino...</p>
+          )}
+
+          {!loadingTreino && proximoTreino && (
+            <div className="rounded-2xl border border-[#d4a548]/25 bg-[#241b0b] p-4 mb-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#f1d38b]">
+                Próximo treino
+              </p>
+              <p className="mt-3 text-2xl font-bold text-white">{proximoTreino.diaTitulo}</p>
+              <p className="mt-2 text-sm text-zinc-300">
+                {format(proximoTreino.dataHora, "dd/MM/yyyy", { locale: ptBR })} •{" "}
+                {formatDiaSemana(getIsoDay(proximoTreino.dataHora))}
+              </p>
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+                <Button
+                  icon={Dumbbell}
+                  onClick={() => navigate("/aluno/treino")}
+                  className={mobileDashboardButtonClass}
+                >
+                  Abrir treino dinâmico
+                </Button>
+                <p className="text-sm text-zinc-300">
+                  Seu acesso rápido ao treino do momento está aqui no topo.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {!loadingTreino && !proximoTreino && (
+            <div className="space-y-3">
+              <p className="text-sm text-zinc-300">
+                Nenhum plano de treino dinâmico ativo no momento.
+              </p>
+              {ultimoTreinoPdf ? (
+                <a
+                  href={ultimoTreinoPdf.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full sm:inline-flex sm:w-auto"
+                >
+                  <Button icon={FileText} className={mobileDashboardButtonClass}>
+                    Abrir último treino em PDF
+                  </Button>
+                </a>
+              ) : (
+                <p className="text-sm text-zinc-400">
+                  Também não há PDF de treino disponível.
+                </p>
+              )}
+            </div>
+          )}
+
+          {!!cronogramaTreino.length && (
+            <div className="grid gap-3 md:grid-cols-2 mt-2">
+              {cronogramaTreino.map((item) => (
+                <div
+                  key={item.id}
+                  className={`rounded-2xl border p-4 ${
+                    item.isNext
+                      ? "border-[#d4a548]/35 bg-[#22180a]"
+                      : "border-white/10 bg-white/[0.03]"
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="font-semibold text-white">{item.diaTitulo}</p>
+                    {item.isNext && <Badge variant="warning">Próximo</Badge>}
+                  </div>
+                  <p className="text-sm text-zinc-300 mt-2">{item.diaSemanaLabel}</p>
+                  <p className="text-xs text-zinc-400 mt-1">
+                    {item.exerciciosCount} exercício(s)
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
+      </div>
+
+      <Card>
+        <h2 className="text-lg font-semibold mb-4">Atalhos rápidos</h2>
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
+          <Button
+            variant="secondary"
+            icon={User}
+            onClick={() => navigate("/aluno/perfil")}
+            className="w-full justify-center text-center"
+          >
+            Formulário
+          </Button>
+          <Button
+            variant="secondary"
+            icon={TrendingUp}
+            onClick={() => navigate("/aluno/evolucao")}
+            className="w-full justify-center text-center"
+          >
+            Histórico
+          </Button>
+          <Button
+            variant="secondary"
+            icon={UtensilsCrossed}
+            onClick={() => navigate("/aluno/dieta")}
+            className="w-full justify-center text-center"
+          >
+            Dieta
+          </Button>
+          <Button
+            variant="secondary"
+            icon={Dumbbell}
+            onClick={() => navigate("/aluno/treino")}
+            className="w-full justify-center text-center"
+          >
+            Treino
+          </Button>
+          <Button
+            variant="secondary"
+            icon={Camera}
+            onClick={() => navigate("/aluno/fotos-arquivos")}
+            className="w-full justify-center text-center"
+          >
+            Enviar Fotos
+          </Button>
         </div>
       </Card>
 
@@ -571,24 +766,30 @@ export const AlunoDashboardPage: React.FC = () => {
               )}
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
               {youtubeContent?.video ? (
                 <a
                   href={youtubeContent.video.watchUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex"
+                  className="flex w-full sm:inline-flex sm:w-auto"
                 >
-                  <Button icon={PlayCircle}>Assistir no YouTube</Button>
+                  <Button icon={PlayCircle} className={mobileDashboardButtonClass}>
+                    Assistir no YouTube
+                  </Button>
                 </a>
               ) : null}
               <a
                 href={youtubeChannelUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex"
+                className="flex w-full sm:inline-flex sm:w-auto"
               >
-                <Button variant="secondary" icon={ExternalLink}>
+                <Button
+                  variant="secondary"
+                  icon={ExternalLink}
+                  className={mobileDashboardButtonClass}
+                >
                   Acessar canal da G-Force
                 </Button>
               </a>
@@ -632,43 +833,6 @@ export const AlunoDashboardPage: React.FC = () => {
         </Card>
       ) : null}
 
-      <Card>
-        <h2 className="text-lg font-semibold mb-4">Atalhos rápidos</h2>
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-2">
-          <Button variant="secondary" icon={User} onClick={() => navigate("/aluno/perfil")}>
-            Formulário
-          </Button>
-          <Button
-            variant="secondary"
-            icon={TrendingUp}
-            onClick={() => navigate("/aluno/evolucao")}
-          >
-            Histórico
-          </Button>
-          <Button
-            variant="secondary"
-            icon={UtensilsCrossed}
-            onClick={() => navigate("/aluno/dieta")}
-          >
-            Dieta
-          </Button>
-          <Button
-            variant="secondary"
-            icon={Dumbbell}
-            onClick={() => navigate("/aluno/treino")}
-          >
-            Treino
-          </Button>
-          <Button
-            variant="secondary"
-            icon={Camera}
-            onClick={() => navigate("/aluno/fotos-arquivos")}
-          >
-            Enviar Fotos
-          </Button>
-        </div>
-      </Card>
-
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <Card>
           <div className="flex items-center gap-2 mb-3">
@@ -692,6 +856,7 @@ export const AlunoDashboardPage: React.FC = () => {
               <Button
                 icon={UtensilsCrossed}
                 onClick={() => navigate("/aluno/dieta")}
+                className={mobileDashboardButtonClass}
               >
                 Abrir dieta dinâmica
               </Button>
@@ -708,9 +873,11 @@ export const AlunoDashboardPage: React.FC = () => {
                   href={ultimaDietaPdf.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex"
+                  className="flex w-full sm:inline-flex sm:w-auto"
                 >
-                  <Button icon={FileText}>Abrir última dieta em PDF</Button>
+                  <Button icon={FileText} className={mobileDashboardButtonClass}>
+                    Abrir última dieta em PDF
+                  </Button>
                 </a>
               ) : (
                 <p className="text-sm text-zinc-400">
@@ -721,57 +888,6 @@ export const AlunoDashboardPage: React.FC = () => {
           )}
         </Card>
 
-        <Card>
-          <div className="flex items-center gap-2 mb-3">
-            <Dumbbell className="h-5 w-5 text-blue-300" />
-            <h2 className="text-lg font-semibold">Próximo treino</h2>
-          </div>
-
-          {loadingTreino && (
-            <p className="text-sm text-zinc-300">Carregando agenda de treino...</p>
-          )}
-
-          {!loadingTreino && proximoTreino && (
-            <div className="space-y-2">
-              <p className="text-xl font-bold text-white">{proximoTreino.diaTitulo}</p>
-              <p className="text-sm text-zinc-300">
-                {format(proximoTreino.dataHora, "dd/MM/yyyy", { locale: ptBR })} •{" "}
-                {formatDiaSemana(getIsoDay(proximoTreino.dataHora))}
-              </p>
-              <Button
-                icon={Dumbbell}
-                onClick={() => navigate("/aluno/treino")}
-              >
-                Abrir treino dinâmico
-              </Button>
-            </div>
-          )}
-
-          {!loadingTreino && !proximoTreino && (
-            <div className="space-y-3">
-              <p className="text-sm text-zinc-300">
-                Nenhum plano de treino dinâmico ativo no momento.
-              </p>
-              {ultimoTreinoPdf ? (
-                <a
-                  href={ultimoTreinoPdf.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex"
-                >
-                  <Button icon={FileText}>Abrir último treino em PDF</Button>
-                </a>
-              ) : (
-                <p className="text-sm text-zinc-400">
-                  Também não há PDF de treino disponível.
-                </p>
-              )}
-            </div>
-          )}
-        </Card>
-      </div>
-
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <Card>
           <div className="flex items-center gap-2 mb-4">
             <Target className="h-5 w-5" />
@@ -795,35 +911,6 @@ export const AlunoDashboardPage: React.FC = () => {
             Frequência de treino nos últimos 28 dias:{" "}
             <strong>{frequenciaTreino28Dias} sessão(ões) concluída(s)</strong>.
           </p>
-        </Card>
-
-        <Card>
-          <div className="flex items-center gap-2 mb-4">
-            <MessageSquareText className="h-5 w-5" />
-            <h2 className="text-lg font-semibold">Recados do professor</h2>
-          </div>
-
-          {comentariosProfessor.length === 0 && (
-            <p className="text-sm text-zinc-400">
-              Quando houver feedback no treino ou dieta ele aparece aqui.
-            </p>
-          )}
-
-          <div className="space-y-3">
-            {comentariosProfessor.map((comment) => (
-              <div key={comment.id} className="rounded-lg border border-blue-500/30 bg-blue-950/40 p-3">
-                <div className="flex items-center justify-between gap-2">
-                  <Badge>{comment.origem}</Badge>
-                  <span className="text-xs text-zinc-300">
-                    {format(new Date(comment.dataHora), "dd/MM HH:mm", {
-                      locale: ptBR,
-                    })}
-                  </span>
-                </div>
-                <p className="text-sm text-white mt-2">{comment.texto}</p>
-              </div>
-            ))}
-          </div>
         </Card>
       </div>
 
