@@ -7,6 +7,8 @@ import {
   Phone,
   Briefcase,
   Ticket,
+  Eye,
+  EyeOff,
 } from "lucide-react"
 import { Card, Input, Button } from "../../components/ui"
 import { BrandMark } from "../../components/BrandMark"
@@ -19,6 +21,8 @@ export const RegisterPage: React.FC = () => {
   const { register } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const [isProfessor, setIsProfessor] = useState(false)
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false)
 
   const [formData, setFormData] = useState<RegisterDTO>({
     nome: "",
@@ -166,31 +170,63 @@ export const RegisterPage: React.FC = () => {
             error={errors.email}
           />
 
-          <Input
-            label="Senha *"
-            icon={Lock}
-            type="password"
-            value={formData.password}
-            onChange={(e) => {
-              setFormData({ ...formData, password: e.target.value })
-              setErrors({ ...errors, password: "" })
-            }}
-            placeholder="Mínimo 6 caracteres"
-            error={errors.password}
-          />
+          <div className="relative">
+            <Input
+              label="Senha *"
+              icon={Lock}
+              type={isPasswordVisible ? "text" : "password"}
+              value={formData.password}
+              onChange={(e) => {
+                setFormData({ ...formData, password: e.target.value })
+                setErrors({ ...errors, password: "" })
+              }}
+              placeholder="Mínimo 6 caracteres"
+              error={errors.password}
+              className="pr-12"
+            />
+            <button
+              type="button"
+              onClick={() => setIsPasswordVisible((visible) => !visible)}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-400 hover:text-white"
+              aria-label={isPasswordVisible ? "Ocultar senha" : "Mostrar senha"}
+              title={isPasswordVisible ? "Ocultar senha" : "Mostrar senha"}
+            >
+              {isPasswordVisible ? (
+                <EyeOff className="h-5 w-5" />
+              ) : (
+                <Eye className="h-5 w-5" />
+              )}
+            </button>
+          </div>
 
-          <Input
-            label="Confirmar Senha *"
-            icon={Lock}
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => {
-              setConfirmPassword(e.target.value)
-              setErrors({ ...errors, confirmPassword: "" })
-            }}
-            placeholder="Digite a senha novamente"
-            error={errors.confirmPassword}
-          />
+          <div className="relative">
+            <Input
+              label="Confirmar Senha *"
+              icon={Lock}
+              type={isConfirmPasswordVisible ? "text" : "password"}
+              value={confirmPassword}
+              onChange={(e) => {
+                setConfirmPassword(e.target.value)
+                setErrors({ ...errors, confirmPassword: "" })
+              }}
+              placeholder="Digite a senha novamente"
+              error={errors.confirmPassword}
+              className="pr-12"
+            />
+            <button
+              type="button"
+              onClick={() => setIsConfirmPasswordVisible((visible) => !visible)}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-400 hover:text-white"
+              aria-label={isConfirmPasswordVisible ? "Ocultar senha" : "Mostrar senha"}
+              title={isConfirmPasswordVisible ? "Ocultar senha" : "Mostrar senha"}
+            >
+              {isConfirmPasswordVisible ? (
+                <EyeOff className="h-5 w-5" />
+              ) : (
+                <Eye className="h-5 w-5" />
+              )}
+            </button>
+          </div>
 
           {isProfessor && (
             <>
