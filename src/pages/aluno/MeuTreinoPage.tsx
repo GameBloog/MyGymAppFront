@@ -119,7 +119,11 @@ export const MeuTreinoPage: React.FC = () => {
   const {
     data: progressData,
     isLoading: loadingProgress,
-  } = useTreinoProgress(alunoId, undefined, !!alunoId)
+  } = useTreinoProgress(
+    alunoId,
+    selectedProgressExerciseId || undefined,
+    !!alunoId && !!selectedProgressExerciseId,
+  )
 
   const startCheckin = useStartTreinoCheckin()
   const updateExercicioCheckin = useUpdateTreinoExercicioCheckin()
