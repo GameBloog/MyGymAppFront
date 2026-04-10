@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 import {
   CalendarCheck,
   CheckCircle2,
@@ -36,6 +36,12 @@ interface ExerciseDraft {
   cargaReal: string
   repeticoesReal: string
   comentarioAluno: string
+}
+
+interface LatestExercisePerformance {
+  cargaReal: number | null
+  repeticoesReal: string | null
+  data: string
 }
 
 const parseOptionalNumber = (value: string): number | undefined => {
@@ -116,7 +122,7 @@ export const MeuTreinoPage: React.FC = () => {
   } = useTreinoProgress(
     alunoId,
     selectedProgressExerciseId || undefined,
-    !!alunoId,
+    !!alunoId && !!selectedProgressExerciseId,
   )
 
   const startCheckin = useStartTreinoCheckin()
@@ -127,6 +133,8 @@ export const MeuTreinoPage: React.FC = () => {
   const [checkinAtual, setCheckinAtual] = useState<TreinoCheckin | null>(null)
   const [exerciseDrafts, setExerciseDrafts] = useState<Record<string, ExerciseDraft>>({})
   const [comentarioDia, setComentarioDia] = useState("")
+  const autofilledExerciseIdsRef = useRef<Record<string, true>>({})
+  const initializedCheckinIdRef = useRef<string | null>(null)
 
   const erroPlanoNaoEncontrado =
     erroPlano?.message?.toLowerCase().includes("não encontrado") ||
@@ -135,6 +143,46 @@ export const MeuTreinoPage: React.FC = () => {
   const seriesDisponiveis = useMemo(() => {
     return progressData || []
   }, [progressData])
+
+  const latestPerformanceByExerciseId = useMemo(() => {
+    const map = new Map<string, LatestExercisePerformance>()
+
+    for (const serie of seriesDisponiveis) {
+      const fallbackPoint = serie.pontos[serie.pontos.length - 1]
+      let latestPointWithLoad: ProgressSerieTreino["pontos"][number] | undefined
+
+      for (let index = serie.pontos.length - 1; index >= 0; index -= 1) {
+        const point = serie.pontos[index]
+
+        if (point.cargaReal !== null && point.cargaReal !== undefined) {
+          latestPointWithLoad = point
+          break
+        }
+      }
+      const latestPoint = latestPointWithLoad || fallbackPoint
+
+      if (!latestPoint) {
+        continue
+      }
+
+      map.set(serie.exercicioId, {
+        cargaReal: latestPoint.cargaReal,
+        repeticoesReal: latestPoint.repeticoesReal,
+        data: latestPoint.data,
+      })
+    }
+
+    return map
+  }, [seriesDisponiveis])
+
+  const ultimoComentarioProfessor = useMemo(() => {
+    return [...(checkins || [])]
+      .filter((item) => !!item.comentarioProfessor)
+      .sort(
+        (a, b) =>
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+      )[0]
+  }, [checkins])
 
   const serieAtual = useMemo(() => {
     if (!seriesDisponiveis.length) {
@@ -176,11 +224,73 @@ export const MeuTreinoPage: React.FC = () => {
     if (!checkinAtual) {
       setExerciseDrafts({})
       setComentarioDia("")
+      autofilledExerciseIdsRef.current = {}
+      initializedCheckinIdRef.current = null
       return
     }
+
+    if (initializedCheckinIdRef.current === checkinAtual.id) {
+      return
+    }
+
     setExerciseDrafts(buildExerciseDrafts(checkinAtual))
     setComentarioDia(checkinAtual.comentarioAluno || "")
+    autofilledExerciseIdsRef.current = {}
+    initializedCheckinIdRef.current = checkinAtual.id
   }, [checkinAtual])
+
+  useEffect(() => {
+    if (!checkinAtual) {
+      return
+    }
+
+    setExerciseDrafts((prev) => {
+      let changed = false
+      const nextDrafts = { ...prev }
+
+      for (const exercise of checkinAtual.exercicios) {
+        const draft = prev[exercise.treinoDiaExercicioId]
+        const latestPerformance = latestPerformanceByExerciseId.get(
+          exercise.exercicioId,
+        )
+
+        if (!draft || !latestPerformance) {
+          continue
+        }
+
+        if (
+          exercise.cargaReal !== null &&
+          exercise.cargaReal !== undefined
+        ) {
+          continue
+        }
+
+        if (draft.cargaReal.trim()) {
+          continue
+        }
+
+        if (
+          latestPerformance.cargaReal === null ||
+          latestPerformance.cargaReal === undefined
+        ) {
+          continue
+        }
+
+        if (autofilledExerciseIdsRef.current[exercise.treinoDiaExercicioId]) {
+          continue
+        }
+
+        nextDrafts[exercise.treinoDiaExercicioId] = {
+          ...draft,
+          cargaReal: String(latestPerformance.cargaReal),
+        }
+        autofilledExerciseIdsRef.current[exercise.treinoDiaExercicioId] = true
+        changed = true
+      }
+
+      return changed ? nextDrafts : prev
+    })
+  }, [checkinAtual, latestPerformanceByExerciseId])
 
   useEffect(() => {
     if (!selectedProgressExerciseId && seriesDisponiveis.length > 0) {
@@ -377,6 +487,32 @@ export const MeuTreinoPage: React.FC = () => {
         </p>
       </div>
 
+      <Card className="border border-[#49b4a6]/20 bg-[#0f1716]">
+        <div className="flex items-center gap-2 mb-3">
+          <MessageSquare className="h-5 w-5 text-[#7de0d3]" />
+          <h2 className="text-lg font-semibold">Feedback em destaque</h2>
+        </div>
+        {ultimoComentarioProfessor ? (
+          <div className="rounded-2xl border border-[#49b4a6]/30 bg-[#12302c] p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7de0d3]">
+              Último recado do professor
+            </p>
+            <p className="mt-3 text-sm leading-7 text-white">
+              {ultimoComentarioProfessor.comentarioProfessor}
+            </p>
+            <p className="mt-3 text-xs text-zinc-300">
+              {format(new Date(ultimoComentarioProfessor.updatedAt), "dd/MM/yyyy HH:mm", {
+                locale: ptBR,
+              })} • {ultimoComentarioProfessor.treinoDia.titulo}
+            </p>
+          </div>
+        ) : (
+          <p className="text-sm text-zinc-300">
+            Quando houver um comentário do professor ele aparece aqui antes do restante do treino.
+          </p>
+        )}
+      </Card>
+
       <Card>
         <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
           <CalendarCheck className="h-5 w-5" />
@@ -454,6 +590,12 @@ export const MeuTreinoPage: React.FC = () => {
                 repeticoesReal: "",
                 comentarioAluno: "",
               }
+              const latestPerformance = latestPerformanceByExerciseId.get(
+                exercise.exercicioId,
+              )
+              const hasVisualMedia =
+                !!exercise.exercicio.executionGifUrl ||
+                !!exercise.exercicio.equipmentImageUrl
 
               return (
                 <div
@@ -471,6 +613,11 @@ export const MeuTreinoPage: React.FC = () => {
                         {exercise.treinoDiaExercicio.series || "-"} séries •{" "}
                         {exercise.treinoDiaExercicio.repeticoes || "-"} reps
                       </p>
+                      {exercise.exercicio.descricao && (
+                        <p className="text-xs text-zinc-400 mt-2 leading-6">
+                          {exercise.exercicio.descricao}
+                        </p>
+                      )}
                     </div>
                     <label className="flex items-center gap-2 text-sm text-zinc-200">
                       <input
@@ -486,6 +633,72 @@ export const MeuTreinoPage: React.FC = () => {
                     </label>
                   </div>
 
+                  {hasVisualMedia && (
+                    <div className="grid grid-cols-1 gap-3 md:grid-cols-2 mb-4">
+                      {exercise.exercicio.executionGifUrl && (
+                        <div className="rounded-lg border border-zinc-700 bg-zinc-950 overflow-hidden">
+                          <div className="px-3 py-2 border-b border-zinc-800">
+                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-300">
+                              Execução
+                            </p>
+                          </div>
+                          <img
+                            src={exercise.exercicio.executionGifUrl}
+                            alt={`Demonstração de ${exercise.exercicio.nome}`}
+                            className="h-48 w-full object-cover"
+                            loading="lazy"
+                          />
+                        </div>
+                      )}
+
+                      {exercise.exercicio.equipmentImageUrl && (
+                        <div className="rounded-lg border border-zinc-700 bg-zinc-950 overflow-hidden">
+                          <div className="px-3 py-2 border-b border-zinc-800">
+                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-300">
+                              Aparelho
+                            </p>
+                          </div>
+                          <img
+                            src={exercise.exercicio.equipmentImageUrl}
+                            alt={`Aparelho usado em ${exercise.exercicio.nome}`}
+                            className="h-48 w-full object-cover"
+                            loading="lazy"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {latestPerformance && (
+                    <div className="mb-4 rounded-lg border border-[#d4a548]/20 bg-[#191308] p-3">
+                      <div className="flex items-center gap-2">
+                        <Target className="h-4 w-4 text-[#f1d38b]" />
+                        <p className="text-sm font-medium text-white">
+                          Referência de progressão
+                        </p>
+                      </div>
+                      <p className="text-sm text-zinc-300 mt-2">
+                        Último registro:{" "}
+                        <strong className="text-white">
+                          {latestPerformance.cargaReal !== null &&
+                          latestPerformance.cargaReal !== undefined
+                            ? `${latestPerformance.cargaReal} kg`
+                            : "sem carga registrada"}
+                        </strong>
+                        {latestPerformance.repeticoesReal
+                          ? ` • ${latestPerformance.repeticoesReal}`
+                          : ""}
+                        {" • "}
+                        {format(new Date(latestPerformance.data), "dd/MM/yyyy", {
+                          locale: ptBR,
+                        })}
+                      </p>
+                      <p className="text-xs text-zinc-400 mt-2">
+                        Quando houver histórico, a última carga aparece como ponto de partida e pode ser ajustada livremente.
+                      </p>
+                    </div>
+                  )}
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <Input
                       label="Carga realizada (kg)"
@@ -499,9 +712,12 @@ export const MeuTreinoPage: React.FC = () => {
                         })
                       }
                       placeholder={
-                        exercise.treinoDiaExercicio.cargaSugerida
-                          ? `Sugestão: ${exercise.treinoDiaExercicio.cargaSugerida}`
-                          : "Ex: 40"
+                        latestPerformance?.cargaReal !== null &&
+                        latestPerformance?.cargaReal !== undefined
+                          ? `Última carga: ${latestPerformance.cargaReal} kg`
+                          : exercise.treinoDiaExercicio.cargaSugerida
+                            ? `Sugestão: ${exercise.treinoDiaExercicio.cargaSugerida}`
+                            : "Ex: 40"
                       }
                     />
                     <Input
@@ -584,6 +800,11 @@ export const MeuTreinoPage: React.FC = () => {
 
         {seriesDisponiveis.length > 0 && (
           <div className="space-y-4">
+            <div className="rounded-lg border border-white/10 bg-white/[0.03] p-3">
+              <p className="text-sm text-zinc-300">
+                Use esta visão para comparar sua execução recente e progredir com mais critério, não no escuro.
+              </p>
+            </div>
             <div>
               <label className="block text-sm font-medium text-zinc-200 mb-1">
                 Exercício

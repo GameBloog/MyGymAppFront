@@ -34,16 +34,18 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
   const showDietaLink = isAluno && !location.pathname.includes("/dieta")
   const showFotosLink =
     isAluno && !location.pathname.includes("/fotos-arquivos")
+  const mobileTopbarButtonClass =
+    "!h-9 !w-9 !justify-center !gap-0 !rounded-md !p-0 sm:!h-auto sm:!w-auto sm:!rounded-lg sm:!p-2"
 
   return (
     <div className="min-h-screen bg-black text-white">
       <header className="bg-zinc-950 shadow-sm border-b border-zinc-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-3 py-3 sm:h-16 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-0">
+            <div className="flex flex-wrap items-center gap-3">
               <BrandMark size="sm" text="G-Force Coach" />
               {user && (
-                <span className="ml-4 px-3 py-1 bg-zinc-800 text-zinc-100 text-sm rounded-full">
+                <span className="px-3 py-1 bg-zinc-800 text-zinc-100 text-sm rounded-full">
                   {user.role === "ADMIN" && "Administrador"}
                   {user.role === "PROFESSOR" && "Professor"}
                   {user.role === "ALUNO" && "Aluno"}
@@ -51,13 +53,13 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
               )}
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex w-full flex-wrap items-center gap-1 sm:w-auto sm:flex-nowrap sm:justify-end sm:gap-2">
               {showDashboardLink && (
                 <Button
                   variant="secondary"
                   icon={Home}
                   onClick={() => navigate("/aluno/dashboard")}
-                  className="!p-2"
+                  className={mobileTopbarButtonClass}
                   title="Abrir Dashboard"
                 >
                   <span className="hidden sm:inline">Dashboard</span>
@@ -69,7 +71,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
                   variant="secondary"
                   icon={User}
                   onClick={() => navigate("/aluno/perfil")}
-                  className="!p-2"
+                  className={mobileTopbarButtonClass}
                   title="Ver Perfil"
                 >
                   <span className="hidden sm:inline">Perfil</span>
@@ -81,7 +83,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
                   variant="secondary"
                   icon={TrendingUp}
                   onClick={() => navigate("/aluno/evolucao")}
-                  className="!p-2"
+                  className={mobileTopbarButtonClass}
                   title="Ver Evolução"
                 >
                   <span className="hidden sm:inline">Evolução</span>
@@ -93,7 +95,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
                   variant="secondary"
                   icon={Dumbbell}
                   onClick={() => navigate("/aluno/treino")}
-                  className="!p-2"
+                  className={mobileTopbarButtonClass}
                   title="Ver Treino"
                 >
                   <span className="hidden sm:inline">Treino</span>
@@ -105,7 +107,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
                   variant="secondary"
                   icon={UtensilsCrossed}
                   onClick={() => navigate("/aluno/dieta")}
-                  className="!p-2"
+                  className={mobileTopbarButtonClass}
                   title="Ver Dieta"
                 >
                   <span className="hidden sm:inline">Dieta</span>
@@ -117,7 +119,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
                   variant="secondary"
                   icon={Camera}
                   onClick={() => navigate("/aluno/fotos-arquivos")}
-                  className="!p-2"
+                  className={mobileTopbarButtonClass}
                   title="Enviar Fotos"
                 >
                   <span className="hidden sm:inline">Fotos</span>
@@ -128,7 +130,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
                 variant="secondary"
                 icon={LogOut}
                 onClick={handleLogout}
-                className="!p-2"
+                className={mobileTopbarButtonClass}
                 title="Sair"
               >
                 <span className="hidden sm:inline">Sair</span>

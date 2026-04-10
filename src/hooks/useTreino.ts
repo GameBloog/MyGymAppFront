@@ -11,6 +11,7 @@ import type {
   CreateExercicioDTO,
   Exercicio,
   ExercicioExterno,
+  ExercicioMediaKind,
   GrupamentoMuscular,
   ImportExercicioExternoDTO,
   PlanoTreino,
@@ -131,6 +132,46 @@ export const useImportExercicioExterno = (): UseMutationResult<
       },
       onError: (error) => {
         showToast.error(error.message || "Erro ao importar exercício")
+      },
+    },
+  )
+}
+
+export const useUploadExercicioMedia = (): UseMutationResult<
+  Exercicio,
+  Error,
+  { exercicioId: string; kind: ExercicioMediaKind; file: File }
+> => {
+  const queryClient = useQueryClient()
+
+  return useMutation<Exercicio, Error, { exercicioId: string; kind: ExercicioMediaKind; file: File }>(
+    ({ exercicioId, kind, file }) => exerciciosApi.uploadMedia(exercicioId, kind, file),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("exercicios")
+      },
+      onError: (error) => {
+        showToast.error(error.message || "Erro ao enviar mídia do exercício")
+      },
+    },
+  )
+}
+
+export const useClearExercicioMedia = (): UseMutationResult<
+  Exercicio,
+  Error,
+  { exercicioId: string; kind: ExercicioMediaKind }
+> => {
+  const queryClient = useQueryClient()
+
+  return useMutation<Exercicio, Error, { exercicioId: string; kind: ExercicioMediaKind }>(
+    ({ exercicioId, kind }) => exerciciosApi.clearMedia(exercicioId, kind),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("exercicios")
+      },
+      onError: (error) => {
+        showToast.error(error.message || "Erro ao limpar mídia do exercício")
       },
     },
   )

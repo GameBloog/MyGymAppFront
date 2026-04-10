@@ -13,6 +13,8 @@ import { Layout } from "./components/Layout"
 
 // Landing Page
 import LandingPage from "./pages/LandingPage"
+import PlanosPage from "./pages/PlanosPage"
+import CamisasPage from "./pages/CamisasPage"
 
 // Auth Pages
 import { LoginPage } from "./pages/LoginPage"
@@ -77,6 +79,8 @@ function AppRoutes() {
       <Routes>
         {/* Landing pública */}
         <Route path="/landing" element={<LandingPage />} />
+        <Route path="/planos" element={<PlanosPage />} />
+        <Route path="/camisas" element={<CamisasPage />} />
 
         {/* Auth */}
         <Route path="/login" element={<LoginPage />} />
