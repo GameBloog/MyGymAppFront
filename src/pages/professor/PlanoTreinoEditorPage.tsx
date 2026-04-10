@@ -689,12 +689,20 @@ export const PlanoTreinoEditorPage: React.FC = () => {
       return
     }
 
-    const updatedExercise = await clearExercicioMedia.mutateAsync({
-      exercicioId: mediaExercise.id,
-      kind,
-    })
-    replaceExerciseReferences(updatedExercise)
-    showToast.success("Mídia do exercício removida")
+    try {
+      const updatedExercise = await clearExercicioMedia.mutateAsync({
+        exercicioId: mediaExercise.id,
+        kind,
+      })
+      replaceExerciseReferences(updatedExercise)
+      showToast.success("Mídia do exercício removida")
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Não foi possível remover a mídia do exercício"
+      showToast.error(message)
+    }
   }
 
   if (!alunoId) {
