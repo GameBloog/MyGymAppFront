@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
-import { Mail, Lock, AlertCircle } from "lucide-react"
+import { Mail, Lock, AlertCircle, Eye, EyeOff } from "lucide-react"
 import { Card, Input, Button } from "../components/ui"
 import { BrandMark } from "../components/BrandMark"
 import { useAuth } from "../hooks/useAuth"
@@ -16,6 +16,7 @@ export const LoginPage: React.FC = () => {
     email: "",
     password: "",
   })
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [generalError, setGeneralError] = useState<string>("")
@@ -104,27 +105,51 @@ export const LoginPage: React.FC = () => {
             autoComplete="email"
           />
 
-          <Input
-            label="Senha"
-            icon={Lock}
-            type="password"
-            value={formData.password}
-            onChange={(e) => {
-              setFormData({ ...formData, password: e.target.value })
-              setErrors({ ...errors, password: "" })
-              setGeneralError("")
-            }}
-            onKeyPress={handleKeyPress}
-            placeholder="••••••••"
-            error={errors.password}
-            autoComplete="current-password"
-          />
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-white mb-1">
+              Senha
+            </label>
+            <div className="relative">
+              <Input
+                icon={Lock}
+                type={isPasswordVisible ? "text" : "password"}
+                value={formData.password}
+                onChange={(e) => {
+                  setFormData({ ...formData, password: e.target.value })
+                  setErrors({ ...errors, password: "" })
+                  setGeneralError("")
+                }}
+                onKeyPress={handleKeyPress}
+                placeholder="••••••••"
+                autoComplete="current-password"
+                className={`mb-0 pr-12 ${errors.password ? "border-red-500" : ""}`}
+              />
+              <button
+                type="button"
+                onClick={() => setIsPasswordVisible((visible) => !visible)}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-400 hover:text-white"
+                aria-label={
+                  isPasswordVisible ? "Ocultar senha" : "Mostrar senha"
+                }
+                title={isPasswordVisible ? "Ocultar senha" : "Mostrar senha"}
+              >
+                {isPasswordVisible ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
+                  <Eye className="h-5 w-5" />
+                )}
+              </button>
+            </div>
+            {errors.password && (
+              <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+            )}
+          </div>
 
           <Button
             onClick={handleSubmit}
             isLoading={isLoading}
             disabled={isLoading}
-            className="w-full"
+            className="w-full mt-6 justify-center"
           >
             {isLoading ? "Entrando..." : "Entrar"}
           </Button>
