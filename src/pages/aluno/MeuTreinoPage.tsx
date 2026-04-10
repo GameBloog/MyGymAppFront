@@ -144,10 +144,17 @@ export const MeuTreinoPage: React.FC = () => {
     const map = new Map<string, LatestExercisePerformance>()
 
     for (const serie of seriesDisponiveis) {
-      const latestPointWithLoad = [...serie.pontos]
-        .filter((point) => point.cargaReal !== null && point.cargaReal !== undefined)
-        .slice(-1)[0]
-      const fallbackPoint = serie.pontos.slice(-1)[0]
+      const fallbackPoint = serie.pontos[serie.pontos.length - 1]
+      let latestPointWithLoad: ProgressSerieTreino["pontos"][number] | undefined
+
+      for (let index = serie.pontos.length - 1; index >= 0; index -= 1) {
+        const point = serie.pontos[index]
+
+        if (point.cargaReal !== null && point.cargaReal !== undefined) {
+          latestPointWithLoad = point
+          break
+        }
+      }
       const latestPoint = latestPointWithLoad || fallbackPoint
 
       if (!latestPoint) {
