@@ -66,11 +66,6 @@ export const exerciciosApi = {
     const response = await api.post<Exercicio>(
       `/exercicios/${exercicioId}/midia/${kind}`,
       formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      },
     )
     return response.data
   },
