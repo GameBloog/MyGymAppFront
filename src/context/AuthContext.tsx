@@ -1,6 +1,6 @@
 import React, { useState, useEffect, type ReactNode } from "react"
 import { AuthContext } from "./AuthContext"
-import { authApi } from "../services/api"
+import { AUTH_SESSION_REFRESHED_EVENT, authApi } from "../services/api"
 import { showToast } from "../utils/toast"
 import {
   type User,
@@ -36,6 +36,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsLoading(false)
   }, [])
 
+  useEffect(() => {
+    const handleSessionRefreshed = (event: Event) => {
+      const session = (event as CustomEvent<LoginResponse>).detail
+      if (!session?.token || !session.user) return
+
+      setToken(session.token)
+      setUser(session.user)
+    }
+
+    window.addEventListener(
+      AUTH_SESSION_REFRESHED_EVENT,
+      handleSessionRefreshed,
+    )
+
+    return () => {
+      window.removeEventListener(
+        AUTH_SESSION_REFRESHED_EVENT,
+        handleSessionRefreshed,
+      )
+    }
+  }, [])
+
   const login = async (data: LoginDTO) => {
     try {
       const response: LoginResponse = await authApi.login(data)
@@ -65,6 +87,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }
 
   const logout = () => {
+    void authApi.logout().catch(() => {})
     setToken(null)
     setUser(null)
     localStorage.removeItem("token")

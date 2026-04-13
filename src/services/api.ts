@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios"
+import axios, { AxiosError, type AxiosRequestConfig } from "axios"
 import {
   type User,
   type LoginDTO,
@@ -40,8 +40,15 @@ export const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
   timeout: 10000,
 })
+
+export const AUTH_SESSION_REFRESHED_EVENT = "auth:session-refreshed"
+
+interface RetryableRequestConfig extends AxiosRequestConfig {
+  _retry?: boolean
+}
 
 const shouldLogApiErrors = import.meta.env.DEV
 
@@ -64,6 +71,31 @@ let isRedirecting = false
 const clearAuth = () => {
   localStorage.removeItem("token")
   localStorage.removeItem("user")
+}
+
+const storeAuth = (session: LoginResponse) => {
+  localStorage.setItem("token", session.token)
+  localStorage.setItem("user", JSON.stringify(session.user))
+  window.dispatchEvent(
+    new CustomEvent<LoginResponse>(AUTH_SESSION_REFRESHED_EVENT, {
+      detail: session,
+    }),
+  )
+}
+
+let refreshSessionPromise: Promise<LoginResponse> | null = null
+
+const refreshSession = async (): Promise<LoginResponse> => {
+  if (!refreshSessionPromise) {
+    refreshSessionPromise = api
+      .post<LoginResponse>("/auth/refresh")
+      .then((response) => response.data)
+      .finally(() => {
+        refreshSessionPromise = null
+      })
+  }
+
+  return refreshSessionPromise
 }
 
 const redirectToPublicEntry = () => {
@@ -104,7 +136,7 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => response,
-  (error: AxiosError<ApiError>) => {
+  async (error: AxiosError<ApiError>) => {
     if (shouldLogApiErrors) {
       console.error("API Error:", {
         status: error.response?.status,
@@ -120,8 +152,34 @@ api.interceptors.response.use(
 
     const status = error.response.status
     const errorMessage = error.response.data?.error || "Erro desconhecido"
+    const originalRequest = error.config as RetryableRequestConfig | undefined
+    const requestUrl = originalRequest?.url || ""
+    const isLoginRequest = requestUrl.includes("/auth/login")
+    const isRefreshRequest = requestUrl.includes("/auth/refresh")
+    const isLogoutRequest = requestUrl.includes("/auth/logout")
 
     if (status === 401) {
+      if (isLoginRequest) {
+        return Promise.reject(new Error(errorMessage))
+      }
+
+      if (originalRequest && !originalRequest._retry && !isRefreshRequest && !isLogoutRequest) {
+        originalRequest._retry = true
+
+        try {
+          const refreshedSession = await refreshSession()
+          storeAuth(refreshedSession)
+          originalRequest.headers = originalRequest.headers || {}
+          originalRequest.headers.Authorization = `Bearer ${refreshedSession.token}`
+          return api(originalRequest)
+        } catch {
+          redirectToPublicEntry()
+          return Promise.reject(
+            new Error("Sessão expirada. Faça login novamente."),
+          )
+        }
+      }
+
       redirectToPublicEntry()
       return Promise.reject(new Error("Sessão expirada. Faça login novamente."))
     }
@@ -211,6 +269,10 @@ export const authApi = {
     } catch {
       return false
     }
+  },
+
+  logout: async (): Promise<void> => {
+    await api.post("/auth/logout")
   },
 }
 
