@@ -1,16 +1,14 @@
 import { useEffect, useRef } from "react"
 import { useAuth } from "../hooks/useAuth"
 import { authApi } from "../services/api"
-import { showToast } from "../utils/toast"
 
 /**
- * Componente que verifica periodicamente se o token ainda é válido
- * Se o token expirou, faz logout automático e redireciona para login
+ * Mantem a sessão aquecida sem tomar decisões destrutivas.
+ * O interceptor central decide quando uma sessão realmente expirou.
  */
 export const TokenValidator: React.FC = () => {
-  const { isAuthenticated, logout } = useAuth()
+  const { isAuthenticated } = useAuth()
   const checkingRef = useRef(false)
-  const notifiedRef = useRef(false)
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -22,19 +20,10 @@ export const TokenValidator: React.FC = () => {
       checkingRef.current = true
 
       try {
-        const isValid = await authApi.checkToken()
-
-        if (!isValid && !notifiedRef.current) {
-          notifiedRef.current = true
-          showToast.warning("Sua sessão expirou. Faça login novamente.")
-          logout()
-        }
+        await authApi.me()
       } catch (error) {
-        console.error("Erro ao verificar token:", error)
-        if (!notifiedRef.current) {
-          notifiedRef.current = true
-          showToast.warning("Sua sessão expirou. Faça login novamente.")
-          logout()
+        if (import.meta.env.DEV) {
+          console.debug("Falha ao validar sessão no keep-alive:", error)
         }
       } finally {
         checkingRef.current = false
@@ -57,7 +46,7 @@ export const TokenValidator: React.FC = () => {
       clearInterval(interval)
       document.removeEventListener("visibilitychange", handleVisibilityChange)
     }
-  }, [isAuthenticated, logout])
+  }, [isAuthenticated])
 
-  return null 
+  return null
 }
