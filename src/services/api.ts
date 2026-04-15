@@ -1,4 +1,4 @@
-import axios, { AxiosError, type AxiosRequestConfig } from "axios"
+import axios, { AxiosError, AxiosHeaders, type AxiosRequestConfig } from "axios"
 import {
   type User,
   type LoginDTO,
@@ -45,12 +45,29 @@ export const api = axios.create({
 })
 
 export const AUTH_SESSION_REFRESHED_EVENT = "auth:session-refreshed"
+export const AUTH_SESSION_EXPIRED_EVENT = "auth:session-expired"
 
 interface RetryableRequestConfig extends AxiosRequestConfig {
   _retry?: boolean
 }
 
 const shouldLogApiErrors = import.meta.env.DEV
+
+const isFormDataPayload = (data: unknown): data is FormData =>
+  typeof FormData !== "undefined" && data instanceof FormData
+
+const removeContentTypeHeader = (headers: AxiosRequestConfig["headers"]) => {
+  if (!headers) return
+
+  if (headers instanceof AxiosHeaders) {
+    headers.delete("Content-Type")
+    return
+  }
+
+  const mutableHeaders = headers as Record<string, unknown>
+  delete mutableHeaders["Content-Type"]
+  delete mutableHeaders["content-type"]
+}
 
 const cleanPayload = <T extends object>(data: T): Record<string, unknown> =>
   Object.entries(data as Record<string, unknown>).reduce(
@@ -83,6 +100,10 @@ const storeAuth = (session: LoginResponse) => {
   )
 }
 
+const notifySessionExpired = () => {
+  window.dispatchEvent(new Event(AUTH_SESSION_EXPIRED_EVENT))
+}
+
 let refreshSessionPromise: Promise<LoginResponse> | null = null
 
 const refreshSession = async (): Promise<LoginResponse> => {
@@ -102,6 +123,7 @@ const redirectToPublicEntry = () => {
   if (isRedirecting) return
   isRedirecting = true
 
+  notifySessionExpired()
   clearAuth()
 
   const currentPath = window.location.pathname
@@ -120,6 +142,10 @@ const redirectToPublicEntry = () => {
 
 api.interceptors.request.use(
   (config) => {
+    if (isFormDataPayload(config.data)) {
+      removeContentTypeHeader(config.headers)
+    }
+
     const token = localStorage.getItem("token")
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
