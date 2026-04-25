@@ -121,7 +121,7 @@ export const PublicPlanosPage = () => {
             </p>
             <button
               onClick={handleContactClick}
-              className="mt-7 inline-flex items-center justify-center gap-2 self-start rounded-full bg-[color:var(--public-accent)] px-6 py-4 text-sm font-semibold text-[color:var(--public-accent-contrast)] transition-transform hover:-translate-y-0.5 sm:px-7 sm:text-base"
+              className="mt-7 inline-flex items-center justify-center gap-2 self-start rounded-full bg-[color:var(--public-accent)] bg-[image:var(--public-accent-gradient)] px-6 py-4 text-sm font-semibold text-[color:var(--public-accent-contrast)] transition-transform hover:-translate-y-0.5 sm:px-7 sm:text-base"
             >
               <MessageCircle className="h-5 w-5" />
               Falar sobre os planos

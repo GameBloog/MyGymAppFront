@@ -126,7 +126,7 @@ export const PublicLandingPage = () => {
               <div className="flex flex-col gap-3 sm:flex-row">
                 <button
                   onClick={handleContactClick}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[color:var(--public-accent)] px-6 py-4 text-sm font-semibold text-[color:var(--public-accent-contrast)] transition-transform hover:-translate-y-0.5 sm:w-auto sm:px-7 sm:text-base"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[color:var(--public-accent)] bg-[image:var(--public-accent-gradient)] px-6 py-4 text-sm font-semibold text-[color:var(--public-accent-contrast)] transition-transform hover:-translate-y-0.5 sm:w-auto sm:px-7 sm:text-base"
                 >
                   <MessageCircle className="h-5 w-5" />
                   Quero entender meu melhor caminho
@@ -442,7 +442,7 @@ export const PublicLandingPage = () => {
               </button>
               <button
                 onClick={handleShirtClick}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[color:var(--public-teal)] px-6 py-3 text-sm font-semibold text-[color:var(--public-accent-contrast)] transition-transform hover:-translate-y-0.5 sm:w-auto"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[color:var(--public-teal)] bg-[image:var(--public-secondary-gradient)] px-6 py-3 text-sm font-semibold text-[color:var(--public-accent-contrast)] transition-transform hover:-translate-y-0.5 sm:w-auto"
               >
                 Falar sobre os produtos
                 <ArrowRight className="h-4 w-4" />
@@ -476,7 +476,7 @@ export const PublicLandingPage = () => {
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
               <button
                 onClick={handleContactClick}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[color:var(--public-accent)] px-6 py-4 text-sm font-semibold text-[color:var(--public-accent-contrast)] transition-transform hover:-translate-y-0.5 sm:w-auto sm:px-7 sm:text-base"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[color:var(--public-accent)] bg-[image:var(--public-accent-gradient)] px-6 py-4 text-sm font-semibold text-[color:var(--public-accent-contrast)] transition-transform hover:-translate-y-0.5 sm:w-auto sm:px-7 sm:text-base"
               >
                 <MessageCircle className="h-5 w-5" />
                 Quero iniciar meu acompanhamento

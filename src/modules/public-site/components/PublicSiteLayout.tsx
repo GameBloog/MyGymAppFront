@@ -145,7 +145,7 @@ export const PublicSiteLayout: React.FC<PublicSiteLayoutProps> = ({ children }) 
             </button>
             <button
               onClick={handleContactClick}
-              className="inline-flex items-center gap-2 rounded-full bg-[color:var(--public-accent)] px-5 py-2 text-sm font-semibold text-[color:var(--public-accent-contrast)] transition-transform hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 rounded-full bg-[color:var(--public-accent)] bg-[image:var(--public-accent-gradient)] px-5 py-2 text-sm font-semibold text-[color:var(--public-accent-contrast)] transition-transform hover:-translate-y-0.5"
             >
               <MessageCircle className="h-4 w-4" />
               Falar no WhatsApp
@@ -213,7 +213,7 @@ export const PublicSiteLayout: React.FC<PublicSiteLayoutProps> = ({ children }) 
               </button>
               <button
                 onClick={handleContactClick}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--public-accent)] px-4 py-3 text-sm font-semibold text-[color:var(--public-accent-contrast)]"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--public-accent)] bg-[image:var(--public-accent-gradient)] px-4 py-3 text-sm font-semibold text-[color:var(--public-accent-contrast)]"
               >
                 <MessageCircle className="h-4 w-4" />
                 Falar no WhatsApp
