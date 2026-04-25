@@ -29,10 +29,10 @@ export const PublicCamisasPage = () => {
               <Shirt className="h-4 w-4 text-[color:var(--public-accent)]" />
               Camisas oficiais
             </p>
-            <h1 className="text-4xl font-semibold leading-tight text-[color:var(--public-text)] sm:text-5xl">
+            <h1 className="max-w-[15ch] text-[2.2rem] font-semibold leading-[1.14] tracking-[-0.01em] text-[color:var(--public-text)] sm:text-[2.8rem] lg:text-[3.2rem]">
               A camisa carrega a identidade da comunidade que escolhe processo, constância e evolução real.
             </h1>
-            <p className="text-lg leading-8 text-[color:var(--public-text-soft)]">
+            <p className="text-[1rem] leading-8 text-[color:var(--public-text-soft)] sm:text-[1.05rem]">
               O serviço principal continua sendo o centro da proposta da G-Force. A camisa entra
               como extensão da cultura da comunidade: um símbolo de pertencimento, disciplina e
               compromisso com a rotina.
@@ -54,7 +54,7 @@ export const PublicCamisasPage = () => {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-accent)]">
               Valor percebido
             </p>
-            <h2 className="text-3xl font-semibold text-[color:var(--public-text)] sm:text-4xl">
+            <h2 className="max-w-[18ch] text-[2rem] font-semibold leading-[1.16] tracking-[-0.01em] text-[color:var(--public-text)] sm:text-[2.45rem]">
               O valor da camisa vai além do tecido: ela representa vínculo com a cultura da G-Force.
             </h2>
           </div>
@@ -91,7 +91,7 @@ export const PublicCamisasPage = () => {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-teal)]">
               Disponibilidade e detalhes
             </p>
-            <h2 className="mt-4 text-3xl font-semibold text-[color:var(--public-text)]">
+            <h2 className="mt-4 max-w-[16ch] text-[2rem] font-semibold leading-[1.16] tracking-[-0.01em] text-[color:var(--public-text)] sm:text-[2.35rem]">
               Quer saber sobre modelagem, disponibilidade e valores da camisa?
             </h2>
             <p className="mt-4 max-w-2xl text-base leading-8 text-[color:var(--public-text-soft)]">

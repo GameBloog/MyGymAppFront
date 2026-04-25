@@ -104,85 +104,76 @@ export const PublicLandingPage = () => {
     <PublicSiteLayout>
       <section className="relative overflow-hidden px-5 pb-20 pt-28 sm:px-6 lg:px-8">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(208,160,58,0.18),_transparent_30%),radial-gradient(circle_at_80%_20%,_rgba(73,180,166,0.14),_transparent_24%),linear-gradient(180deg,_var(--public-bg)_0%,_var(--public-bg-alt)_42%,_var(--public-bg)_100%)]" />
-        <div className="relative mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.96fr_1.04fr] lg:items-center xl:gap-14">
-          <div className="space-y-7">
-            <div className="inline-flex max-w-full flex-wrap items-center justify-center gap-2 rounded-full border border-[color:var(--public-border-strong)] bg-[color:var(--public-accent-surface)] px-4 py-2 text-center text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-[color:var(--public-accent)] sm:justify-start sm:text-left sm:text-xs sm:tracking-[0.2em]">
-              <Sparkles className="h-3.5 w-3.5" />
-              Clareza comercial + experiência real do aluno
+        <div className="relative mx-auto max-w-7xl space-y-5">
+          <div className="grid gap-10 lg:grid-cols-[0.96fr_1.04fr] lg:items-center xl:gap-14">
+            <div className="space-y-7">
+              <div className="inline-flex max-w-full flex-wrap items-center justify-center gap-2 rounded-full border border-[color:var(--public-border-strong)] bg-[color:var(--public-accent-surface)] px-4 py-2 text-center text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--public-accent)] sm:justify-start sm:text-left sm:text-[0.78rem] sm:tracking-[0.16em]">
+                <Sparkles className="h-3.5 w-3.5" />
+                Clareza comercial + experiência real do aluno
+              </div>
+
+              <div className="space-y-4">
+                <h1 className="max-w-[20ch] text-[2.05rem] font-semibold leading-[1.1] text-[color:var(--public-text)] sm:max-w-[18ch] sm:text-[2.45rem] lg:max-w-none lg:text-[3rem]">
+                  Acompanhamento não deveria depender de bagunça, improviso e mensagem perdida.
+                </h1>
+                <p className="max-w-[40rem] text-[1rem] leading-7 text-[color:var(--public-text-soft)] sm:text-[1.05rem] sm:leading-8 lg:max-w-[36rem]">
+                  A G-Force combina comunidade, acompanhamento e plataforma própria para
+                  organizar treino, dieta, feedback e evolução em uma rotina mais clara,
+                  forte e sustentável.
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <button
+                  onClick={handleContactClick}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[color:var(--public-accent)] px-6 py-4 text-sm font-semibold text-[color:var(--public-accent-contrast)] transition-transform hover:-translate-y-0.5 sm:w-auto sm:px-7 sm:text-base"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  Quero entender meu melhor caminho
+                </button>
+                <button
+                  onClick={() => navigate("/login")}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[color:var(--public-border)] px-6 py-4 text-sm font-semibold text-[color:var(--public-text)] transition-colors hover:border-[color:var(--public-border-strong)] hover:bg-[color:var(--public-surface)] sm:w-auto sm:px-7 sm:text-base"
+                >
+                  <LogIn className="h-5 w-5" />
+                  Já sou aluno
+                </button>
+              </div>
+
             </div>
 
-            <div className="space-y-4">
-              <h1 className="max-w-3xl text-[2.15rem] font-semibold leading-[1.04] text-[color:var(--public-text)] sm:text-[2.65rem] lg:text-[3.2rem]">
-                Acompanhamento não deveria depender de bagunça, improviso e mensagem perdida.
-              </h1>
-              <p className="max-w-xl text-base leading-7 text-[color:var(--public-text-soft)] sm:text-lg sm:leading-8">
-                A G-Force combina comunidade, acompanhamento e plataforma própria para
-                organizar treino, dieta, feedback e evolução em uma rotina mais clara,
-                forte e sustentável.
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <button
-                onClick={handleContactClick}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[color:var(--public-accent)] px-6 py-4 text-sm font-semibold text-[color:var(--public-accent-contrast)] transition-transform hover:-translate-y-0.5 sm:w-auto sm:px-7 sm:text-base"
-              >
-                <MessageCircle className="h-5 w-5" />
-                Quero entender meu melhor caminho
-              </button>
-              <button
-                onClick={() => navigate("/login")}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[color:var(--public-border)] px-6 py-4 text-sm font-semibold text-[color:var(--public-text)] transition-colors hover:border-[color:var(--public-border-strong)] hover:bg-[color:var(--public-surface)] sm:w-auto sm:px-7 sm:text-base"
-              >
-                <LogIn className="h-5 w-5" />
-                Já sou aluno
-              </button>
-            </div>
-
-            <div className="flex flex-wrap gap-3 text-sm text-[color:var(--public-text-muted)]">
-              <span className="rounded-full border border-[color:var(--public-border)] bg-[color:var(--public-surface)] px-4 py-2">
-                Método mais claro
-              </span>
-              <span className="rounded-full border border-[color:var(--public-border)] bg-[color:var(--public-surface)] px-4 py-2">
-                Experiência organizada
-              </span>
-              <span className="rounded-full border border-[color:var(--public-border)] bg-[color:var(--public-surface)] px-4 py-2">
-                Acompanhamento com contexto
-              </span>
+            <div className="space-y-5">
+              <div className="overflow-hidden rounded-[32px] border border-[color:var(--public-border)] bg-[color:var(--public-surface-strong)] shadow-[var(--public-shadow)]">
+                <img
+                  src="/0e831fa0-39ee-4b03-9071-98532877d713.jpeg"
+                  alt="Identidade visual da comunidade G-Force"
+                  className="aspect-[4/4.1] w-full object-cover"
+                />
+              </div>
             </div>
           </div>
 
-          <div className="space-y-5">
-            <div className="overflow-hidden rounded-[32px] border border-[color:var(--public-border)] bg-[color:var(--public-surface-strong)] shadow-[var(--public-shadow)]">
-              <img
-                src="/0e831fa0-39ee-4b03-9071-98532877d713.jpeg"
-                alt="Identidade visual da comunidade G-Force"
-                className="aspect-[4/4.1] w-full object-cover"
-              />
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              {serviceHighlights.map((item, index) => (
-                <div
-                  key={item.title}
-                  className={`rounded-[28px] border p-5 sm:p-6 ${
-                    index % 2 === 0
-                      ? "border-[color:var(--public-border-strong)] bg-[color:var(--public-accent-surface)]"
-                      : "border-[color:var(--public-border)] bg-[color:var(--public-teal-surface)]"
-                  }`}
-                >
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--public-text-muted)]">
-                    Destaque
-                  </p>
-                  <p className="mt-3 text-base font-semibold leading-7 text-[color:var(--public-text)]">
-                    {item.title}
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-[color:var(--public-text-soft)]">
-                    {item.description}
-                  </p>
-                </div>
-              ))}
-            </div>
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {serviceHighlights.map((item, index) => (
+              <div
+                key={item.title}
+                className={`min-h-full rounded-[24px] border p-4 ${
+                  index % 2 === 0
+                    ? "border-[color:var(--public-border-strong)] bg-[color:var(--public-accent-surface)]"
+                    : "border-[color:var(--public-border)] bg-[color:var(--public-teal-surface)]"
+                }`}
+              >
+                <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--public-text-muted)]">
+                  Destaque
+                </p>
+                <p className="mt-2.5 text-[0.98rem] font-semibold leading-6 text-[color:var(--public-text)]">
+                  {item.title}
+                </p>
+                <p className="mt-1.5 text-[0.84rem] leading-[1.55] text-[color:var(--public-text-soft)]">
+                  {item.description}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -193,10 +184,10 @@ export const PublicLandingPage = () => {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-accent)]">
               Onde a evolução costuma travar
             </p>
-            <h2 className="text-3xl font-semibold text-[color:var(--public-text)] sm:text-4xl lg:text-[3.5rem]">
-              Não é falta de esforço. Normalmente é falta de método para sustentar o esforço.
+            <h2 className="text-3xl font-semibold leading-[1.14] text-[color:var(--public-text)] sm:text-[2.55rem] lg:text-[3.2rem]">
+              Não é falta de suor. É a falta de um método que torne esse suor sustentável.
             </h2>
-            <p className="text-lg leading-8 text-[color:var(--public-text-soft)]">
+            <p className="mx-auto max-w-[40rem] text-[1rem] leading-8 text-[color:var(--public-text-soft)] sm:text-[1.06rem]">
               Quando treino, dieta, feedback e histórico ficam espalhados, até a boa vontade
               perde força. A proposta da G-Force é reduzir esse atrito e deixar o processo
               mais utilizável no mundo real.
@@ -226,7 +217,7 @@ export const PublicLandingPage = () => {
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-teal)]">
                   O que muda com a G-Force
                 </p>
-                <h3 className="mt-4 max-w-xl text-2xl font-semibold text-[color:var(--public-text)]">
+                <h3 className="mt-4 max-w-xl text-[1.7rem] font-semibold leading-[1.2] tracking-[-0.01em] text-[color:var(--public-text)]">
                   O serviço principal vem antes de qualquer acessório: primeiro clareza, depois complemento.
                 </h3>
                 <p className="mt-4 max-w-xl text-sm leading-7 text-[color:var(--public-text-soft)]">
@@ -261,10 +252,10 @@ export const PublicLandingPage = () => {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-teal)]">
               Plataforma própria
             </p>
-            <h2 className="text-3xl font-semibold text-[color:var(--public-text)] sm:text-4xl lg:text-[3.5rem]">
+            <h2 className="text-3xl font-semibold leading-[1.14] text-[color:var(--public-text)] sm:text-[2.55rem] lg:text-[3.2rem]">
               O acompanhamento fica mais forte quando o aluno enxerga o processo com clareza.
             </h2>
-            <p className="text-lg leading-8 text-[color:var(--public-text-soft)]">
+            <p className="mx-auto max-w-[41rem] text-[1rem] leading-8 text-[color:var(--public-text-soft)] sm:text-[1.06rem]">
               A plataforma própria centraliza o que mais importa para manter consistência:
               treino, dieta, materiais, histórico, recados e sinais concretos de progresso.
             </p>
@@ -283,7 +274,7 @@ export const PublicLandingPage = () => {
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--public-text-muted)]">
                   {item.eyebrow}
                 </p>
-                <h3 className="mt-4 text-[1.65rem] font-semibold leading-9 text-[color:var(--public-text)]">
+                <h3 className="mt-4 text-[1.45rem] font-semibold leading-[1.22] tracking-[-0.01em] text-[color:var(--public-text)] sm:text-[1.55rem]">
                   {item.title}
                 </h3>
                 <p className="mt-4 text-sm leading-7 text-[color:var(--public-text-soft)]">
@@ -296,28 +287,28 @@ export const PublicLandingPage = () => {
           <div className="grid gap-4 lg:grid-cols-4">
             <div className={accentCardClass}>
               <CalendarDays className="h-7 w-7 text-[color:var(--public-accent)]" />
-              <p className="mt-4 text-lg font-semibold text-[color:var(--public-text)]">Cronograma útil</p>
+              <p className="mt-4 text-[1.05rem] font-semibold leading-6 text-[color:var(--public-text)]">Cronograma útil</p>
               <p className="mt-2 text-sm leading-6 text-[color:var(--public-text-soft)]">
                 O aluno abre a rotina e identifica rapidamente o próximo treino e o próximo passo.
               </p>
             </div>
             <div className={accentCardClass}>
               <Target className="h-7 w-7 text-[color:var(--public-teal)]" />
-              <p className="mt-4 text-lg font-semibold text-[color:var(--public-text)]">Execução com contexto</p>
+              <p className="mt-4 text-[1.05rem] font-semibold leading-6 text-[color:var(--public-text)]">Execução com contexto</p>
               <p className="mt-2 text-sm leading-6 text-[color:var(--public-text-soft)]">
                 Histórico de carga, observações e mídia ajudam a transformar orientação em ação.
               </p>
             </div>
             <div className={accentCardClass}>
               <TrendingUp className="h-7 w-7 text-[color:var(--public-accent)]" />
-              <p className="mt-4 text-lg font-semibold text-[color:var(--public-text)]">Progressão real</p>
+              <p className="mt-4 text-[1.05rem] font-semibold leading-6 text-[color:var(--public-text)]">Progressão real</p>
               <p className="mt-2 text-sm leading-6 text-[color:var(--public-text-soft)]">
                 Fica mais fácil perceber o que evoluiu, o que estagnou e onde ajustar.
               </p>
             </div>
             <div className={accentCardClass}>
               <ShieldCheck className="h-7 w-7 text-[color:var(--public-teal)]" />
-              <p className="mt-4 text-lg font-semibold text-[color:var(--public-text)]">Menos ruído</p>
+              <p className="mt-4 text-[1.05rem] font-semibold leading-6 text-[color:var(--public-text)]">Menos ruído</p>
               <p className="mt-2 text-sm leading-6 text-[color:var(--public-text-soft)]">
                 A experiência reduz dependência de conversa solta para algo que exige método.
               </p>
@@ -403,12 +394,12 @@ export const PublicLandingPage = () => {
 
       <section id="experiencia" className="px-5 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl space-y-10">
-          <div className="mx-auto max-w-3xl space-y-4 text-center">
+          <div className="mx-auto max-w-[48rem] space-y-4 text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-teal)]">
               O que a comunidade valoriza
             </p>
-            <h2 className="text-3xl font-semibold text-[color:var(--public-text)] sm:text-4xl lg:text-[3.5rem]">
-              Uma experiência pensada para ajudar o aluno a continuar, não apenas começar.
+            <h2 className="mx-auto max-w-[30ch] text-[2rem] font-semibold leading-[1.10] text-[color:var(--public-text)] sm:text-[2.45rem] lg:text-[3rem]">
+              Mais do que um ponto de partida, criamos o ecossistema necessário para a sua continuidade.
             </h2>
           </div>
 
@@ -418,7 +409,7 @@ export const PublicLandingPage = () => {
                 key={item.title}
                 className="rounded-[28px] border border-[color:var(--public-border)] bg-[linear-gradient(160deg,var(--public-surface-strong),var(--public-surface))] p-6 sm:p-7"
               >
-                <p className="text-xl font-semibold text-[color:var(--public-text)]">{item.title}</p>
+                <p className="text-[1.22rem] font-semibold leading-7 text-[color:var(--public-text)]">{item.title}</p>
                 <p className="mt-4 text-sm leading-7 text-[color:var(--public-text-soft)]">
                   {item.description}
                 </p>
@@ -475,7 +466,7 @@ export const PublicLandingPage = () => {
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[color:var(--public-accent)]">
             Próximo passo
           </p>
-          <h2 className="mt-4 text-3xl font-semibold text-[color:var(--public-text)] sm:text-4xl lg:text-[3.5rem]">
+          <h2 className="mt-4 text-3xl tracking[-0.01em] font-semibold text-[color:var(--public-text)] sm:text-5xl lg:text-[3rem]">
             Se você quer tratar treino e dieta com mais clareza, o ponto de partida é organizar a experiência.
           </h2>
           <p className="mx-auto mt-5 max-w-3xl text-base leading-8 text-[color:var(--public-text-soft)]">

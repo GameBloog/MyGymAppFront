@@ -20,10 +20,10 @@ export const PublicPlanosPage = () => {
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-accent)]">
                 Planos G-Force
               </p>
-              <h1 className="text-4xl font-semibold leading-tight text-[color:var(--public-text)] sm:text-5xl">
+              <h1 className="max-w-[14ch] text-[2.2rem] font-semibold leading-[1.14] tracking-[-0.01em] text-[color:var(--public-text)] sm:text-[2.8rem] lg:text-[3.2rem]">
                 O valor do plano não está apenas no que ele entrega. Está na rotina que ele torna possível.
               </h1>
-              <p className="max-w-3xl text-lg leading-8 text-[color:var(--public-text-soft)]">
+              <p className="max-w-3xl text-[1rem] leading-8 text-[color:var(--public-text-soft)] sm:text-[1.05rem]">
                 Esta página compara o valor do acompanhamento sem reduzir a conversa a preço isolado.
                 A lógica é simples: quanto mais clareza, contexto e capacidade de ajuste você precisa,
                 mais importante fica a qualidade do acompanhamento.
@@ -71,7 +71,7 @@ export const PublicPlanosPage = () => {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-teal)]">
               O que sustenta valor de verdade
             </p>
-            <h2 className="text-3xl font-semibold text-[color:var(--public-text)] sm:text-4xl">
+            <h2 className="max-w-[18ch] text-[2rem] font-semibold leading-[1.16] tracking-[-0.01em] text-[color:var(--public-text)] sm:text-[2.45rem]">
               O plano certo ajuda a organizar, acompanhar e ajustar com muito menos ruído.
             </h2>
           </div>
@@ -112,7 +112,7 @@ export const PublicPlanosPage = () => {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-accent)]">
               Conversa direta
             </p>
-            <h2 className="mt-4 text-3xl font-semibold text-[color:var(--public-text)]">
+            <h2 className="mt-4 max-w-[16ch] text-[2rem] font-semibold leading-[1.16] tracking-[-0.01em] text-[color:var(--public-text)] sm:text-[2.35rem]">
               Quer descobrir qual formato de acompanhamento combina com o seu momento?
             </h2>
             <p className="mt-4 max-w-2xl text-base leading-8 text-[color:var(--public-text-soft)]">
