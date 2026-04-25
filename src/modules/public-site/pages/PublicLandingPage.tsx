@@ -103,7 +103,7 @@ export const PublicLandingPage = () => {
   return (
     <PublicSiteLayout>
       <section className="relative overflow-hidden px-5 pb-20 pt-28 sm:px-6 lg:px-8">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(208,160,58,0.18),_transparent_30%),radial-gradient(circle_at_80%_20%,_rgba(73,180,166,0.14),_transparent_24%),linear-gradient(180deg,_var(--public-bg)_0%,_var(--public-bg-alt)_42%,_var(--public-bg)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_var(--public-hero-glow-primary),_transparent_30%),radial-gradient(circle_at_80%_20%,_var(--public-hero-glow-secondary),_transparent_24%),linear-gradient(180deg,_var(--public-bg)_0%,_var(--public-bg-alt)_42%,_var(--public-bg)_100%)]" />
         <div className="relative mx-auto max-w-7xl space-y-5">
           <div className="grid gap-10 lg:grid-cols-[0.96fr_1.04fr] lg:items-center xl:gap-14">
             <div className="space-y-7">
