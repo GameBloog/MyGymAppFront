@@ -3,25 +3,25 @@
 @tailwind utilities;
 
 :root {
-  --public-bg: #0d0d0d;
+  --public-bg: #03171d;
   --public-bg-alt: rgba(8, 33, 38, 0.58);
   --public-surface: rgba(242, 242, 242, 0.05);
   --public-surface-strong: rgba(8, 33, 38, 0.74);
   --public-surface-soft: rgba(166, 166, 166, 0.08);
   --public-border: rgba(166, 166, 166, 0.24);
   --public-border-strong: rgba(142, 155, 255, 0.45);
-  --public-text: #f2f2f2;
+  --public-text: #d6ede3;
   --public-text-soft: rgba(242, 242, 242, 0.84);
   --public-text-muted: rgba(166, 166, 166, 0.86);
-  --public-accent: #f2f2f2;
+  --public-accent: #d6ede3;
   --public-accent-soft: #a6a6a6;
-  --public-accent-contrast: #0d0d0d;
+  --public-accent-contrast: #03171d;
   --public-accent-surface: rgba(242, 242, 242, 0.15);
-  --public-teal: #8e9bff;
+  --public-teal: #d6ede3;
   --public-teal-soft: rgba(142, 155, 255, 0.42);
   --public-teal-surface: rgba(142, 155, 255, 0.22);
-  --public-danger: #595959;
-  --public-danger-surface: rgba(89, 89, 89, 0.32);
+  --public-danger: #d6ede3;
+  --public-danger-surface: rgba(2, 2, 2, 0.32);
   --public-nav: rgba(13, 13, 13, 0.9);
   --public-footer: rgba(8, 33, 38, 0.95);
   --public-shadow: 0 24px 80px rgba(13, 13, 13, 0.56);

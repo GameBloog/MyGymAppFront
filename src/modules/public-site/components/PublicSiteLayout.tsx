@@ -134,7 +134,7 @@ export const PublicSiteLayout: React.FC<PublicSiteLayoutProps> = ({ children }) 
               aria-label={themeToggleLabel}
             >
               {isDarkTheme ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              {isDarkTheme ? "Modo light" : "Modo dark"}
+              {isDarkTheme ? "Light" : "Dark"}
             </button>
             <button
               onClick={handleLoginClick}

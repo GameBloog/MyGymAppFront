@@ -103,10 +103,10 @@ export const PublicLandingPage = () => {
   return (
     <PublicSiteLayout>
       <section className="relative overflow-hidden px-5 pb-20 pt-28 sm:px-6 lg:px-8">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_var(--public-hero-glow-primary),_transparent_30%),radial-gradient(circle_at_80%_20%,_var(--public-hero-glow-secondary),_transparent_24%),linear-gradient(180deg,_var(--public-bg)_0%,_var(--public-bg-alt)_42%,_var(--public-bg)_100%)]" />
-        <div className="relative mx-auto max-w-7xl space-y-5">
-          <div className="grid gap-10 lg:grid-cols-[0.96fr_1.04fr] lg:items-center xl:gap-14">
-            <div className="space-y-7">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_var(--public-hero-glow-primary),_transparent_15%),radial-gradient(circle_at_75%_40%,_var(--public-hero-glow-secondary),_transparent_30%),linear-gradient(100deg,_var(--public-bg)_0%,_var(--public-bg-alt)_42%,_var(--public-bg)_100%)]" />
+        <div className="relative mx-auto max-w-8xl space-y-10">
+          <div className="grid gap-20 lg:grid-cols-[0.96fr_1.04fr] lg:items-center xl:gap-20">
+            <div className="space-y-5">
               <div className="inline-flex max-w-full flex-wrap items-center justify-center gap-2 rounded-full border border-[color:var(--public-border-strong)] bg-[color:var(--public-accent-surface)] px-4 py-2 text-center text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--public-accent)] sm:justify-start sm:text-left sm:text-[0.78rem] sm:tracking-[0.16em]">
                 <Sparkles className="h-3.5 w-3.5" />
                 Clareza comercial + experiência real do aluno
@@ -178,8 +178,8 @@ export const PublicLandingPage = () => {
         </div>
       </section>
 
-      <section id="servico" className="px-5 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl space-y-14">
+      <section id="servico" className="px-5 py-12 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl space-y-12">
           <div className="mx-auto max-w-3xl space-y-4 text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-accent)]">
               Onde a evolução costuma travar
@@ -211,9 +211,6 @@ export const PublicLandingPage = () => {
 
             <div className="grid gap-4">
               <div className="relative overflow-hidden rounded-[28px] border border-[color:var(--public-border)] bg-[linear-gradient(140deg,var(--public-surface-strong),var(--public-surface),var(--public-teal-surface))] p-6 sm:p-7">
-                <div className="absolute right-4 top-3 text-[90px] font-semibold leading-none text-[color:var(--public-border)]">
-                  <X className="h-16 w-16" strokeWidth={1.25} />
-                </div>
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-teal)]">
                   O que muda com a G-Force
                 </p>
@@ -224,9 +221,7 @@ export const PublicLandingPage = () => {
                   A estrutura do serviço foi pensada para eliminar ruído, organizar a comunicação e
                   deixar o acompanhamento mais legível para o aluno no dia a dia.
                 </p>
-              </div>
-
-              <div className="grid gap-4 rounded-[28px] border border-[color:var(--public-border)] bg-[color:var(--public-surface)] p-6 sm:grid-cols-2 sm:p-7">
+                              <div className="mt-6 space-y-4">
                 {serviceHighlights.map((item) => (
                   <div key={item.title} className="flex items-start gap-3">
                     <div className="mt-1 rounded-full bg-[color:var(--public-teal-surface)] p-1.5 text-[color:var(--public-teal)]">
@@ -244,9 +239,10 @@ export const PublicLandingPage = () => {
             </div>
           </div>
         </div>
+              </div>
       </section>
 
-      <section id="plataforma" className="bg-[color:var(--public-bg-alt)] px-5 py-20 sm:px-6 lg:px-8">
+      <section id="plataforma" className="bg-[color:var(--public-bg-alt)] px-5 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl space-y-12">
           <div className="mx-auto max-w-3xl space-y-4 text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-teal)]">
@@ -385,7 +381,7 @@ export const PublicLandingPage = () => {
                 className="rounded-[24px] border border-[color:var(--public-border)] bg-[color:var(--public-surface)] p-5"
               >
                 <Dumbbell className="h-6 w-6 text-[color:var(--public-teal)]" />
-                <p className="mt-4 text-sm leading-7 text-[color:var(--public-text-soft)]">{item}</p>
+                <p className="mt-4 text-sm font-medium leading-7 text-[color:var(--public-text-soft)]">{item}</p>
               </div>
             ))}
           </div>
@@ -420,13 +416,13 @@ export const PublicLandingPage = () => {
       </section>
 
       <section className="bg-[color:var(--public-bg-alt)] px-5 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-center xl:gap-12">
+        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-center xl:gap-12">
           <div className="space-y-4 lg:max-w-[36rem]">
-            <p className="inline-flex max-w-full flex-wrap items-center gap-2 rounded-full border border-[color:var(--public-border)] bg-[color:var(--public-surface)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--public-text-soft)] sm:tracking-[0.18em]">
+            <p className="inline-flex max-w-full flex-wrap items-center gap-5 rounded-full border border-[color:var(--public-border)] bg-[color:var(--public-surface)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--public-text-soft)] sm:tracking-[0.18em]">
               <Shirt className="h-4 w-4 text-[color:var(--public-accent)]" />
               Camisas oficiais
             </p>
-            <h2 className="text-3xl font-semibold text-[color:var(--public-text)] sm:text-4xl">
+            <h2 className="text-2xl font-semibold text-[color:var(--public-text)] sm:text-4xl">
               As camisas entram como extensão da comunidade, não como foco principal da oferta.
             </h2>
             <p className="text-base leading-8 text-[color:var(--public-text-soft)]">
