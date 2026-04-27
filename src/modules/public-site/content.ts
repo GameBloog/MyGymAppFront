@@ -1,8 +1,8 @@
 export const WHATSAPP_NUMBER = "5511978439205"
 
 export const publicNavigationSections = [
-  { label: "Serviço", target: "servico" },
   { label: "Plataforma", target: "plataforma" },
+  { label: "Serviço", target: "servico" },
   { label: "Quem somos", target: "quem-somos" },
   { label: "Experiência", target: "experiencia" },
 ] as const
@@ -34,17 +34,17 @@ export const frictionPoints = [
   {
     title: "Treino perdido em PDF antigo",
     description:
-      "Versões soltas dificultam saber o que vale hoje e o que já foi ajustado.",
+      "Versões soltas dificultam entender o que vale hoje e o que já foi ajustado.",
   },
   {
     title: "Feedback importante espalhado",
     description:
-      "Orientações relevantes somem entre conversas, recados e mensagens sem contexto.",
+      "Orientações relevantes se perdem entre conversas, recados e mensagens sem contexto.",
   },
   {
     title: "Evolução sem linha do tempo",
     description:
-      "Sem histórico organizado, fica mais difícil perceber consistência e decidir o próximo passo.",
+      "Sem um histórico organizado, fica mais difícil perceber consistência e decidir o próximo passo.",
   },
 ] as const
 
@@ -57,9 +57,9 @@ export const platformCards = [
   },
   {
     eyebrow: "Feedback visível",
-    title: "O aluno encontra recados do professor sem precisar caçar conversa antiga.",
+    title: "O aluno encontra recados do professor sem precisar procurar conversa antiga.",
     description:
-      "Acompanhamento fica mais útil quando orientação e execução aparecem no momento certo.",
+      "O acompanhamento fica mais útil quando orientação e execução aparecem no momento certo.",
   },
   {
     eyebrow: "Histórico organizado",
@@ -71,7 +71,7 @@ export const platformCards = [
     eyebrow: "Rotina mais previsível",
     title: "Cronograma, dieta e materiais ficam centralizados em uma experiência única.",
     description:
-      "Isso reduz atrito, melhora aderência e fortalece a constância que o processo exige.",
+      "Isso reduz atrito, melhora a aderência e fortalece a constância que o processo exige.",
   },
 ] as const
 

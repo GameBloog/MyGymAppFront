@@ -2,6 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --public-bg: #03171d;
+  --public-bg-alt: rgba(8, 33, 38, 0.58);
+  --public-surface: rgba(242, 242, 242, 0.05);
+  --public-surface-strong: rgba(8, 33, 38, 0.74);
+  --public-surface-soft: rgba(166, 166, 166, 0.08);
+  --public-border: rgba(166, 166, 166, 0.24);
+  --public-border-strong: rgba(142, 155, 255, 0.45);
+  --public-text: #d6ede3;
+  --public-text-soft: rgba(242, 242, 242, 0.84);
+  --public-text-muted: rgba(166, 166, 166, 0.86);
+  --public-accent: #d6ede3;
+  --public-accent-soft: #a6a6a6;
+  --public-accent-contrast: #03171d;
+  --public-accent-surface: rgba(242, 242, 242, 0.15);
+  --public-teal: #d6ede3;
+  --public-teal-soft: rgba(142, 155, 255, 0.42);
+  --public-teal-surface: rgba(142, 155, 255, 0.22);
+  --public-danger: #d6ede3;
+  --public-danger-surface: rgba(2, 2, 2, 0.32);
+  --public-nav: rgba(13, 13, 13, 0.9);
+  --public-footer: rgba(8, 33, 38, 0.95);
+  --public-shadow: 0 24px 80px rgba(13, 13, 13, 0.56);
+  --public-hero-glow-primary: rgba(242, 242, 242, 0.18);
+  --public-hero-glow-secondary: rgba(142, 155, 255, 0.2);
+  --public-accent-gradient: linear-gradient(135deg, #f2f2f2 0%, #a6a6a6 100%);
+  --public-secondary-gradient: linear-gradient(135deg, #8e9bff 0%, #b7c0ff 100%);
+}
+
+:root[data-public-theme="light"] {
+  --public-bg: #f2f2f2;
+  --public-bg-alt: rgba(166, 166, 166, 0.18);
+  --public-surface: rgba(242, 242, 242, 0.92);
+  --public-surface-strong: #f2f2f2;
+  --public-surface-soft: rgba(166, 166, 166, 0.16);
+  --public-border: rgba(89, 89, 89, 0.22);
+  --public-border-strong: rgba(15, 0, 143, 0.34);
+  --public-text: #0d0d0d;
+  --public-text-soft: #595959;
+  --public-text-muted: rgba(89, 89, 89, 0.78);
+  --public-accent: #0b3b59;
+  --public-accent-soft: #595959;
+  --public-accent-contrast: #f2f2f2;
+  --public-accent-surface: rgba(11, 59, 89, 0.12);
+  --public-teal: #0f008f;
+  --public-teal-soft: rgba(15, 0, 143, 0.34);
+  --public-teal-surface: rgba(15, 0, 143, 0.14);
+  --public-danger: #595959;
+  --public-danger-surface: rgba(89, 89, 89, 0.1);
+  --public-nav: rgba(242, 242, 242, 0.9);
+  --public-footer: rgba(166, 166, 166, 0.24);
+  --public-shadow: 0 24px 80px rgba(13, 13, 13, 0.12);
+  --public-hero-glow-primary: rgba(166, 166, 166, 0.24);
+  --public-hero-glow-secondary: rgba(15, 0, 143, 0.18);
+  --public-accent-gradient: linear-gradient(135deg, #0b3b59 0%, #595959 100%);
+  --public-secondary-gradient: linear-gradient(135deg, #0f008f 0%, #2d25bf 100%);
+}
+
 /* Reset básico */
 * {
   margin: 0;
@@ -15,6 +73,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: var(--public-bg);
+  color: var(--public-text);
 }
 
 code {
