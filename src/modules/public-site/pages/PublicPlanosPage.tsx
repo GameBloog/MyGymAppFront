@@ -14,29 +14,19 @@ export const PublicPlanosPage = () => {
   return (
     <PublicSiteLayout>
       <section className="px-5 pb-16 pt-28 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl space-y-12">
-          <div className="grid gap-8 lg:grid-cols-[1fr_0.82fr] lg:items-end">
-            <div className="space-y-5">
+        <div className="mx-auto max-w-8xl space-y-12">
+          <div className="lg:grid-cols-[1fr_0.82fr] lg:items-end">
+            <div className="mx-auto max-w-3xl space-y-4 text-center">
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-accent)]">
                 Planos G-Force
               </p>
-              <h1 className="max-w-[14ch] text-[2.2rem] font-semibold leading-[1.14] tracking-[-0.01em] text-[color:var(--public-text)] sm:text-[2.8rem] lg:text-[3.2rem]">
+              <h1 className="text-[2.2rem] font-semibold leading-[1.14] tracking-[-0.01em] text-[color:var(--public-text)] sm:text-[2.8rem] lg:text-[3.2rem]">
                 O valor do plano não está apenas no que ele entrega. Está na rotina que ele torna possível.
               </h1>
-              <p className="max-w-3xl text-[1rem] leading-8 text-[color:var(--public-text-soft)] sm:text-[1.05rem]">
+              <p className="text-[1rem] leading-8 text-[color:var(--public-text-soft)] sm:text-[1.05rem]">
                 Esta página compara o valor do acompanhamento sem reduzir a conversa a preço isolado.
                 A lógica é simples: quanto mais clareza, contexto e capacidade de ajuste você precisa,
                 mais importante fica a qualidade do acompanhamento.
-              </p>
-            </div>
-
-            <div className="rounded-[28px] border border-[color:var(--public-border)] bg-[color:var(--public-surface)] p-6 sm:p-7">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-teal)]">
-                Comparativo sem preço
-              </p>
-              <p className="mt-4 text-base leading-7 text-[color:var(--public-text-soft)]">
-                A definição do plano ideal é alinhada na conversa. O foco aqui é ajudar você a
-                entender qual nível de estrutura e acompanhamento faz sentido para o seu momento.
               </p>
             </div>
           </div>
@@ -67,11 +57,11 @@ export const PublicPlanosPage = () => {
 
       <section className="bg-[color:var(--public-bg-alt)] px-5 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl space-y-8">
-          <div className="max-w-3xl space-y-4">
+          <div className="mx-auto max-w-3xl space-y-4 text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-teal)]">
               O que sustenta valor de verdade
             </p>
-            <h2 className="max-w-[18ch] text-[2rem] font-semibold leading-[1.16] tracking-[-0.01em] text-[color:var(--public-text)] sm:text-[2.45rem]">
+            <h2 className="text-[1rem] font-semibold leading-[1] tracking-[-0.01em] text-[color:var(--public-text)] sm:text-[3rem]">
               O plano certo ajuda a organizar, acompanhar e ajustar com muito menos ruído.
             </h2>
           </div>

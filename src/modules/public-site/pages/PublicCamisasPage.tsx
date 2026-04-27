@@ -29,7 +29,7 @@ export const PublicCamisasPage = () => {
               <Shirt className="h-4 w-4 text-[color:var(--public-accent)]" />
               Camisas oficiais
             </p>
-            <h1 className="max-w-[15ch] text-[2.2rem] font-semibold leading-[1.14] tracking-[-0.01em] text-[color:var(--public-text)] sm:text-[2.8rem] lg:text-[3.2rem]">
+            <h1 className="max-w-[20ch] text-[2.05rem] font-semibold leading-[1.1] text-[color:var(--public-text)] sm:max-w-[18ch] sm:text-[2.45rem] lg:max-w-none lg:text-[3rem]">
               A camisa carrega a identidade da comunidade que escolhe processo, constância e evolução real.
             </h1>
             <p className="text-[1rem] leading-8 text-[color:var(--public-text-soft)] sm:text-[1.05rem]">
@@ -50,11 +50,11 @@ export const PublicCamisasPage = () => {
 
       <section className="bg-[color:var(--public-bg-alt)] px-5 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl space-y-10">
-          <div className="max-w-3xl space-y-4">
+          <div className="mx-auto max-w-3xl space-y-4 text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-accent)]">
               Valor percebido
             </p>
-            <h2 className="max-w-[18ch] text-[2rem] font-semibold leading-[1.16] tracking-[-0.01em] text-[color:var(--public-text)] sm:text-[2.45rem]">
+            <h2 className="text-[2rem] font-semibold leading-[1.16] tracking-[-0.01em] text-[color:var(--public-text)] sm:text-[2.45rem]">
               O valor da camisa vai além do tecido: ela representa vínculo com a cultura da G-Force.
             </h2>
           </div>
