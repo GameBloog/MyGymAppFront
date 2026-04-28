@@ -55,9 +55,22 @@ const parseOptionalNumber = (value: string): number | undefined => {
   return parsed
 }
 
+const sortCheckinExercises = (exercicios: TreinoCheckin["exercicios"]) => {
+  return [...exercicios].sort(
+    (a, b) =>
+      (a.treinoDiaExercicio?.ordem ?? Number.MAX_SAFE_INTEGER) -
+      (b.treinoDiaExercicio?.ordem ?? Number.MAX_SAFE_INTEGER),
+  )
+}
+
+const normalizeTreinoCheckin = (checkin: TreinoCheckin): TreinoCheckin => ({
+  ...checkin,
+  exercicios: sortCheckinExercises(checkin.exercicios),
+})
+
 const buildExerciseDrafts = (checkin: TreinoCheckin): Record<string, ExerciseDraft> => {
   const nextDrafts: Record<string, ExerciseDraft> = {}
-  for (const exercise of checkin.exercicios) {
+  for (const exercise of sortCheckinExercises(checkin.exercicios)) {
     nextDrafts[exercise.treinoDiaExercicioId] = {
       concluido: exercise.concluido,
       cargaReal:
@@ -216,7 +229,7 @@ export const MeuTreinoPage: React.FC = () => {
       if (previous?.id === openCheckin.id) {
         return previous
       }
-      return openCheckin
+      return normalizeTreinoCheckin(openCheckin)
     })
   }, [checkins])
 
@@ -315,7 +328,7 @@ export const MeuTreinoPage: React.FC = () => {
       treinoDiaId: selectedDiaId,
       alunoId,
     })
-    setCheckinAtual(checkin)
+    setCheckinAtual(normalizeTreinoCheckin(checkin))
     showToast.success("Treino iniciado com sucesso")
   }
 
@@ -358,7 +371,7 @@ export const MeuTreinoPage: React.FC = () => {
       if (!prev) {
         return prev
       }
-      return {
+      return normalizeTreinoCheckin({
         ...prev,
         exercicios: prev.exercicios.map((exercise) => {
           if (exercise.treinoDiaExercicioId === treinoDiaExercicioId) {
@@ -366,7 +379,7 @@ export const MeuTreinoPage: React.FC = () => {
           }
           return exercise
         }),
-      }
+      })
     })
 
     showToast.success("Exercício atualizado")
@@ -382,11 +395,19 @@ export const MeuTreinoPage: React.FC = () => {
       alunoId,
       comentarioAluno: comentarioDia.trim() || undefined,
     })
-    setCheckinAtual(finalizado)
+    setCheckinAtual(normalizeTreinoCheckin(finalizado))
     showToast.success("Dia de treino marcado como concluído")
   }
 
   const progresso = getCompletionProgress(checkinAtual)
+
+  const exerciciosOrdenados = useMemo(() => {
+    if (!checkinAtual) {
+      return []
+    }
+
+    return sortCheckinExercises(checkinAtual.exercicios)
+  }, [checkinAtual])
 
   const renderProgressGraphic = (serie: ProgressSerieTreino) => {
     const pontosComCarga = serie.pontos.filter(
@@ -583,7 +604,7 @@ export const MeuTreinoPage: React.FC = () => {
           </div>
 
           <div className="space-y-4">
-            {checkinAtual.exercicios.map((exercise) => {
+            {exerciciosOrdenados.map((exercise) => {
               const draft = exerciseDrafts[exercise.treinoDiaExercicioId] || {
                 concluido: false,
                 cargaReal: "",
