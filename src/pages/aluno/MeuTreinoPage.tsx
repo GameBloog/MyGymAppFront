@@ -400,6 +400,12 @@ export const MeuTreinoPage: React.FC = () => {
   }
 
   const progresso = getCompletionProgress(checkinAtual)
+  const selectedDia = useMemo(() => {
+    if (!planoAtivo) {
+      return undefined
+    }
+    return planoAtivo.dias.find((dia) => dia.id === selectedDiaId)
+  }, [planoAtivo, selectedDiaId])
 
   const exerciciosOrdenados = useMemo(() => {
     if (!checkinAtual) {
@@ -483,7 +489,7 @@ export const MeuTreinoPage: React.FC = () => {
 
   if (!planoAtivo) {
     return (
-      <Card>
+      <Card className="border border-[#d4a548]/20 bg-[#171208]">
         <div className="text-center py-8">
           <Dumbbell className="h-12 w-12 text-zinc-500 mx-auto mb-3" />
           <h2 className="text-xl font-semibold text-white mb-2">
@@ -534,7 +540,7 @@ export const MeuTreinoPage: React.FC = () => {
         )}
       </Card>
 
-      <Card>
+      <Card className="border border-[#d4a548]/20 bg-[#171208]">
         <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
           <CalendarCheck className="h-5 w-5" />
           Selecionar dia para treinar
@@ -546,8 +552,8 @@ export const MeuTreinoPage: React.FC = () => {
               onClick={() => setSelectedDiaId(dia.id)}
               className={`p-4 rounded-lg border text-left transition-colors ${
                 selectedDiaId === dia.id
-                  ? "border-blue-500 bg-blue-950/40"
-                  : "border-zinc-700 hover:border-zinc-700"
+                  ? "border-[#d4a548]/40 bg-[#22180a]"
+                  : "border-zinc-700 hover:border-[#d4a548]/25"
               }`}
             >
               <p className="font-semibold text-white">{dia.titulo}</p>
@@ -555,6 +561,11 @@ export const MeuTreinoPage: React.FC = () => {
               <p className="text-xs text-zinc-400 mt-1">
                 {dia.exercicios.length} exercício(s)
               </p>
+              {(dia.metodo || dia.observacoes) && (
+                <p className="mt-2 text-[11px] uppercase tracking-[0.12em] text-[#f1d38b]">
+                  Possui orientações do professor
+                </p>
+              )}
             </button>
           ))}
         </div>
@@ -570,6 +581,76 @@ export const MeuTreinoPage: React.FC = () => {
           </Button>
         </div>
       </Card>
+
+      {selectedDia && (
+        <Card className="border border-[#49b4a6]/20 bg-[#0f1716]">
+          <h2 className="text-lg font-semibold text-white mb-2">
+            Orientações do dia: {selectedDia.titulo}
+          </h2>
+          {(selectedDia.metodo || selectedDia.observacoes) ? (
+            <div className="space-y-3">
+              {selectedDia.metodo && (
+                <div className="rounded-lg border border-[#49b4a6]/25 bg-[#12302c] p-3">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7de0d3]">
+                    Método
+                  </p>
+                  <p className="mt-1 text-sm text-zinc-100">{selectedDia.metodo}</p>
+                </div>
+              )}
+              {selectedDia.observacoes && (
+                <div className="rounded-lg border border-zinc-700 bg-zinc-900 p-3">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-300">
+                    Observações do professor
+                  </p>
+                  <p className="mt-1 text-sm text-zinc-200">{selectedDia.observacoes}</p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <p className="text-sm text-zinc-400">
+              Este dia não possui método ou observações cadastradas.
+            </p>
+          )}
+        </Card>
+      )}
+
+      {selectedDia && !checkinAtual && (
+        <Card className="border border-[#49b4a6]/20 bg-[#0f1716]">
+          <h2 className="text-lg font-semibold mb-4">Exercícios planejados do dia</h2>
+          <div className="space-y-3">
+            {selectedDia.exercicios.map((item) => (
+              <div
+                key={item.id}
+                className="border border-[#49b4a6]/20 rounded-lg p-4 bg-[#12302c]/40"
+              >
+                <p className="font-semibold text-white">{item.exercicio.nome}</p>
+                <p className="text-xs text-zinc-300 mt-1">
+                  {grupamentoLabels[item.exercicio.grupamentoMuscular]} •{" "}
+                  {item.series || "-"} séries • {item.repeticoes || "-"} reps
+                  {item.cargaSugerida ? ` • carga sugerida: ${item.cargaSugerida} kg` : ""}
+                </p>
+                {(item.metodo || item.observacoes) && (
+                  <div className="mt-2 space-y-2">
+                    {item.metodo && (
+                      <div className="rounded-md border border-[#49b4a6]/25 bg-[#12302c] px-3 py-2">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7de0d3]">
+                          Método
+                        </p>
+                        <p className="text-sm text-zinc-100">{item.metodo}</p>
+                      </div>
+                    )}
+                    {item.observacoes && (
+                      <p className="text-sm text-zinc-200">
+                        <strong>Observações do professor:</strong> {item.observacoes}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
 
       {checkinAtual && (
         <Card>
@@ -638,6 +719,23 @@ export const MeuTreinoPage: React.FC = () => {
                         <p className="text-xs text-zinc-400 mt-2 leading-6">
                           {exercise.exercicio.descricao}
                         </p>
+                      )}
+                      {(exercise.treinoDiaExercicio.metodo ||
+                        exercise.treinoDiaExercicio.observacoes) && (
+                        <div className="mt-2 space-y-1">
+                          {exercise.treinoDiaExercicio.metodo && (
+                            <p className="text-sm text-zinc-200">
+                              <strong>Método:</strong>{" "}
+                              {exercise.treinoDiaExercicio.metodo}
+                            </p>
+                          )}
+                          {exercise.treinoDiaExercicio.observacoes && (
+                            <p className="text-sm text-zinc-300">
+                              <strong>Observações do professor:</strong>{" "}
+                              {exercise.treinoDiaExercicio.observacoes}
+                            </p>
+                          )}
+                        </div>
                       )}
                     </div>
                     <label className="flex items-center gap-2 text-sm text-zinc-200">
