@@ -364,8 +364,8 @@ export const AnswerForm: React.FC = () => {
   if (isCreating && isAdmin && loadingProfessores) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
-        <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
-        <p className="text-zinc-200">Carregando professores...</p>
+        <Loader2 className="h-12 w-12 animate-spin text-[color:var(--student-info)]" />
+        <p className="text-[color:var(--student-text-soft)]">Carregando professores...</p>
       </div>
     )
   }
@@ -373,8 +373,8 @@ export const AnswerForm: React.FC = () => {
   if (isEdit && loadingAluno) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
-        <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
-        <p className="text-zinc-200">Carregando dados...</p>
+        <Loader2 className="h-12 w-12 animate-spin text-[color:var(--student-info)]" />
+        <p className="text-[color:var(--student-text-soft)]">Carregando dados...</p>
       </div>
     )
   }
@@ -384,18 +384,18 @@ export const AnswerForm: React.FC = () => {
   if (alunoSemRegistro) {
     return (
       <div>
-        <Card className="bg-amber-950/40 border-2 border-amber-500/30">
+        <Card className="bg-[color:var(--student-warning-surface)] border-2 border-[color:rgba(241,211,139,0.45)]">
           <div className="flex items-start gap-3">
-            <AlertCircle className="h-6 w-6 text-amber-300 flex-shrink-0 mt-1" />
+            <AlertCircle className="h-6 w-6 text-[color:var(--student-warning)] flex-shrink-0 mt-1" />
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-white mb-2">
+              <h3 className="text-lg font-semibold text-[color:var(--student-text)] mb-2">
                 Perfil Incompleto
               </h3>
-              <p className="text-zinc-100 mb-4">
+              <p className="text-[color:var(--student-text)] mb-4">
                 Seu cadastro de aluno ainda não foi completado. Entre em contato
                 com seu professor ou administrador para finalizar seu registro.
               </p>
-              <p className="text-sm text-amber-300">
+              <p className="text-sm text-[color:var(--student-warning)]">
                 <strong>Usuário:</strong> {user?.nome} ({user?.email})
               </p>
             </div>
@@ -411,13 +411,13 @@ export const AnswerForm: React.FC = () => {
           {!isAluno && (
             <button
               onClick={() => navigate(getBackRoute())}
-              className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
+              className="p-2 hover:bg-[color:var(--student-surface-soft)] rounded-lg transition-colors"
               title="Voltar"
             >
               <ArrowLeft className="h-5 w-5" />
             </button>
           )}
-          <h1 className="text-3xl font-bold text-white">
+          <h1 className="text-3xl font-bold text-[color:var(--student-text)]">
             {isAluno ? "Meu Perfil" : isEdit ? "Editar Aluno" : "Novo Aluno"}
           </h1>
         </div>
@@ -490,7 +490,7 @@ export const AnswerForm: React.FC = () => {
               placeholder="(11) 98765-4321"
             />
             <div>
-              <label className="block text-sm font-medium text-white mb-1">
+              <label className="block text-sm font-medium text-[color:var(--student-text)] mb-1">
                 Sexo biológico (para cálculos)
               </label>
               <select
@@ -498,15 +498,15 @@ export const AnswerForm: React.FC = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, sexoBiologico: e.target.value })
                 }
-                className="w-full px-3 py-2 bg-zinc-900 text-white border border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-300 focus:border-transparent transition-colors"
+                className="w-full px-3 py-2 bg-[color:var(--student-surface)] text-[color:var(--student-text)] border border-[color:var(--student-border)] rounded-lg focus:ring-2 focus:ring-[color:var(--student-border-strong)] focus:border-transparent transition-colors"
               >
-                <option value="" className="bg-zinc-900 text-white">
+                <option value="" className="bg-[color:var(--student-surface)] text-[color:var(--student-text)]">
                   Não informado
                 </option>
-                <option value="MASCULINO" className="bg-zinc-900 text-white">
+                <option value="MASCULINO" className="bg-[color:var(--student-surface)] text-[color:var(--student-text)]">
                   Masculino
                 </option>
-                <option value="FEMININO" className="bg-zinc-900 text-white">
+                <option value="FEMININO" className="bg-[color:var(--student-surface)] text-[color:var(--student-text)]">
                   Feminino
                 </option>
               </select>
@@ -515,12 +515,12 @@ export const AnswerForm: React.FC = () => {
 
           {isAdmin && (
             <div className="mt-4">
-              <label className="block text-sm font-medium text-white mb-1">
+              <label className="block text-sm font-medium text-[color:var(--student-text)] mb-1">
                 Professor Responsável (opcional)
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <UserCheck className="h-5 w-5 text-zinc-400" />
+                  <UserCheck className="h-5 w-5 text-[color:var(--student-text-muted)]" />
                 </div>
                 <select
                   value={formData.professorId}
@@ -528,18 +528,18 @@ export const AnswerForm: React.FC = () => {
                     setFormData({ ...formData, professorId: e.target.value })
                     setErrors({ ...errors, professorId: "" })
                   }}
-                  className={`w-full pl-10 pr-3 py-2 bg-zinc-900 text-white border rounded-lg focus:ring-2 focus:ring-zinc-300 focus:border-transparent transition-colors ${
-                    errors.professorId ? "border-red-500" : "border-zinc-700"
+                  className={`w-full pl-10 pr-3 py-2 bg-[color:var(--student-surface)] text-[color:var(--student-text)] border rounded-lg focus:ring-2 focus:ring-[color:var(--student-border-strong)] focus:border-transparent transition-colors ${
+                    errors.professorId ? "border-[color:var(--student-danger)]" : "border-[color:var(--student-border)]"
                   }`}
                 >
-                  <option value="" className="bg-zinc-900 text-white">
+                  <option value="" className="bg-[color:var(--student-surface)] text-[color:var(--student-text)]">
                     Usar professor padrão
                   </option>
                   {professores?.map((prof) => (
                     <option
                       key={prof.id}
                       value={prof.id}
-                      className="bg-zinc-900 text-white"
+                      className="bg-[color:var(--student-surface)] text-[color:var(--student-text)]"
                     >
                       {prof.user?.nome || `Professor ${prof.id.slice(0, 8)}`}
                       {prof.especialidade && ` - ${prof.especialidade}`}
@@ -548,19 +548,19 @@ export const AnswerForm: React.FC = () => {
                 </select>
               </div>
               {errors.professorId && (
-                <p className="mt-1 text-sm text-red-600">
+                <p className="mt-1 text-sm text-[color:var(--student-danger)]">
                   {errors.professorId}
                 </p>
               )}
-              <p className="mt-1 text-xs text-zinc-200">
+              <p className="mt-1 text-xs text-[color:var(--student-text-soft)]">
                 Se não selecionar, será usado o professor padrão
               </p>
             </div>
           )}
 
           {isProfessor && (
-            <div className="mt-4 p-3 bg-blue-950/40 border border-blue-500/30 rounded-lg">
-              <p className="text-sm text-white">
+            <div className="mt-4 p-3 bg-[color:var(--student-info-surface)] border border-[color:var(--student-border-strong)] rounded-lg">
+              <p className="text-sm text-[color:var(--student-text)]">
                 ℹ️ O aluno será automaticamente vinculado a você
               </p>
             </div>
@@ -575,7 +575,7 @@ export const AnswerForm: React.FC = () => {
             Dados de Acesso
           </h2>
 
-          <p className="text-sm text-zinc-200 mb-4">
+          <p className="text-sm text-[color:var(--student-text-soft)] mb-4">
             Atualize nome, email e senha quando necessário. Deixe a senha em
             branco para manter a atual.
           </p>
@@ -652,7 +652,7 @@ export const AnswerForm: React.FC = () => {
               max="120"
             />
             <div>
-              <label className="block text-sm font-medium text-white mb-1">
+              <label className="block text-sm font-medium text-[color:var(--student-text)] mb-1">
                 Sexo biológico (para cálculos)
               </label>
               <select
@@ -660,15 +660,15 @@ export const AnswerForm: React.FC = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, sexoBiologico: e.target.value })
                 }
-                className="w-full px-3 py-2 bg-zinc-900 text-white border border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-300 focus:border-transparent transition-colors"
+                className="w-full px-3 py-2 bg-[color:var(--student-surface)] text-[color:var(--student-text)] border border-[color:var(--student-border)] rounded-lg focus:ring-2 focus:ring-[color:var(--student-border-strong)] focus:border-transparent transition-colors"
               >
-                <option value="" className="bg-zinc-900 text-white">
+                <option value="" className="bg-[color:var(--student-surface)] text-[color:var(--student-text)]">
                   Não informado
                 </option>
-                <option value="MASCULINO" className="bg-zinc-900 text-white">
+                <option value="MASCULINO" className="bg-[color:var(--student-surface)] text-[color:var(--student-text)]">
                   Masculino
                 </option>
-                <option value="FEMININO" className="bg-zinc-900 text-white">
+                <option value="FEMININO" className="bg-[color:var(--student-surface)] text-[color:var(--student-text)]">
                   Feminino
                 </option>
               </select>
@@ -683,11 +683,11 @@ export const AnswerForm: React.FC = () => {
           Medidas Corporais
         </h2>
 
-        <div className="mb-4 p-4 rounded-lg border border-blue-500/30 bg-blue-950/40">
-          <p className="text-sm font-medium text-white">
+        <div className="mb-4 p-4 rounded-lg border border-[color:var(--student-border-strong)] bg-[color:var(--student-info-surface)]">
+          <p className="text-sm font-medium text-[color:var(--student-text)]">
             Instruções para tirar medidas
           </p>
-          <p className="text-sm text-zinc-100 mt-1">
+          <p className="text-sm text-[color:var(--student-text)] mt-1">
             Assista os vídeos antes de enviar suas medidas. Você pode trocar os
             links pelos vídeos finais depois.
           </p>
@@ -698,7 +698,7 @@ export const AnswerForm: React.FC = () => {
                 href={video.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm font-medium text-white hover:text-zinc-200 underline"
+                className="text-sm font-medium text-[color:var(--student-text)] hover:text-[color:var(--student-text-soft)] underline"
               >
                 {video.label}
               </a>
@@ -823,11 +823,11 @@ export const AnswerForm: React.FC = () => {
           />
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-white mb-2">
+            <label className="block text-sm font-medium text-[color:var(--student-text)] mb-2">
               Toma remédio atualmente?
             </label>
             <div className="flex flex-col sm:flex-row gap-3">
-              <label className="flex items-center gap-2 text-sm text-white">
+              <label className="flex items-center gap-2 text-sm text-[color:var(--student-text)]">
                 <input
                   type="radio"
                   name="toma-remedio"
@@ -839,7 +839,7 @@ export const AnswerForm: React.FC = () => {
                 />
                 Sim
               </label>
-              <label className="flex items-center gap-2 text-sm text-white">
+              <label className="flex items-center gap-2 text-sm text-[color:var(--student-text)]">
                 <input
                   type="radio"
                   name="toma-remedio"
@@ -852,7 +852,7 @@ export const AnswerForm: React.FC = () => {
                 />
                 Não
               </label>
-              <label className="flex items-center gap-2 text-sm text-white">
+              <label className="flex items-center gap-2 text-sm text-[color:var(--student-text)]">
                 <input
                   type="radio"
                   name="toma-remedio"
@@ -866,7 +866,7 @@ export const AnswerForm: React.FC = () => {
                 Prefiro não informar
               </label>
             </div>
-            <p className="mt-2 text-xs text-zinc-200">
+            <p className="mt-2 text-xs text-[color:var(--student-text-soft)]">
               Esta informação é visível para o professor responsável.
             </p>
           </div>
@@ -931,7 +931,7 @@ export const AnswerForm: React.FC = () => {
       </div>
 
       {isCreating && (
-        <p className="text-sm text-zinc-200 mt-4">* Campos obrigatórios</p>
+        <p className="text-sm text-[color:var(--student-text-soft)] mt-4">* Campos obrigatórios</p>
       )}
     </div>
   )

@@ -38,14 +38,14 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
     "!h-9 !w-9 !justify-center !gap-0 !rounded-md !p-0 sm:!h-auto sm:!w-auto sm:!rounded-lg sm:!p-2"
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <header className="bg-zinc-950 shadow-sm border-b border-zinc-800">
+    <div className="min-h-screen bg-[linear-gradient(160deg,var(--student-bg)_0%,var(--student-bg-alt)_42%,var(--student-bg)_100%)] text-[color:var(--student-text)]">
+      <header className="border-b border-[color:var(--student-border)] bg-[color:var(--student-surface-strong)] shadow-[var(--student-shadow)] backdrop-blur">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-3 py-3 sm:h-16 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-0">
             <div className="flex flex-wrap items-center gap-3">
               <BrandMark size="sm" text="G-Force Coach" />
               {user && (
-                <span className="px-3 py-1 bg-zinc-800 text-zinc-100 text-sm rounded-full">
+                <span className="px-3 py-1 rounded-full border border-[color:var(--student-border-strong)] bg-[color:var(--student-accent-surface)] text-sm text-[color:var(--student-text)]">
                   {user.role === "ADMIN" && "Administrador"}
                   {user.role === "PROFESSOR" && "Professor"}
                   {user.role === "ALUNO" && "Aluno"}
@@ -144,9 +144,9 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
         {children}
       </main>
 
-      <footer className="bg-zinc-950 border-t border-zinc-800 mt-auto">
+      <footer className="mt-auto border-t border-[color:var(--student-border)] bg-[color:var(--student-surface-strong)] backdrop-blur">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <p className="text-center text-sm text-zinc-400">
+          <p className="text-center text-sm text-[color:var(--student-text-muted)]">
             © 2026 G-Force Coach. Todos os direitos reservados.
           </p>
         </div>

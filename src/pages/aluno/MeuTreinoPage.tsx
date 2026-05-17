@@ -395,7 +395,7 @@ export const MeuTreinoPage: React.FC = () => {
 
     if (pontosComCarga.length === 0) {
       return (
-        <p className="text-sm text-zinc-400">
+        <p className="text-sm text-[color:var(--student-text-muted)]">
           Sem cargas registradas ainda para este exercício.
         </p>
       )
@@ -409,20 +409,20 @@ export const MeuTreinoPage: React.FC = () => {
           const percentual = maxCarga > 0 ? ((point.cargaReal || 0) / maxCarga) * 100 : 0
           return (
             <div key={`${point.data}-${point.cargaReal}`} className="space-y-1">
-              <div className="flex justify-between text-xs text-zinc-300">
+              <div className="flex justify-between text-xs text-[color:var(--student-text-soft)]">
                 <span>
                   {format(new Date(point.data), "dd/MM/yyyy", { locale: ptBR })}
                 </span>
                 <span className="font-semibold">{point.cargaReal} kg</span>
               </div>
-              <div className="h-2 bg-zinc-700 rounded-full overflow-hidden">
+              <div className="h-2 bg-[color:var(--student-surface-soft)] rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-blue-600 rounded-full"
+                  className="h-full bg-[color:var(--student-info)] rounded-full"
                   style={{ width: `${percentual}%` }}
                 />
               </div>
               {point.repeticoesReal && (
-                <p className="text-xs text-zinc-400">
+                <p className="text-xs text-[color:var(--student-text-muted)]">
                   Repetições: {point.repeticoesReal}
                 </p>
               )}
@@ -436,16 +436,16 @@ export const MeuTreinoPage: React.FC = () => {
   if (loadingAluno || loadingPlano) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
-        <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
-        <p className="text-zinc-300">Carregando seu treino...</p>
+        <Loader2 className="h-10 w-10 animate-spin text-[color:var(--student-info)]" />
+        <p className="text-[color:var(--student-text-soft)]">Carregando seu treino...</p>
       </div>
     )
   }
 
   if (!aluno) {
     return (
-      <Card className="bg-amber-950/40 border-2 border-amber-500/30">
-        <p className="text-zinc-100">
+      <Card className="bg-[color:var(--student-warning-surface)] border-2 border-[color:rgba(241,211,139,0.45)]">
+        <p className="text-[color:var(--student-text)]">
           Não foi possível localizar o perfil do aluno para carregar o treino.
         </p>
       </Card>
@@ -454,8 +454,8 @@ export const MeuTreinoPage: React.FC = () => {
 
   if (erroPlano && !erroPlanoNaoEncontrado) {
     return (
-      <Card className="bg-red-950/40 border-2 border-red-500/30">
-        <p className="text-red-300">{erroPlano.message}</p>
+      <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:rgba(239,68,68,0.45)]">
+        <p className="text-[color:var(--student-danger)]">{erroPlano.message}</p>
       </Card>
     )
   }
@@ -464,11 +464,11 @@ export const MeuTreinoPage: React.FC = () => {
     return (
       <Card>
         <div className="text-center py-8">
-          <Dumbbell className="h-12 w-12 text-zinc-500 mx-auto mb-3" />
-          <h2 className="text-xl font-semibold text-white mb-2">
+          <Dumbbell className="h-12 w-12 text-[color:var(--student-text-muted)] mx-auto mb-3" />
+          <h2 className="text-xl font-semibold text-[color:var(--student-text)] mb-2">
             Treino ainda não configurado
           </h2>
-          <p className="text-zinc-300">
+          <p className="text-[color:var(--student-text-soft)]">
             Seu professor ainda não montou seu plano de treino nesta área.
           </p>
         </div>
@@ -479,35 +479,35 @@ export const MeuTreinoPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl sm:text-3xl font-bold text-white">
+        <h1 className="text-2xl sm:text-3xl font-bold text-[color:var(--student-text)]">
           Meu Treino
         </h1>
-        <p className="text-zinc-300">
+        <p className="text-[color:var(--student-text-soft)]">
           {planoAtivo.nome} • organize sua execução, cargas e comentários por dia
         </p>
       </div>
 
-      <Card className="border border-[#49b4a6]/20 bg-[#0f1716]">
+      <Card className="border border-[color:rgba(125,224,211,0.45)] bg-[color:var(--student-surface-strong)]">
         <div className="flex items-center gap-2 mb-3">
-          <MessageSquare className="h-5 w-5 text-[#7de0d3]" />
+          <MessageSquare className="h-5 w-5 text-[color:var(--student-success)]" />
           <h2 className="text-lg font-semibold">Feedback em destaque</h2>
         </div>
         {ultimoComentarioProfessor ? (
-          <div className="rounded-2xl border border-[#49b4a6]/30 bg-[#12302c] p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7de0d3]">
+          <div className="rounded-2xl border border-[color:rgba(125,224,211,0.45)] bg-[color:var(--student-success-surface)] p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--student-success)]">
               Último recado do professor
             </p>
-            <p className="mt-3 text-sm leading-7 text-white">
+            <p className="mt-3 text-sm leading-7 text-[color:var(--student-text)]">
               {ultimoComentarioProfessor.comentarioProfessor}
             </p>
-            <p className="mt-3 text-xs text-zinc-300">
+            <p className="mt-3 text-xs text-[color:var(--student-text-soft)]">
               {format(new Date(ultimoComentarioProfessor.updatedAt), "dd/MM/yyyy HH:mm", {
                 locale: ptBR,
               })} • {ultimoComentarioProfessor.treinoDia.titulo}
             </p>
           </div>
         ) : (
-          <p className="text-sm text-zinc-300">
+          <p className="text-sm text-[color:var(--student-text-soft)]">
             Quando houver um comentário do professor ele aparece aqui antes do restante do treino.
           </p>
         )}
@@ -525,13 +525,13 @@ export const MeuTreinoPage: React.FC = () => {
               onClick={() => setSelectedDiaId(dia.id)}
               className={`p-4 rounded-lg border text-left transition-colors ${
                 selectedDiaId === dia.id
-                  ? "border-blue-500 bg-blue-950/40"
-                  : "border-zinc-700 hover:border-zinc-700"
+                  ? "border-[color:var(--student-border-strong)] bg-[color:var(--student-info-surface)]"
+                  : "border-[color:var(--student-border)] hover:border-[color:var(--student-border-strong)]"
               }`}
             >
-              <p className="font-semibold text-white">{dia.titulo}</p>
-              <p className="text-sm text-zinc-300">{formatDiaSemana(dia.diaSemana)}</p>
-              <p className="text-xs text-zinc-400 mt-1">
+              <p className="font-semibold text-[color:var(--student-text)]">{dia.titulo}</p>
+              <p className="text-sm text-[color:var(--student-text-soft)]">{formatDiaSemana(dia.diaSemana)}</p>
+              <p className="text-xs text-[color:var(--student-text-muted)] mt-1">
                 {dia.exercicios.length} exercício(s)
               </p>
             </button>
@@ -557,7 +557,7 @@ export const MeuTreinoPage: React.FC = () => {
               <h2 className="text-lg font-semibold">
                 Sessão atual: {checkinAtual.treinoDia.titulo}
               </h2>
-              <p className="text-sm text-zinc-300">
+              <p className="text-sm text-[color:var(--student-text-soft)]">
                 Iniciado em{" "}
                 {format(new Date(checkinAtual.iniciadoEm), "dd/MM/yyyy HH:mm", {
                   locale: ptBR,
@@ -570,13 +570,13 @@ export const MeuTreinoPage: React.FC = () => {
           </div>
 
           <div className="mb-4">
-            <div className="flex justify-between text-sm text-zinc-300 mb-1">
+            <div className="flex justify-between text-sm text-[color:var(--student-text-soft)] mb-1">
               <span>Progresso do dia</span>
               <span>{progresso}%</span>
             </div>
-            <div className="h-2 bg-zinc-700 rounded-full overflow-hidden">
+            <div className="h-2 bg-[color:var(--student-surface-soft)] rounded-full overflow-hidden">
               <div
-                className="h-full bg-green-600 rounded-full transition-all"
+                className="h-full bg-[color:var(--student-success)] rounded-full transition-all"
                 style={{ width: `${progresso}%` }}
               />
             </div>
@@ -600,26 +600,26 @@ export const MeuTreinoPage: React.FC = () => {
               return (
                 <div
                   key={exercise.id}
-                  className="border border-zinc-700 rounded-lg p-4 bg-zinc-900"
+                  className="border border-[color:var(--student-border)] rounded-lg p-4 bg-[color:var(--student-surface)]"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                     <div>
-                      <h3 className="font-semibold text-white">
+                      <h3 className="font-semibold text-[color:var(--student-text)]">
                         {exercise.exercicio.nome}
                       </h3>
-                      <p className="text-xs text-zinc-300">
+                      <p className="text-xs text-[color:var(--student-text-soft)]">
                         {grupamentoLabels[exercise.exercicio.grupamentoMuscular]} •
                         {" "}
                         {exercise.treinoDiaExercicio.series || "-"} séries •{" "}
                         {exercise.treinoDiaExercicio.repeticoes || "-"} reps
                       </p>
                       {exercise.exercicio.descricao && (
-                        <p className="text-xs text-zinc-400 mt-2 leading-6">
+                        <p className="text-xs text-[color:var(--student-text-muted)] mt-2 leading-6">
                           {exercise.exercicio.descricao}
                         </p>
                       )}
                     </div>
-                    <label className="flex items-center gap-2 text-sm text-zinc-200">
+                    <label className="flex items-center gap-2 text-sm text-[color:var(--student-text-soft)]">
                       <input
                         type="checkbox"
                         checked={draft.concluido}
@@ -636,9 +636,9 @@ export const MeuTreinoPage: React.FC = () => {
                   {hasVisualMedia && (
                     <div className="grid grid-cols-1 gap-3 md:grid-cols-2 mb-4">
                       {exercise.exercicio.executionGifUrl && (
-                        <div className="rounded-lg border border-zinc-700 bg-zinc-950 overflow-hidden">
-                          <div className="px-3 py-2 border-b border-zinc-800">
-                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-300">
+                        <div className="rounded-lg border border-[color:var(--student-border)] bg-[color:var(--student-surface-strong)] overflow-hidden">
+                          <div className="px-3 py-2 border-b border-[color:var(--student-border)]">
+                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--student-text-soft)]">
                               Execução
                             </p>
                           </div>
@@ -652,9 +652,9 @@ export const MeuTreinoPage: React.FC = () => {
                       )}
 
                       {exercise.exercicio.equipmentImageUrl && (
-                        <div className="rounded-lg border border-zinc-700 bg-zinc-950 overflow-hidden">
-                          <div className="px-3 py-2 border-b border-zinc-800">
-                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-300">
+                        <div className="rounded-lg border border-[color:var(--student-border)] bg-[color:var(--student-surface-strong)] overflow-hidden">
+                          <div className="px-3 py-2 border-b border-[color:var(--student-border)]">
+                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--student-text-soft)]">
                               Aparelho
                             </p>
                           </div>
@@ -670,16 +670,16 @@ export const MeuTreinoPage: React.FC = () => {
                   )}
 
                   {latestPerformance && (
-                    <div className="mb-4 rounded-lg border border-[#d4a548]/20 bg-[#191308] p-3">
+                    <div className="mb-4 rounded-lg border border-[color:rgba(241,211,139,0.45)] bg-[color:var(--student-warning-surface)] p-3">
                       <div className="flex items-center gap-2">
-                        <Target className="h-4 w-4 text-[#f1d38b]" />
-                        <p className="text-sm font-medium text-white">
+                        <Target className="h-4 w-4 text-[color:var(--student-warning)]" />
+                        <p className="text-sm font-medium text-[color:var(--student-text)]">
                           Referência de progressão
                         </p>
                       </div>
-                      <p className="text-sm text-zinc-300 mt-2">
+                      <p className="text-sm text-[color:var(--student-text-soft)] mt-2">
                         Último registro:{" "}
-                        <strong className="text-white">
+                        <strong className="text-[color:var(--student-text)]">
                           {latestPerformance.cargaReal !== null &&
                           latestPerformance.cargaReal !== undefined
                             ? `${latestPerformance.cargaReal} kg`
@@ -693,7 +693,7 @@ export const MeuTreinoPage: React.FC = () => {
                           locale: ptBR,
                         })}
                       </p>
-                      <p className="text-xs text-zinc-400 mt-2">
+                      <p className="text-xs text-[color:var(--student-text-muted)] mt-2">
                         Quando houver histórico, a última carga aparece como ponto de partida e pode ser ajustada livremente.
                       </p>
                     </div>
@@ -786,33 +786,33 @@ export const MeuTreinoPage: React.FC = () => {
         </div>
 
         {loadingProgress && (
-          <div className="flex items-center gap-2 text-zinc-300">
+          <div className="flex items-center gap-2 text-[color:var(--student-text-soft)]">
             <Loader2 className="h-4 w-4 animate-spin" />
             Carregando progressão...
           </div>
         )}
 
         {!loadingProgress && seriesDisponiveis.length === 0 && (
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-[color:var(--student-text-muted)]">
             Finalize treinos e registre cargas para visualizar sua evolução.
           </p>
         )}
 
         {seriesDisponiveis.length > 0 && (
           <div className="space-y-4">
-            <div className="rounded-lg border border-white/10 bg-white/[0.03] p-3">
-              <p className="text-sm text-zinc-300">
+            <div className="rounded-lg border border-[color:var(--student-border)] bg-[color:var(--student-surface)] p-3">
+              <p className="text-sm text-[color:var(--student-text-soft)]">
                 Use esta visão para comparar sua execução recente e progredir com mais critério, não no escuro.
               </p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-zinc-200 mb-1">
+              <label className="block text-sm font-medium text-[color:var(--student-text-soft)] mb-1">
                 Exercício
               </label>
               <select
                 value={selectedProgressExerciseId}
                 onChange={(event) => setSelectedProgressExerciseId(event.target.value)}
-                className="w-full md:w-auto px-3 py-2 bg-zinc-900 text-white border border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-300 focus:border-transparent"
+                className="w-full md:w-auto px-3 py-2 bg-[color:var(--student-surface)] text-[color:var(--student-text)] border border-[color:var(--student-border)] rounded-lg focus:ring-2 focus:ring-[color:var(--student-border-strong)] focus:border-transparent"
               >
                 {seriesDisponiveis.map((serie) => (
                   <option key={serie.exercicioId} value={serie.exercicioId}>
@@ -847,14 +847,14 @@ export const MeuTreinoPage: React.FC = () => {
         </div>
 
         {loadingTimeline && (
-          <div className="flex items-center gap-2 text-zinc-300">
+          <div className="flex items-center gap-2 text-[color:var(--student-text-soft)]">
             <Loader2 className="h-4 w-4 animate-spin" />
             Carregando timeline...
           </div>
         )}
 
         {!loadingTimeline && !timeline?.length && (
-          <p className="text-sm text-zinc-400">Nenhuma atividade registrada ainda.</p>
+          <p className="text-sm text-[color:var(--student-text-muted)]">Nenhuma atividade registrada ainda.</p>
         )}
 
         <div className="space-y-3">
@@ -863,20 +863,20 @@ export const MeuTreinoPage: React.FC = () => {
             return (
               <div
                 key={event.id}
-                className="border border-zinc-700 rounded-lg p-3 bg-zinc-900"
+                className="border border-[color:var(--student-border)] rounded-lg p-3 bg-[color:var(--student-surface)]"
               >
                 <div className="flex flex-wrap items-center gap-2 mb-1">
                   <Badge variant={badge.variant}>{badge.text}</Badge>
-                  <span className="text-xs text-zinc-400">
+                  <span className="text-xs text-[color:var(--student-text-muted)]">
                     {format(new Date(event.dataHora), "dd/MM/yyyy HH:mm", {
                       locale: ptBR,
                     })}
                   </span>
                 </div>
-                <p className="text-sm text-zinc-200">{event.descricao}</p>
-                <p className="text-xs text-zinc-300 mt-1">{event.treinoDiaTitulo}</p>
+                <p className="text-sm text-[color:var(--student-text-soft)]">{event.descricao}</p>
+                <p className="text-xs text-[color:var(--student-text-soft)] mt-1">{event.treinoDiaTitulo}</p>
                 {event.exercicioNome && (
-                  <p className="text-xs text-zinc-300">
+                  <p className="text-xs text-[color:var(--student-text-soft)]">
                     Exercício: {event.exercicioNome}
                   </p>
                 )}
@@ -893,40 +893,40 @@ export const MeuTreinoPage: React.FC = () => {
         </div>
 
         {loadingCheckins && (
-          <div className="flex items-center gap-2 text-zinc-300">
+          <div className="flex items-center gap-2 text-[color:var(--student-text-soft)]">
             <Loader2 className="h-4 w-4 animate-spin" />
             Carregando histórico...
           </div>
         )}
 
         {!loadingCheckins && checkinsOrdenados.length === 0 && (
-          <p className="text-sm text-zinc-400">Nenhum check-in encontrado.</p>
+          <p className="text-sm text-[color:var(--student-text-muted)]">Nenhum check-in encontrado.</p>
         )}
 
         <div className="space-y-3">
           {checkinsOrdenados.map((checkin) => (
             <div
               key={checkin.id}
-              className="border border-zinc-700 rounded-lg p-3 bg-zinc-900"
+              className="border border-[color:var(--student-border)] rounded-lg p-3 bg-[color:var(--student-surface)]"
             >
               <div className="flex flex-wrap items-center gap-2 mb-1">
                 <Badge variant={checkin.status === "CONCLUIDO" ? "success" : "warning"}>
                   {checkin.status === "CONCLUIDO" ? "Concluído" : "Em andamento"}
                 </Badge>
                 <Badge>{checkin.treinoDia.titulo}</Badge>
-                <span className="text-xs text-zinc-400">
+                <span className="text-xs text-[color:var(--student-text-muted)]">
                   {format(new Date(checkin.iniciadoEm), "dd/MM/yyyy HH:mm", {
                     locale: ptBR,
                   })}
                 </span>
               </div>
-              <p className="text-sm text-zinc-200">
+              <p className="text-sm text-[color:var(--student-text-soft)]">
                 Exercícios concluídos:{" "}
                 {checkin.exercicios.filter((exercise) => exercise.concluido).length}/
                 {checkin.exercicios.length}
               </p>
               {checkin.comentarioProfessor && (
-                <p className="text-sm text-zinc-100 mt-2">
+                <p className="text-sm text-[color:var(--student-text)] mt-2">
                   <strong>Feedback do professor:</strong>{" "}
                   {checkin.comentarioProfessor}
                 </p>

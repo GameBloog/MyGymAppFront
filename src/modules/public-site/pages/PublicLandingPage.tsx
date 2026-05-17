@@ -145,7 +145,7 @@ export const PublicLandingPage = () => {
             <div className="space-y-5">
               <div className="overflow-hidden rounded-[32px] border border-[color:var(--public-border)] bg-[color:var(--public-surface-strong)] shadow-[var(--public-shadow)]">
                 <img
-                  src="/0e831fa0-39ee-4b03-9071-98532877d713.jpeg"
+                  src="/logo.jpg"
                   alt="Identidade visual da comunidade G-Force"
                   className="aspect-[4/4.1] w-full object-cover"
                 />

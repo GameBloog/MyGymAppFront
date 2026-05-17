@@ -90,34 +90,34 @@ export const ModalEnviarArquivo: React.FC<ModalEnviarArquivoProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
       onClick={handleClose}
     >
       <div
-        className="bg-zinc-950 border border-zinc-800 rounded-lg shadow-xl w-full max-w-md overflow-hidden"
+        className="w-full max-w-md overflow-hidden rounded-lg border border-[color:var(--student-border)] bg-[color:var(--student-surface-strong)] shadow-[var(--student-shadow)]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-6 border-b border-zinc-800">
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+        <div className="flex items-center justify-between border-b border-[color:var(--student-border)] p-6">
+          <h2 className="flex items-center gap-2 text-xl font-bold text-[color:var(--student-text)]">
             <FileText className="h-5 w-5" />
             Enviar Arquivo
           </h2>
           <button
             onClick={handleClose}
             disabled={isLoading}
-            className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
+            className="rounded-lg p-2 text-[color:var(--student-text-muted)] transition-colors hover:bg-[color:var(--student-surface)]"
           >
-            <X className="h-5 w-5 text-zinc-400" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
         <div className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-zinc-200 mb-2">
+            <label className="mb-2 block text-sm font-medium text-[color:var(--student-text)]">
               Tipo *
             </label>
             <div className="flex gap-3">
-              <label className="flex-1 flex items-center p-3 border-2 border-zinc-700 rounded-lg cursor-pointer transition-colors hover:bg-blue-950/30">
+              <label className="flex flex-1 cursor-pointer items-center rounded-lg border-2 border-[color:var(--student-border)] p-3 transition-colors hover:bg-[color:var(--student-info-surface)]">
                 <input
                   type="radio"
                   name="tipo"
@@ -127,10 +127,10 @@ export const ModalEnviarArquivo: React.FC<ModalEnviarArquivoProps> = ({
                   className="mr-3"
                   disabled={isLoading}
                 />
-                <span className="font-medium text-zinc-100">Treino</span>
+                <span className="font-medium text-[color:var(--student-text)]">Treino</span>
               </label>
 
-              <label className="flex-1 flex items-center p-3 border-2 border-zinc-700 rounded-lg cursor-pointer transition-colors hover:bg-emerald-950/30">
+              <label className="flex flex-1 cursor-pointer items-center rounded-lg border-2 border-[color:var(--student-border)] p-3 transition-colors hover:bg-[color:var(--student-success-surface)]">
                 <input
                   type="radio"
                   name="tipo"
@@ -140,7 +140,7 @@ export const ModalEnviarArquivo: React.FC<ModalEnviarArquivoProps> = ({
                   className="mr-3"
                   disabled={isLoading}
                 />
-                <span className="font-medium text-zinc-100">Dieta</span>
+                <span className="font-medium text-[color:var(--student-text)]">Dieta</span>
               </label>
             </div>
           </div>
@@ -149,8 +149,8 @@ export const ModalEnviarArquivo: React.FC<ModalEnviarArquivoProps> = ({
             <label
               className={`flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-6 cursor-pointer transition-colors ${
                 file
-                  ? "border-emerald-500 bg-emerald-950/30"
-                  : "border-zinc-700 hover:border-blue-500 hover:bg-blue-950/30"
+                  ? "border-[color:rgba(125,224,211,0.55)] bg-[color:var(--student-success-surface)]"
+                  : "border-[color:var(--student-border)] hover:border-[color:var(--student-border-strong)] hover:bg-[color:var(--student-surface)]"
               }`}
             >
               <input
@@ -163,24 +163,24 @@ export const ModalEnviarArquivo: React.FC<ModalEnviarArquivoProps> = ({
 
               {file ? (
                 <div className="text-center">
-                  <FileText className="h-12 w-12 text-green-600 mx-auto mb-2" />
-                  <p className="text-sm font-medium text-white">
+                  <FileText className="mx-auto mb-2 h-12 w-12 text-[color:var(--student-success)]" />
+                  <p className="text-sm font-medium text-[color:var(--student-text)]">
                     {file.name}
                   </p>
-                  <p className="text-xs text-zinc-400 mt-1">
+                  <p className="mt-1 text-xs text-[color:var(--student-text-muted)]">
                     {formatarTamanho(file.size)}
                   </p>
-                  <p className="text-xs text-zinc-400 mt-1">
+                  <p className="mt-1 text-xs text-[color:var(--student-text-muted)]">
                     Clique para trocar
                   </p>
                 </div>
               ) : (
                 <div className="text-center">
-                  <Upload className="h-12 w-12 text-zinc-400 mx-auto mb-3" />
-                  <p className="text-zinc-200 font-medium mb-1">
+                  <Upload className="mx-auto mb-3 h-12 w-12 text-[color:var(--student-text-muted)]" />
+                  <p className="mb-1 font-medium text-[color:var(--student-text-soft)]">
                     Arraste aqui ou clique
                   </p>
-                  <p className="text-sm text-zinc-400">
+                  <p className="text-sm text-[color:var(--student-text-muted)]">
                     Apenas PDF • Máximo 5MB
                   </p>
                 </div>
@@ -188,7 +188,7 @@ export const ModalEnviarArquivo: React.FC<ModalEnviarArquivoProps> = ({
             </label>
 
             {error && (
-              <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
+              <p className="mt-2 flex items-center gap-1 text-sm text-[color:var(--student-danger)]">
                 ⚠️ {error}
               </p>
             )}
@@ -213,7 +213,7 @@ export const ModalEnviarArquivo: React.FC<ModalEnviarArquivoProps> = ({
           />
         </div>
 
-        <div className="flex gap-3 p-6 border-t border-zinc-800 bg-zinc-900">
+        <div className="flex gap-3 border-t border-[color:var(--student-border)] bg-[color:var(--student-surface)] p-6">
           <Button
             variant="secondary"
             onClick={handleClose}

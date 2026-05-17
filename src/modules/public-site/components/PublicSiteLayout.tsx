@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import {
   ArrowRight,
   LogIn,
   Menu,
   MessageCircle,
-  Moon,
-  Sun,
   Shirt,
   X,
 } from "lucide-react"
@@ -21,34 +19,15 @@ interface PublicSiteLayoutProps {
   children: React.ReactNode
 }
 
-type PublicTheme = "dark" | "light"
-
-const PUBLIC_THEME_STORAGE_KEY = "gforce-public-theme"
-
 const navButtonClass =
   "text-sm font-medium text-[color:var(--public-text-soft)] transition-colors hover:text-[color:var(--public-text)]"
 
 export const PublicSiteLayout: React.FC<PublicSiteLayoutProps> = ({ children }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [theme, setTheme] = useState<PublicTheme>(() => {
-    if (typeof window === "undefined") {
-      return "dark"
-    }
-
-    const savedTheme = window.localStorage.getItem(PUBLIC_THEME_STORAGE_KEY)
-    return savedTheme === "light" ? "light" : "dark"
-  })
   const location = useLocation()
   const navigate = useNavigate()
 
   const isLanding = location.pathname === "/landing"
-  const isDarkTheme = theme === "dark"
-  const themeToggleLabel = isDarkTheme ? "Ativar modo light" : "Ativar modo dark"
-
-  useEffect(() => {
-    document.documentElement.setAttribute("data-public-theme", theme)
-    window.localStorage.setItem(PUBLIC_THEME_STORAGE_KEY, theme)
-  }, [theme])
 
   const handleSectionNavigation = (target: string) => {
     if (isLanding) {
@@ -80,10 +59,6 @@ export const PublicSiteLayout: React.FC<PublicSiteLayoutProps> = ({ children }) 
   const handleLoginClick = () => {
     navigate("/login")
     setMobileMenuOpen(false)
-  }
-
-  const handleThemeToggle = () => {
-    setTheme((currentTheme) => (currentTheme === "dark" ? "light" : "dark"))
   }
 
   return (
@@ -129,14 +104,6 @@ export const PublicSiteLayout: React.FC<PublicSiteLayoutProps> = ({ children }) 
 
           <div className="hidden items-center gap-3 lg:flex">
             <button
-              onClick={handleThemeToggle}
-              className="inline-flex items-center gap-2 rounded-full border border-[color:var(--public-border)] px-4 py-2 text-sm font-medium text-[color:var(--public-text-soft)] transition-colors hover:border-[color:var(--public-border-strong)] hover:bg-[color:var(--public-surface)] hover:text-[color:var(--public-text)]"
-              aria-label={themeToggleLabel}
-            >
-              {isDarkTheme ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              {isDarkTheme ? "Light" : "Dark"}
-            </button>
-            <button
               onClick={handleLoginClick}
               className="inline-flex items-center gap-2 rounded-full border border-[color:var(--public-border)] px-4 py-2 text-sm font-medium text-[color:var(--public-text-soft)] transition-colors hover:border-[color:var(--public-border-strong)] hover:bg-[color:var(--public-surface)] hover:text-[color:var(--public-text)]"
             >
@@ -153,13 +120,6 @@ export const PublicSiteLayout: React.FC<PublicSiteLayoutProps> = ({ children }) 
           </div>
 
           <div className="flex items-center gap-2 lg:hidden">
-            <button
-              onClick={handleThemeToggle}
-              className="rounded-lg border border-[color:var(--public-border)] p-2 text-[color:var(--public-text-soft)] transition-colors hover:border-[color:var(--public-border-strong)] hover:bg-[color:var(--public-surface)] hover:text-[color:var(--public-text)]"
-              aria-label={themeToggleLabel}
-            >
-              {isDarkTheme ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </button>
             <button
               onClick={() => setMobileMenuOpen((prev) => !prev)}
               className="rounded-lg border border-[color:var(--public-border)] p-2 text-[color:var(--public-text-soft)]"
@@ -197,13 +157,6 @@ export const PublicSiteLayout: React.FC<PublicSiteLayoutProps> = ({ children }) 
             </div>
 
             <div className="mt-4 grid gap-2">
-              <button
-                onClick={handleThemeToggle}
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--public-border)] px-4 py-3 text-sm font-medium text-[color:var(--public-text-soft)]"
-              >
-                {isDarkTheme ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-                {isDarkTheme ? "Ativar modo light" : "Ativar modo dark"}
-              </button>
               <button
                 onClick={handleLoginClick}
                 className="inline-flex items-center justify-center gap-2 rounded-full border border-[color:var(--public-border)] px-4 py-3 text-sm font-medium text-[color:var(--public-text-soft)]"
