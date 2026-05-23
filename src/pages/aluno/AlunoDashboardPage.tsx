@@ -680,52 +680,6 @@ export const AlunoDashboardPage: React.FC = () => {
         </Card>
       </div>
 
-      <Card>
-        <h2 className="text-lg font-semibold mb-4">Atalhos rápidos</h2>
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
-          <Button
-            variant="secondary"
-            icon={User}
-            onClick={() => navigate("/aluno/perfil")}
-            className="w-full justify-center text-center"
-          >
-            Formulário
-          </Button>
-          <Button
-            variant="secondary"
-            icon={TrendingUp}
-            onClick={() => navigate("/aluno/evolucao")}
-            className="w-full justify-center text-center"
-          >
-            Histórico
-          </Button>
-          <Button
-            variant="secondary"
-            icon={UtensilsCrossed}
-            onClick={() => navigate("/aluno/dieta")}
-            className="w-full justify-center text-center"
-          >
-            Dieta
-          </Button>
-          <Button
-            variant="secondary"
-            icon={Dumbbell}
-            onClick={() => navigate("/aluno/treino")}
-            className="w-full justify-center text-center"
-          >
-            Treino
-          </Button>
-          <Button
-            variant="secondary"
-            icon={Camera}
-            onClick={() => navigate("/aluno/fotos-arquivos")}
-            className="w-full justify-center text-center"
-          >
-            Enviar Fotos
-          </Button>
-        </div>
-      </Card>
-
       <Card className="relative overflow-hidden border border-[color:var(--student-border-strong)] bg-[linear-gradient(120deg,_rgba(241,211,139,0.16)_0%,_rgba(8,33,38,0.92)_45%,_rgba(142,155,255,0.18)_100%)]">
         <div className="absolute inset-0 bg-black/20" />
         <div className="relative grid grid-cols-1 gap-4 lg:grid-cols-[1.2fr_1fr] lg:items-center">

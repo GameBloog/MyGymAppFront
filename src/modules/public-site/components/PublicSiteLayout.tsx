@@ -63,7 +63,7 @@ export const PublicSiteLayout: React.FC<PublicSiteLayoutProps> = ({ children }) 
 
   return (
     <div className="min-h-screen overflow-x-clip bg-[color:var(--public-bg)] text-[color:var(--public-text)]">
-      <nav className="fixed inset-x-0 top-0 z-50 border-b border-[color:var(--public-border)] bg-[color:var(--public-nav)] backdrop-blur">
+      <nav className="fixed inset-x-0 top-0 z-50 border-b border-[color:var(--public-border)] bg-[linear-gradient(180deg,var(--public-nav),rgba(2,11,17,0.9))] shadow-[0_10px_40px_rgba(2,2,2,0.45)] backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-5 sm:px-6 lg:px-8">
           <button
             onClick={() => navigate("/landing")}
@@ -131,7 +131,7 @@ export const PublicSiteLayout: React.FC<PublicSiteLayoutProps> = ({ children }) 
         </div>
 
         {mobileMenuOpen && (
-          <div className="border-t border-[color:var(--public-border)] bg-[color:var(--public-surface-strong)] px-5 py-4 sm:px-6 lg:hidden">
+          <div className="border-t border-[color:var(--public-border)] bg-[linear-gradient(180deg,var(--public-surface-strong),var(--public-bg-alt))] px-5 py-4 shadow-[0_18px_40px_rgba(2,2,2,0.42)] sm:px-6 lg:hidden">
             <div className="space-y-2">
               {publicNavigationSections.map((item) => (
                 <button
@@ -178,9 +178,9 @@ export const PublicSiteLayout: React.FC<PublicSiteLayoutProps> = ({ children }) 
 
       <main>{children}</main>
 
-      <footer className="border-t border-[color:var(--public-border)] bg-[color:var(--public-footer)]">
+      <footer className="border-t border-[color:var(--public-border)] bg-[linear-gradient(180deg,var(--public-footer),var(--public-bg))]">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:px-6 lg:grid-cols-[1.15fr_0.95fr_1fr] lg:px-8">
-          <div className="space-y-4 rounded-[28px] border border-[color:var(--public-border)] bg-[color:var(--public-surface-soft)] p-6 shadow-[var(--public-shadow)]">
+          <div className="space-y-4 rounded-[28px] border border-[color:var(--public-border-strong)] bg-[color:var(--public-accent-surface)] p-6 shadow-[var(--public-shadow)]">
             <BrandMark
               size="sm"
               imageClassName="border-[color:var(--public-border-strong)]"
@@ -192,7 +192,7 @@ export const PublicSiteLayout: React.FC<PublicSiteLayoutProps> = ({ children }) 
             </p>
           </div>
 
-          <div className="rounded-[28px] border border-[color:var(--public-border)] bg-[color:var(--public-surface-soft)] p-6">
+          <div className="rounded-[28px] border border-[color:var(--public-border)] bg-[color:var(--public-surface)] p-6">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-accent)]">
               Navegação
             </p>
@@ -216,7 +216,7 @@ export const PublicSiteLayout: React.FC<PublicSiteLayoutProps> = ({ children }) 
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-[color:var(--public-border)] bg-[color:var(--public-surface-soft)] p-6">
+          <div className="rounded-[28px] border border-[color:var(--public-border)] bg-[color:var(--public-surface)] p-6">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-teal)]">
               Contato
             </p>
