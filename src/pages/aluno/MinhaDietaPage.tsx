@@ -27,9 +27,28 @@ interface RefeicaoDraft {
   observacaoAluno: string
 }
 
+const sortCheckinRefeicoes = (refeicoes: DietaCheckin["refeicoes"]) => {
+  return [...refeicoes].sort(
+    (a, b) =>
+      (a.dietaRefeicao?.ordem ?? Number.MAX_SAFE_INTEGER) -
+      (b.dietaRefeicao?.ordem ?? Number.MAX_SAFE_INTEGER),
+  )
+}
+
+const normalizeDietaCheckin = (checkin: DietaCheckin): DietaCheckin => ({
+  ...checkin,
+  refeicoes: sortCheckinRefeicoes(checkin.refeicoes).map((refeicao) => ({
+    ...refeicao,
+    dietaRefeicao: {
+      ...refeicao.dietaRefeicao,
+      itens: [...refeicao.dietaRefeicao.itens].sort((a, b) => a.ordem - b.ordem),
+    },
+  })),
+})
+
 const buildDrafts = (checkin: DietaCheckin) => {
   const next: Record<string, RefeicaoDraft> = {}
-  for (const item of checkin.refeicoes) {
+  for (const item of sortCheckinRefeicoes(checkin.refeicoes)) {
     next[item.dietaRefeicaoId] = {
       concluida: item.concluida,
       observacaoAluno: item.observacaoAluno || "",
@@ -84,7 +103,7 @@ export const MinhaDietaPage: React.FC = () => {
 
     const aberto = checkins.find((item) => item.status === "INICIADO")
     if (aberto) {
-      setCheckinAtual(aberto)
+      setCheckinAtual(normalizeDietaCheckin(aberto))
     }
   }, [checkins])
 
@@ -111,7 +130,7 @@ export const MinhaDietaPage: React.FC = () => {
       return
     }
     const checkin = await startCheckin.mutateAsync({ dietaDiaId: selectedDiaId, alunoId })
-    setCheckinAtual(checkin)
+    setCheckinAtual(normalizeDietaCheckin(checkin))
     showToast.success("Dia de dieta iniciado")
   }
 
@@ -142,7 +161,7 @@ export const MinhaDietaPage: React.FC = () => {
 
     setCheckinAtual((prev) => {
       if (!prev) return prev
-      return {
+      return normalizeDietaCheckin({
         ...prev,
         refeicoes: prev.refeicoes.map((ref) => {
           if (ref.dietaRefeicaoId === dietaRefeicaoId) {
@@ -150,7 +169,7 @@ export const MinhaDietaPage: React.FC = () => {
           }
           return ref
         }),
-      }
+      })
     })
     showToast.success("Refeição atualizada")
   }
@@ -162,10 +181,18 @@ export const MinhaDietaPage: React.FC = () => {
       alunoId,
       observacaoDia: observacaoDia.trim() || undefined,
     })
-    setCheckinAtual(done)
+    setCheckinAtual(normalizeDietaCheckin(done))
   }
 
   const progresso = getCompletion(checkinAtual)
+
+  const refeicoesOrdenadas = useMemo(() => {
+    if (!checkinAtual) {
+      return []
+    }
+
+    return sortCheckinRefeicoes(checkinAtual.refeicoes)
+  }, [checkinAtual])
 
   if (loadingAluno || loadingPlano) {
     return (
@@ -302,7 +329,7 @@ export const MinhaDietaPage: React.FC = () => {
           </div>
 
           <div className="space-y-4">
-            {checkinAtual.refeicoes.map((refeicao) => {
+            {refeicoesOrdenadas.map((refeicao) => {
               const draft = refeicaoDrafts[refeicao.dietaRefeicaoId] || {
                 concluida: false,
                 observacaoAluno: "",
