@@ -34,8 +34,8 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
     return (
       <Card>
         <div className="flex flex-col items-center justify-center h-64 gap-4">
-          <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
-          <p className="text-zinc-300">Carregando evolução...</p>
+          <Loader2 className="h-12 w-12 animate-spin text-[color:var(--student-info)]" />
+          <p className="text-[color:var(--student-text-soft)]">Carregando evolução...</p>
         </div>
       </Card>
     )
@@ -43,14 +43,14 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
 
   if (error) {
     return (
-      <Card className="bg-red-950/40 border-2 border-red-500/30">
+      <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:rgba(239,68,68,0.45)]">
         <div className="flex items-start gap-3">
-          <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-1" />
+          <AlertCircle className="h-6 w-6 text-[color:var(--student-danger)] flex-shrink-0 mt-1" />
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-white mb-2">
+            <h3 className="text-lg font-semibold text-[color:var(--student-text)] mb-2">
               Erro ao carregar gráfico
             </h3>
-            <p className="text-zinc-100">{error.message}</p>
+            <p className="text-[color:var(--student-text)]">{error.message}</p>
           </div>
         </div>
       </Card>
@@ -61,11 +61,11 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
     return (
       <Card>
         <div className="text-center py-12">
-          <TrendingUp className="h-12 w-12 text-zinc-500 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-white mb-2">
+          <TrendingUp className="h-12 w-12 text-[color:var(--student-text-muted)] mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-[color:var(--student-text)] mb-2">
             Nenhum histórico disponível
           </h3>
-          <p className="text-zinc-400">
+          <p className="text-[color:var(--student-text-muted)]">
             Adicione o primeiro registro para visualizar a evolução
           </p>
         </div>
@@ -84,11 +84,11 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
     return (
       <Card>
         <div className="text-center py-12">
-          <TrendingUp className="h-12 w-12 text-zinc-500 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-white mb-2">
+          <TrendingUp className="h-12 w-12 text-[color:var(--student-text-muted)] mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-[color:var(--student-text)] mb-2">
             Sem dados para {nomesMetricas[metrica]}
           </h3>
-          <p className="text-zinc-400">Nenhum registro contém esta medida</p>
+          <p className="text-[color:var(--student-text-muted)]">Nenhum registro contém esta medida</p>
         </div>
       </Card>
     )
@@ -117,38 +117,38 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
         </h2>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-          <div className="bg-blue-950/40 border border-blue-500/30 p-3 rounded-lg">
-            <p className="text-xs text-zinc-200 mb-1">Valor Atual</p>
-            <p className="text-lg font-bold text-blue-200">
+          <div className="bg-[color:var(--student-info-surface)] border border-[color:var(--student-border-strong)] p-3 rounded-lg">
+            <p className="text-xs text-[color:var(--student-text-soft)] mb-1">Valor Atual</p>
+            <p className="text-lg font-bold text-[color:var(--student-info)]">
               {valores[valores.length - 1].toFixed(1)}
             </p>
           </div>
-          <div className="bg-emerald-950/40 border border-emerald-500/30 p-3 rounded-lg">
-            <p className="text-xs text-zinc-200 mb-1">Média</p>
-            <p className="text-lg font-bold text-emerald-200">
+          <div className="bg-[color:var(--student-success-surface)] border border-[color:rgba(125,224,211,0.45)] p-3 rounded-lg">
+            <p className="text-xs text-[color:var(--student-text-soft)] mb-1">Média</p>
+            <p className="text-lg font-bold text-[color:var(--student-success)]">
               {valorMedio.toFixed(1)}
             </p>
           </div>
-          <div className="bg-purple-950/40 border border-purple-500/30 p-3 rounded-lg">
-            <p className="text-xs text-zinc-200 mb-1">Mínimo</p>
-            <p className="text-lg font-bold text-purple-200">
+          <div className="bg-[color:var(--student-info-surface)] border border-[color:var(--student-border-strong)] p-3 rounded-lg">
+            <p className="text-xs text-[color:var(--student-text-soft)] mb-1">Mínimo</p>
+            <p className="text-lg font-bold text-[color:var(--student-info)]">
               {valorMinimo.toFixed(1)}
             </p>
           </div>
-          <div className="bg-orange-950/40 border border-orange-500/30 p-3 rounded-lg">
-            <p className="text-xs text-zinc-200 mb-1">Máximo</p>
-            <p className="text-lg font-bold text-orange-200">
+          <div className="bg-[color:var(--student-warning-surface)] border border-[color:rgba(241,211,139,0.45)] p-3 rounded-lg">
+            <p className="text-xs text-[color:var(--student-text-soft)] mb-1">Máximo</p>
+            <p className="text-lg font-bold text-[color:var(--student-warning)]">
               {valorMaximo.toFixed(1)}
             </p>
           </div>
         </div>
 
-        <div className="mt-4 p-3 bg-zinc-900 border border-zinc-700 rounded-lg">
-          <p className="text-sm text-zinc-200">
-            <span className="font-medium text-white">Evolução total:</span>{" "}
+        <div className="mt-4 p-3 bg-[color:var(--student-surface)] border border-[color:var(--student-border)] rounded-lg">
+          <p className="text-sm text-[color:var(--student-text-soft)]">
+            <span className="font-medium text-[color:var(--student-text)]">Evolução total:</span>{" "}
             <span
               className={`font-bold ${
-                diferencaTotal > 0 ? "text-emerald-300" : "text-red-300"
+                diferencaTotal > 0 ? "text-[color:var(--student-success)]" : "text-[color:var(--student-danger)]"
               }`}
             >
               {diferencaTotal > 0 ? "+" : ""}
@@ -158,7 +158,7 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
         </div>
       </div>
 
-      <div className="relative h-96 md:h-[32rem] border-l-2 border-b-2 border-zinc-700 pl-2">
+      <div className="relative h-96 md:h-[32rem] border-l-2 border-b-2 border-[color:var(--student-border)] pl-2">
         <div className="flex items-end justify-center h-full pb-2 gap-2 md:gap-4">
           {dadosFiltrados.map((item, index) => {
             const altura = calcularAltura(item[metrica] as number)
@@ -179,23 +179,23 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
                 style={{ width: barWidth, minWidth: "30px" }}
               >
                 <div
-                  className="w-full bg-blue-500 hover:bg-blue-600 transition-colors rounded-t cursor-pointer relative"
+                  className="w-full bg-[color:var(--student-border-strong)] hover:bg-[color:var(--student-info)] transition-colors rounded-t cursor-pointer relative"
                   style={{ height: `${altura}%`, minHeight: "10px" }}
                   title={`${format(new Date(item.dataRegistro), "dd/MM/yyyy", {
                     locale: ptBR,
                   })}: ${valor.toFixed(1)}`}
                 >
                   <div className="hidden md:block opacity-0 group-hover:opacity-100 transition-opacity absolute -top-10 left-1/2 transform -translate-x-1/2 z-10">
-                    <div className="bg-zinc-950 text-white border border-zinc-700 text-xs px-2 py-1 rounded whitespace-nowrap">
+                    <div className="bg-[color:var(--student-surface-strong)] text-[color:var(--student-text)] border border-[color:var(--student-border)] text-xs px-2 py-1 rounded whitespace-nowrap">
                       {valor.toFixed(1)}
-                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-zinc-950" />
+                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-[color:var(--student-surface-strong)]" />
                     </div>
                   </div>
                 </div>
 
                 {(dadosFiltrados.length <= 10 ||
                   index % Math.ceil(dadosFiltrados.length / 10) === 0) && (
-                  <p className="text-[10px] text-zinc-400 mt-1 whitespace-nowrap">
+                  <p className="text-[10px] text-[color:var(--student-text-muted)] mt-1 whitespace-nowrap">
                     {format(new Date(item.dataRegistro), "dd/MM", {
                       locale: ptBR,
                     })}
@@ -207,18 +207,18 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
         </div>
 
         <div
-          className="absolute left-0 right-0 border-t-2 border-dashed border-green-400 pointer-events-none"
+          className="pointer-events-none absolute left-0 right-0 border-t-2 border-dashed border-[color:var(--student-success)]"
           style={{
             bottom: `calc(${calcularAltura(valorMedio)}% + 0.5rem)`,
           }}
         >
-          <span className="absolute right-2 -top-5 text-xs font-medium text-emerald-300 bg-zinc-950 border border-zinc-700 px-2">
+          <span className="absolute right-2 -top-5 text-xs font-medium text-[color:var(--student-success)] bg-[color:var(--student-surface-strong)] border border-[color:var(--student-border)] px-2">
             Média: {valorMedio.toFixed(1)}
           </span>
         </div>
       </div>
 
-      <div className="mt-4 text-xs text-zinc-400">
+      <div className="mt-4 text-xs text-[color:var(--student-text-muted)]">
         <p>
           📊 Total de registros: {dadosFiltrados.length} | Período:{" "}
           {format(new Date(dadosFiltrados[0].dataRegistro), "dd/MM/yyyy", {

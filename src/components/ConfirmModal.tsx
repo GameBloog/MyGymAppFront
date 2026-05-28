@@ -29,21 +29,21 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
 
   const variantColors = {
     danger: {
-      icon: "text-red-300",
-      bg: "bg-red-950/50",
-      border: "border-red-500/40",
+      icon: "text-[color:var(--student-danger)]",
+      bg: "bg-[color:var(--student-danger-surface)]",
+      border: "border-[color:rgba(239,68,68,0.45)]",
       button: "danger" as const,
     },
     warning: {
-      icon: "text-amber-300",
-      bg: "bg-amber-950/50",
-      border: "border-amber-500/40",
+      icon: "text-[color:var(--student-warning)]",
+      bg: "bg-[color:var(--student-warning-surface)]",
+      border: "border-[color:rgba(241,211,139,0.45)]",
       button: "primary" as const,
     },
     info: {
-      icon: "text-blue-300",
-      bg: "bg-blue-950/50",
-      border: "border-blue-500/40",
+      icon: "text-[color:var(--student-info)]",
+      bg: "bg-[color:var(--student-info-surface)]",
+      border: "border-[color:var(--student-border-strong)]",
       button: "primary" as const,
     },
   }
@@ -52,36 +52,38 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 animate-fade-in"
       onClick={onCancel}
     >
       <div
-        className="bg-zinc-950 border border-zinc-800 rounded-lg shadow-xl w-full max-w-md transform transition-all animate-scale-in overflow-hidden"
+        className="w-full max-w-md overflow-hidden rounded-lg border border-[color:var(--student-border)] bg-[color:var(--student-surface-strong)] shadow-[var(--student-shadow)] transform transition-all animate-scale-in"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between p-6 border-b border-zinc-800">
+        <div className="flex items-start justify-between border-b border-[color:var(--student-border)] p-6">
           <div className="flex items-center gap-3">
             <div
               className={`p-2 rounded-full ${colors.bg} ${colors.border} border-2`}
             >
               <AlertCircle className={`h-6 w-6 ${colors.icon}`} />
             </div>
-            <h2 className="text-xl font-bold text-white">{title}</h2>
+            <h2 className="text-xl font-bold text-[color:var(--student-text)]">{title}</h2>
           </div>
           <button
             onClick={onCancel}
             disabled={isLoading}
-            className="p-2 hover:bg-zinc-800 rounded-lg transition-colors disabled:opacity-50"
+            className="rounded-lg p-2 text-[color:var(--student-text-muted)] transition-colors hover:bg-[color:var(--student-surface)] disabled:opacity-50"
           >
-            <X className="h-5 w-5 text-zinc-400" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
         <div className="p-6">
-          <p className="text-zinc-200 whitespace-pre-line">{message}</p>
+          <p className="whitespace-pre-line text-[color:var(--student-text-soft)]">
+            {message}
+          </p>
         </div>
 
-        <div className="flex flex-col-reverse sm:flex-row gap-3 p-6 border-t border-zinc-800 bg-zinc-900">
+        <div className="flex flex-col-reverse gap-3 border-t border-[color:var(--student-border)] bg-[color:var(--student-surface)] p-6 sm:flex-row">
           <Button
             variant="secondary"
             onClick={onCancel}

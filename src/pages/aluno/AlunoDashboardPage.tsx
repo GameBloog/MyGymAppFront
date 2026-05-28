@@ -505,16 +505,16 @@ export const AlunoDashboardPage: React.FC = () => {
   if (loadingBase) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
-        <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
-        <p className="text-zinc-300">Carregando dashboard...</p>
+        <Loader2 className="h-10 w-10 animate-spin text-[color:var(--student-info)]" />
+        <p className="text-[color:var(--student-text-soft)]">Carregando dashboard...</p>
       </div>
     )
   }
 
   if (!aluno) {
     return (
-      <Card className="bg-red-950/40 border-2 border-red-500/30">
-        <p className="text-red-300">
+      <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:rgba(239,68,68,0.45)]">
+        <p className="text-[color:var(--student-danger)]">
           Não foi possível carregar seu perfil de aluno para montar o dashboard.
         </p>
       </Card>
@@ -534,14 +534,14 @@ export const AlunoDashboardPage: React.FC = () => {
 
   return (
     <div className="min-w-0 space-y-6">
-      <Card className="relative overflow-hidden border border-[#d4a548]/20 bg-[linear-gradient(120deg,_rgba(212,165,72,0.22),_rgba(12,12,12,0.96)_38%,_rgba(73,180,166,0.18))] text-white">
+      <Card className="relative overflow-hidden border border-[color:var(--student-border-strong)] bg-[linear-gradient(120deg,_var(--student-warning-surface),_rgba(8,33,38,0.94)_40%,_var(--student-info-surface))] text-[color:var(--student-text)]">
         <div className="absolute inset-0 bg-black/30" />
         <div className="relative flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold">
               Dashboard do Aluno
             </h1>
-            <p className="text-zinc-200 mt-1">
+            <p className="text-[color:var(--student-text-soft)] mt-1">
               Bem-vindo, {aluno.user?.nome}. Seu resumo semanal está aqui.
             </p>
           </div>
@@ -557,15 +557,15 @@ export const AlunoDashboardPage: React.FC = () => {
       </Card>
 
       <div className="grid grid-cols-1 xl:grid-cols-[0.95fr_1.05fr] gap-6">
-        <Card className="border border-[#49b4a6]/20 bg-[#0f1716]">
+        <Card className="border border-[color:rgba(125,224,211,0.45)] bg-[color:var(--student-surface-strong)]">
           <div className="flex items-center gap-2 mb-4">
-            <MessageSquareText className="h-5 w-5 text-[#7de0d3]" />
+            <MessageSquareText className="h-5 w-5 text-[color:var(--student-success)]" />
             <h2 className="text-lg font-semibold">Recados do professor</h2>
           </div>
 
           {comentariosProfessor.length === 0 && (
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-sm text-zinc-300">
+            <div className="rounded-2xl border border-[color:var(--student-border)] bg-[color:var(--student-surface)] p-4">
+              <p className="text-sm text-[color:var(--student-text-soft)]">
                 Quando houver feedback no treino ou na dieta, ele aparece aqui com prioridade.
               </p>
             </div>
@@ -577,41 +577,41 @@ export const AlunoDashboardPage: React.FC = () => {
                 key={comment.id}
                 className={`rounded-2xl border p-4 ${
                   index === 0
-                    ? "border-[#49b4a6]/40 bg-[#12302c]"
-                    : "border-white/10 bg-white/[0.03]"
+                    ? "border-[color:rgba(125,224,211,0.45)] bg-[color:var(--student-success-surface)]"
+                    : "border-[color:var(--student-border)] bg-[color:var(--student-surface)]"
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
                   <Badge>{comment.origem}</Badge>
-                  <span className="text-xs text-zinc-300">
+                  <span className="text-xs text-[color:var(--student-text-soft)]">
                     {format(new Date(comment.dataHora), "dd/MM HH:mm", {
                       locale: ptBR,
                     })}
                   </span>
                 </div>
-                <p className="text-sm text-white mt-3 leading-7">{comment.texto}</p>
+                <p className="text-sm text-[color:var(--student-text)] mt-3 leading-7">{comment.texto}</p>
               </div>
             ))}
           </div>
         </Card>
 
-        <Card className="border border-[#d4a548]/20 bg-[#171208]">
+        <Card className="border border-[color:rgba(241,211,139,0.45)] bg-[color:var(--student-surface-strong)]">
           <div className="flex items-center gap-2 mb-4">
-            <CalendarDays className="h-5 w-5 text-[#f1d38b]" />
+            <CalendarDays className="h-5 w-5 text-[color:var(--student-warning)]" />
             <h2 className="text-lg font-semibold">Cronograma de treino</h2>
           </div>
 
           {loadingTreino && (
-            <p className="text-sm text-zinc-300">Carregando agenda de treino...</p>
+            <p className="text-sm text-[color:var(--student-text-soft)]">Carregando agenda de treino...</p>
           )}
 
           {!loadingTreino && proximoTreino && (
-            <div className="rounded-2xl border border-[#d4a548]/25 bg-[#241b0b] p-4 mb-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#f1d38b]">
+            <div className="mb-4 rounded-2xl border border-[color:rgba(241,211,139,0.45)] bg-[color:var(--student-warning-surface)] p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--student-warning)]">
                 Próximo treino
               </p>
-              <p className="mt-3 text-2xl font-bold text-white">{proximoTreino.diaTitulo}</p>
-              <p className="mt-2 text-sm text-zinc-300">
+              <p className="mt-3 text-2xl font-bold text-[color:var(--student-text)]">{proximoTreino.diaTitulo}</p>
+              <p className="mt-2 text-sm text-[color:var(--student-text-soft)]">
                 {format(proximoTreino.dataHora, "dd/MM/yyyy", { locale: ptBR })} •{" "}
                 {formatDiaSemana(getIsoDay(proximoTreino.dataHora))}
               </p>
@@ -623,7 +623,7 @@ export const AlunoDashboardPage: React.FC = () => {
                 >
                   Abrir treino dinâmico
                 </Button>
-                <p className="text-sm text-zinc-300">
+                <p className="text-sm text-[color:var(--student-text-soft)]">
                   Seu acesso rápido ao treino do momento está aqui no topo.
                 </p>
               </div>
@@ -632,7 +632,7 @@ export const AlunoDashboardPage: React.FC = () => {
 
           {!loadingTreino && !proximoTreino && (
             <div className="space-y-3">
-              <p className="text-sm text-zinc-300">
+              <p className="text-sm text-[color:var(--student-text-soft)]">
                 Nenhum plano de treino dinâmico ativo no momento.
               </p>
               {ultimoTreinoPdf ? (
@@ -647,7 +647,7 @@ export const AlunoDashboardPage: React.FC = () => {
                   </Button>
                 </a>
               ) : (
-                <p className="text-sm text-zinc-400">
+                <p className="text-sm text-[color:var(--student-text-muted)]">
                   Também não há PDF de treino disponível.
                 </p>
               )}
@@ -661,16 +661,16 @@ export const AlunoDashboardPage: React.FC = () => {
                   key={item.id}
                   className={`rounded-2xl border p-4 ${
                     item.isNext
-                      ? "border-[#d4a548]/35 bg-[#22180a]"
-                      : "border-white/10 bg-white/[0.03]"
+                      ? "border-[color:rgba(241,211,139,0.45)] bg-[color:var(--student-warning-surface)]"
+                      : "border-[color:var(--student-border)] bg-[color:var(--student-surface)]"
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <p className="font-semibold text-white">{item.diaTitulo}</p>
+                    <p className="font-semibold text-[color:var(--student-text)]">{item.diaTitulo}</p>
                     {item.isNext && <Badge variant="warning">Próximo</Badge>}
                   </div>
-                  <p className="text-sm text-zinc-300 mt-2">{item.diaSemanaLabel}</p>
-                  <p className="text-xs text-zinc-400 mt-1">
+                  <p className="text-sm text-[color:var(--student-text-soft)] mt-2">{item.diaSemanaLabel}</p>
+                  <p className="text-xs text-[color:var(--student-text-muted)] mt-1">
                     {item.exerciciosCount} exercício(s)
                   </p>
                 </div>
@@ -680,53 +680,7 @@ export const AlunoDashboardPage: React.FC = () => {
         </Card>
       </div>
 
-      <Card>
-        <h2 className="text-lg font-semibold mb-4">Atalhos rápidos</h2>
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
-          <Button
-            variant="secondary"
-            icon={User}
-            onClick={() => navigate("/aluno/perfil")}
-            className="w-full justify-center text-center"
-          >
-            Formulário
-          </Button>
-          <Button
-            variant="secondary"
-            icon={TrendingUp}
-            onClick={() => navigate("/aluno/evolucao")}
-            className="w-full justify-center text-center"
-          >
-            Histórico
-          </Button>
-          <Button
-            variant="secondary"
-            icon={UtensilsCrossed}
-            onClick={() => navigate("/aluno/dieta")}
-            className="w-full justify-center text-center"
-          >
-            Dieta
-          </Button>
-          <Button
-            variant="secondary"
-            icon={Dumbbell}
-            onClick={() => navigate("/aluno/treino")}
-            className="w-full justify-center text-center"
-          >
-            Treino
-          </Button>
-          <Button
-            variant="secondary"
-            icon={Camera}
-            onClick={() => navigate("/aluno/fotos-arquivos")}
-            className="w-full justify-center text-center"
-          >
-            Enviar Fotos
-          </Button>
-        </div>
-      </Card>
-
-      <Card className="relative overflow-hidden border border-red-500/30 bg-gradient-to-r from-red-950/50 via-zinc-950 to-zinc-950">
+      <Card className="relative overflow-hidden border border-[color:var(--student-border-strong)] bg-[linear-gradient(120deg,_rgba(241,211,139,0.16)_0%,_rgba(8,33,38,0.92)_45%,_rgba(142,155,255,0.18)_100%)]">
         <div className="absolute inset-0 bg-black/20" />
         <div className="relative grid grid-cols-1 gap-4 lg:grid-cols-[1.2fr_1fr] lg:items-center">
           <div className="space-y-3">
@@ -741,17 +695,17 @@ export const AlunoDashboardPage: React.FC = () => {
             </div>
 
             <div>
-              <h2 className="text-lg font-semibold text-white">Vídeo novo da semana</h2>
+              <h2 className="text-lg font-semibold text-[color:var(--student-text)]">Vídeo novo da semana</h2>
               {loadingYoutubeContent && (
-                <p className="mt-2 text-sm text-zinc-300">Buscando último vídeo...</p>
+                <p className="mt-2 text-sm text-[color:var(--student-text-soft)]">Buscando último vídeo...</p>
               )}
 
               {!loadingYoutubeContent && youtubeContent?.video && (
                 <div className="space-y-2 mt-2">
-                  <p className="text-xl font-bold text-white leading-tight">
+                  <p className="text-xl font-bold text-[color:var(--student-text)] leading-tight">
                     {youtubeContent.video.title}
                   </p>
-                  <p className="text-sm text-zinc-300">
+                  <p className="text-sm text-[color:var(--student-text-soft)]">
                     {youtubeContent.video.channelTitle}
                     {youtubePublishedLabel ? ` • Publicado em ${youtubePublishedLabel}` : ""}
                   </p>
@@ -759,7 +713,7 @@ export const AlunoDashboardPage: React.FC = () => {
               )}
 
               {!loadingYoutubeContent && !youtubeContent?.video && (
-                <p className="mt-2 text-sm text-zinc-300">
+                <p className="mt-2 text-sm text-[color:var(--student-text-soft)]">
                   Não conseguimos carregar o vídeo mais novo agora. Acesse o canal para assistir
                   os conteúdos recentes.
                 </p>
@@ -804,7 +758,7 @@ export const AlunoDashboardPage: React.FC = () => {
               className="group block"
               aria-label={`Abrir vídeo ${youtubeContent.video.title} no YouTube`}
             >
-              <div className="relative overflow-hidden rounded-lg border border-zinc-700">
+              <div className="relative overflow-hidden rounded-lg border border-[color:var(--student-border)]">
                 <img
                   src={youtubeContent.video.thumbnailUrl}
                   alt={`Thumbnail do vídeo ${youtubeContent.video.title}`}
@@ -812,21 +766,21 @@ export const AlunoDashboardPage: React.FC = () => {
                   loading="lazy"
                 />
                 <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                  <PlayCircle className="h-14 w-14 text-white drop-shadow-xl" />
+                  <PlayCircle className="h-14 w-14 text-[color:var(--student-text)] drop-shadow-xl" />
                 </div>
               </div>
             </a>
           )}
 
           {loadingYoutubeContent && (
-            <div className="h-44 animate-pulse rounded-lg border border-zinc-700 bg-zinc-800/60" />
+            <div className="h-44 animate-pulse rounded-lg border border-[color:var(--student-border)] bg-[color:var(--student-surface-soft)]/60" />
           )}
         </div>
       </Card>
 
       {(treinoError && !treinoNaoEncontrado) || (dietaError && !dietaNaoEncontrada) ? (
-        <Card className="bg-red-950/40 border-2 border-red-500/30">
-          <p className="text-red-300">
+        <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:rgba(239,68,68,0.45)]">
+          <p className="text-[color:var(--student-danger)]">
             Erro ao carregar parte dos dados do dashboard. Treino:{" "}
             {treinoError?.message || "ok"} | Dieta: {dietaError?.message || "ok"}
           </p>
@@ -836,18 +790,18 @@ export const AlunoDashboardPage: React.FC = () => {
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <Card>
           <div className="flex items-center gap-2 mb-3">
-            <UtensilsCrossed className="h-5 w-5 text-blue-300" />
+            <UtensilsCrossed className="h-5 w-5 text-[color:var(--student-info)]" />
             <h2 className="text-lg font-semibold">Próxima refeição</h2>
           </div>
 
           {loadingDieta && (
-            <p className="text-sm text-zinc-300">Carregando agenda de dieta...</p>
+            <p className="text-sm text-[color:var(--student-text-soft)]">Carregando agenda de dieta...</p>
           )}
 
           {!loadingDieta && proximaRefeicao && (
             <div className="space-y-2">
-              <p className="text-xl font-bold text-white">{proximaRefeicao.refeicaoNome}</p>
-              <p className="text-sm text-zinc-300">
+              <p className="text-xl font-bold text-[color:var(--student-text)]">{proximaRefeicao.refeicaoNome}</p>
+              <p className="text-sm text-[color:var(--student-text-soft)]">
                 {proximaRefeicao.diaTitulo} •{" "}
                 {format(proximaRefeicao.dataHora, "dd/MM/yyyy HH:mm", {
                   locale: ptBR,
@@ -865,7 +819,7 @@ export const AlunoDashboardPage: React.FC = () => {
 
           {!loadingDieta && !proximaRefeicao && (
             <div className="space-y-3">
-              <p className="text-sm text-zinc-300">
+              <p className="text-sm text-[color:var(--student-text-soft)]">
                 Nenhum plano de dieta dinâmico ativo no momento.
               </p>
               {ultimaDietaPdf ? (
@@ -880,7 +834,7 @@ export const AlunoDashboardPage: React.FC = () => {
                   </Button>
                 </a>
               ) : (
-                <p className="text-sm text-zinc-400">
+                <p className="text-sm text-[color:var(--student-text-muted)]">
                   Também não há PDF de dieta disponível.
                 </p>
               )}
@@ -894,20 +848,20 @@ export const AlunoDashboardPage: React.FC = () => {
             <h2 className="text-lg font-semibold">Resumo semanal</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-            <div className="rounded-lg bg-blue-950/40 p-3">
-              <p className="text-xs text-zinc-300">Treinos na semana</p>
-              <p className="text-2xl font-bold text-white">{checkinsTreinoSemana}</p>
+            <div className="rounded-lg bg-[color:var(--student-info-surface)] p-3">
+              <p className="text-xs text-[color:var(--student-text-soft)]">Treinos na semana</p>
+              <p className="text-2xl font-bold text-[color:var(--student-text)]">{checkinsTreinoSemana}</p>
             </div>
-            <div className="rounded-lg bg-emerald-950/40 p-3">
-              <p className="text-xs text-zinc-300">Check-ins dieta</p>
-              <p className="text-2xl font-bold text-white">{checkinsDietaSemana}</p>
+            <div className="rounded-lg bg-[color:var(--student-success-surface)] p-3">
+              <p className="text-xs text-[color:var(--student-text-soft)]">Check-ins dieta</p>
+              <p className="text-2xl font-bold text-[color:var(--student-text)]">{checkinsDietaSemana}</p>
             </div>
-            <div className="rounded-lg bg-amber-950/40 p-3">
-              <p className="text-xs text-zinc-300">Aderência dieta</p>
-              <p className="text-2xl font-bold text-white">{progressoSemanaDieta}%</p>
+            <div className="rounded-lg bg-[color:var(--student-warning-surface)] p-3">
+              <p className="text-xs text-[color:var(--student-text-soft)]">Aderência dieta</p>
+              <p className="text-2xl font-bold text-[color:var(--student-text)]">{progressoSemanaDieta}%</p>
             </div>
           </div>
-          <p className="text-sm text-zinc-300">
+          <p className="text-sm text-[color:var(--student-text-soft)]">
             Frequência de treino nos últimos 28 dias:{" "}
             <strong>{frequenciaTreino28Dias} sessão(ões) concluída(s)</strong>.
           </p>
@@ -926,15 +880,15 @@ export const AlunoDashboardPage: React.FC = () => {
               const dietaWidth = (item.dieta / maxCheckinSemana) * 100
               return (
                 <div key={item.key}>
-                  <p className="text-xs text-zinc-300 mb-1">Semana {item.key}</p>
+                  <p className="text-xs text-[color:var(--student-text-soft)] mb-1">Semana {item.key}</p>
                   <div className="space-y-1">
-                    <div className="h-2 rounded-full bg-zinc-800 overflow-hidden">
-                      <div className="h-full bg-blue-600 rounded-full" style={{ width: `${treinoWidth}%` }} />
+                    <div className="h-2 rounded-full bg-[color:var(--student-surface-soft)] overflow-hidden">
+                      <div className="h-full bg-[color:var(--student-info)] rounded-full" style={{ width: `${treinoWidth}%` }} />
                     </div>
-                    <div className="h-2 rounded-full bg-zinc-800 overflow-hidden">
-                      <div className="h-full bg-green-600 rounded-full" style={{ width: `${dietaWidth}%` }} />
+                    <div className="h-2 rounded-full bg-[color:var(--student-surface-soft)] overflow-hidden">
+                      <div className="h-full bg-[color:var(--student-success)] rounded-full" style={{ width: `${dietaWidth}%` }} />
                     </div>
-                    <p className="text-[11px] text-zinc-400">
+                    <p className="text-[11px] text-[color:var(--student-text-muted)]">
                       Treino: {item.treino} | Dieta: {item.dieta}
                     </p>
                   </div>
@@ -951,14 +905,14 @@ export const AlunoDashboardPage: React.FC = () => {
           </div>
 
           {seriePeso.length === 0 && (
-            <p className="text-sm text-zinc-400">
+            <p className="text-sm text-[color:var(--student-text-muted)]">
               Sem registros de evolução com peso para montar o gráfico.
             </p>
           )}
 
           {seriePeso.length > 0 && (
             <div className="space-y-3">
-              <div className="h-44 border-l border-b border-zinc-700 px-2 flex items-end gap-2">
+              <div className="h-44 border-l border-b border-[color:var(--student-border)] px-2 flex items-end gap-2">
                 {seriePeso.map((item) => {
                   const peso = item.pesoKg as number
                   const heightPercent =
@@ -966,18 +920,18 @@ export const AlunoDashboardPage: React.FC = () => {
                   return (
                     <div key={item.id} className="flex-1 flex flex-col items-center justify-end gap-1">
                       <div
-                        className="w-full rounded-t bg-blue-500"
+                        className="w-full rounded-t bg-[color:var(--student-border-strong)]"
                         style={{ height: `${heightPercent}%` }}
                         title={`${peso} kg`}
                       />
-                      <span className="text-[10px] text-zinc-400">
+                      <span className="text-[10px] text-[color:var(--student-text-muted)]">
                         {format(new Date(item.dataRegistro), "dd/MM")}
                       </span>
                     </div>
                   )
                 })}
               </div>
-              <p className="text-sm text-zinc-300">
+              <p className="text-sm text-[color:var(--student-text-soft)]">
                 Atual: <strong>{seriePeso[seriePeso.length - 1].pesoKg} kg</strong> | Inicial:{" "}
                 <strong>{seriePeso[0].pesoKg} kg</strong>
               </p>
@@ -993,31 +947,31 @@ export const AlunoDashboardPage: React.FC = () => {
         </div>
 
         {(loadingTreinoTimeline || loadingTreinoCheckins || loadingDietaCheckins) && (
-          <div className="flex items-center gap-2 text-zinc-300 mb-3">
+          <div className="flex items-center gap-2 text-[color:var(--student-text-soft)] mb-3">
             <Loader2 className="h-4 w-4 animate-spin" />
             Atualizando feed...
           </div>
         )}
 
         {feed.length === 0 && (
-          <p className="text-sm text-zinc-400">
+          <p className="text-sm text-[color:var(--student-text-muted)]">
             Sem atividades ainda. Comece o treino ou dieta para alimentar sua timeline.
           </p>
         )}
 
         <div className="space-y-3">
           {feed.map((event) => (
-            <div key={event.id} className="border border-zinc-700 rounded-lg p-3 bg-zinc-900">
+            <div key={event.id} className="border border-[color:var(--student-border)] rounded-lg p-3 bg-[color:var(--student-surface)]">
               <div className="flex flex-wrap items-center gap-2 mb-1">
                 <Badge variant={event.variant}>{event.titulo}</Badge>
                 <Badge>{event.origem}</Badge>
-                <span className="text-xs text-zinc-400">
+                <span className="text-xs text-[color:var(--student-text-muted)]">
                   {format(new Date(event.dataHora), "dd/MM/yyyy HH:mm", {
                     locale: ptBR,
                   })}
                 </span>
               </div>
-              <p className="text-sm text-zinc-200">{event.descricao}</p>
+              <p className="text-sm text-[color:var(--student-text-soft)]">{event.descricao}</p>
             </div>
           ))}
         </div>

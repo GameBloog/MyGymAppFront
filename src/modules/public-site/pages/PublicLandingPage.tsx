@@ -11,7 +11,6 @@ import {
   Sparkles,
   Target,
   TrendingUp,
-  X,
 } from "lucide-react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { leadLinksApi } from "../../../services/api"
@@ -32,7 +31,7 @@ import { PublicSiteLayout } from "../components/PublicSiteLayout"
 import { openWhatsApp, scrollToPublicSection } from "../utils"
 
 const accentCardClass =
-  "rounded-[28px] border border-[color:var(--public-border)] bg-[color:var(--public-surface)] p-6 shadow-[var(--public-shadow)]"
+  "rounded-[28px] border border-[color:var(--public-border)] bg-[linear-gradient(165deg,var(--public-surface-strong),var(--public-surface))] p-6 shadow-[0_18px_48px_rgba(2,2,2,0.42)]"
 
 export const PublicLandingPage = () => {
   const location = useLocation()
@@ -102,12 +101,12 @@ export const PublicLandingPage = () => {
 
   return (
     <PublicSiteLayout>
-      <section className="relative overflow-hidden px-5 pb-20 pt-28 sm:px-6 lg:px-8">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_var(--public-hero-glow-primary),_transparent_15%),radial-gradient(circle_at_75%_40%,_var(--public-hero-glow-secondary),_transparent_30%),linear-gradient(100deg,_var(--public-bg)_0%,_var(--public-bg-alt)_42%,_var(--public-bg)_100%)]" />
+      <section className="relative overflow-hidden border-b border-[color:var(--public-border)] px-5 pb-20 pt-28 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_8%_6%,_var(--public-hero-glow-primary),_transparent_26%),radial-gradient(circle_at_78%_34%,_var(--public-hero-glow-secondary),_transparent_44%),linear-gradient(102deg,_var(--public-bg)_0%,_var(--public-bg-alt)_46%,_var(--public-bg)_100%)]" />
         <div className="relative mx-auto max-w-8xl space-y-10">
           <div className="grid gap-20 lg:grid-cols-[0.96fr_1.04fr] lg:items-center xl:gap-20">
             <div className="space-y-5">
-              <div className="inline-flex max-w-full flex-wrap items-center justify-center gap-2 rounded-full border border-[color:var(--public-border-strong)] bg-[color:var(--public-accent-surface)] px-4 py-2 text-center text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--public-accent)] sm:justify-start sm:text-left sm:text-[0.78rem] sm:tracking-[0.16em]">
+              <div className="inline-flex max-w-full flex-wrap items-center justify-center gap-2 rounded-full border border-[color:var(--public-border-strong)] bg-[linear-gradient(140deg,var(--public-accent-surface),var(--public-teal-surface))] px-4 py-2 text-center text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-[color:var(--public-accent)] shadow-[0_10px_28px_rgba(2,2,2,0.3)] sm:justify-start sm:text-left sm:text-[0.78rem] sm:tracking-[0.16em]">
                 <Sparkles className="h-3.5 w-3.5" />
                 Clareza comercial + experiência real do aluno
               </div>
@@ -143,12 +142,13 @@ export const PublicLandingPage = () => {
             </div>
 
             <div className="space-y-5">
-              <div className="overflow-hidden rounded-[32px] border border-[color:var(--public-border)] bg-[color:var(--public-surface-strong)] shadow-[var(--public-shadow)]">
+              <div className="relative overflow-hidden rounded-[32px] border border-[color:var(--public-border-strong)] bg-[color:var(--public-surface-strong)] shadow-[var(--public-shadow)]">
                 <img
-                  src="/0e831fa0-39ee-4b03-9071-98532877d713.jpeg"
+                  src="/logo.jpg"
                   alt="Identidade visual da comunidade G-Force"
                   className="aspect-[4/4.1] w-full object-cover"
                 />
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_16%,rgba(242,242,242,0.16),transparent_50%)]" />
               </div>
             </div>
           </div>
@@ -159,8 +159,8 @@ export const PublicLandingPage = () => {
                 key={item.title}
                 className={`min-h-full rounded-[24px] border p-4 ${
                   index % 2 === 0
-                    ? "border-[color:var(--public-border-strong)] bg-[color:var(--public-accent-surface)]"
-                    : "border-[color:var(--public-border)] bg-[color:var(--public-teal-surface)]"
+                    ? "border-[color:var(--public-border-strong)] bg-[linear-gradient(155deg,var(--public-accent-surface),var(--public-surface-soft))]"
+                    : "border-[color:var(--public-border)] bg-[linear-gradient(155deg,var(--public-teal-surface),var(--public-surface))]"
                 }`}
               >
                 <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[color:var(--public-text-muted)]">
@@ -178,7 +178,10 @@ export const PublicLandingPage = () => {
         </div>
       </section>
 
-      <section id="servico" className="px-5 py-12 sm:px-6 lg:px-8">
+      <section
+        id="servico"
+        className="bg-[linear-gradient(180deg,var(--public-bg),var(--public-bg-alt)_45%,var(--public-bg))] px-5 py-12 sm:px-6 lg:px-8"
+      >
         <div className="mx-auto max-w-7xl space-y-12">
           <div className="mx-auto max-w-3xl space-y-4 text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-accent)]">
@@ -199,7 +202,7 @@ export const PublicLandingPage = () => {
               {frictionPoints.map((item) => (
                 <div
                   key={item.title}
-                  className="rounded-[24px] border border-[color:var(--public-danger)] bg-[color:var(--public-danger-surface)] p-6"
+                  className="rounded-[24px] border border-[color:var(--public-border)] bg-[linear-gradient(160deg,var(--public-danger-surface),var(--public-surface))] p-6"
                 >
                   <p className="text-lg font-semibold text-[color:var(--public-text)]">{item.title}</p>
                   <p className="mt-3 text-sm leading-7 text-[color:var(--public-text-soft)]">
@@ -210,7 +213,7 @@ export const PublicLandingPage = () => {
             </div>
 
             <div className="grid gap-4">
-              <div className="relative overflow-hidden rounded-[28px] border border-[color:var(--public-border)] bg-[linear-gradient(140deg,var(--public-surface-strong),var(--public-surface),var(--public-teal-surface))] p-6 sm:p-7">
+              <div className="relative overflow-hidden rounded-[28px] border border-[color:var(--public-border-strong)] bg-[linear-gradient(140deg,var(--public-surface-strong),var(--public-surface),var(--public-teal-surface))] p-6 shadow-[0_18px_52px_rgba(2,2,2,0.42)] sm:p-7">
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-teal)]">
                   O que muda com a G-Force
                 </p>
@@ -224,7 +227,7 @@ export const PublicLandingPage = () => {
                               <div className="mt-6 space-y-4">
                 {serviceHighlights.map((item) => (
                   <div key={item.title} className="flex items-start gap-3">
-                    <div className="mt-1 rounded-full bg-[color:var(--public-teal-surface)] p-1.5 text-[color:var(--public-teal)]">
+                    <div className="mt-1 rounded-full bg-[linear-gradient(140deg,var(--public-teal-surface),var(--public-accent-surface))] p-1.5 text-[color:var(--public-teal)]">
                       <Check className="h-4 w-4" />
                     </div>
                     <div>
@@ -242,7 +245,10 @@ export const PublicLandingPage = () => {
               </div>
       </section>
 
-      <section id="plataforma" className="bg-[color:var(--public-bg-alt)] px-5 py-12 sm:px-6 lg:px-8">
+      <section
+        id="plataforma"
+        className="border-y border-[color:var(--public-border)] bg-[linear-gradient(180deg,var(--public-bg-alt),var(--public-bg)_60%)] px-5 py-12 sm:px-6 lg:px-8"
+      >
         <div className="mx-auto max-w-7xl space-y-12">
           <div className="mx-auto max-w-3xl space-y-4 text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-teal)]">
@@ -263,8 +269,8 @@ export const PublicLandingPage = () => {
                 key={item.title}
                 className={`rounded-[28px] border p-6 sm:p-7 ${
                   index % 2 === 0
-                    ? "border-[color:var(--public-border-strong)] bg-[color:var(--public-accent-surface)]"
-                    : "border-[color:var(--public-border)] bg-[color:var(--public-teal-surface)]"
+                    ? "border-[color:var(--public-border-strong)] bg-[linear-gradient(160deg,var(--public-accent-surface),var(--public-surface-soft))]"
+                    : "border-[color:var(--public-border)] bg-[linear-gradient(160deg,var(--public-teal-surface),var(--public-surface))]"
                 }`}
               >
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--public-text-muted)]">
@@ -313,9 +319,9 @@ export const PublicLandingPage = () => {
         </div>
       </section>
 
-      <section className="px-5 py-20 sm:px-6 lg:px-8">
+      <section className="bg-[linear-gradient(180deg,var(--public-bg),var(--public-bg-alt)_55%,var(--public-bg))] px-5 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-[32px] border border-[color:var(--public-border-strong)] bg-[color:var(--public-accent-surface)] p-6 sm:p-8">
+          <div className="rounded-[32px] border border-[color:var(--public-border-strong)] bg-[linear-gradient(160deg,var(--public-accent-surface),var(--public-surface-strong)_62%)] p-6 shadow-[0_18px_50px_rgba(2,2,2,0.4)] sm:p-8">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-accent)]">
               Planos
             </p>
@@ -336,7 +342,7 @@ export const PublicLandingPage = () => {
             </button>
           </div>
 
-          <div className="rounded-[32px] border border-[color:var(--public-border)] bg-[color:var(--public-surface)] p-6 sm:p-8">
+          <div className="rounded-[32px] border border-[color:var(--public-border)] bg-[linear-gradient(160deg,var(--public-surface),var(--public-surface-soft))] p-6 sm:p-8">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-teal)]">
               Acesso rápido
             </p>
@@ -358,7 +364,7 @@ export const PublicLandingPage = () => {
         </div>
       </section>
 
-      <section id="quem-somos" className="bg-[color:var(--public-bg-alt)] px-5 py-20 sm:px-6 lg:px-8">
+      <section id="quem-somos" className="border-y border-[color:var(--public-border)] bg-[linear-gradient(180deg,var(--public-bg-alt),var(--public-bg)_72%)] px-5 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="space-y-4">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-accent)]">
@@ -378,7 +384,7 @@ export const PublicLandingPage = () => {
             {whoWeArePillars.map((item) => (
               <div
                 key={item}
-                className="rounded-[24px] border border-[color:var(--public-border)] bg-[color:var(--public-surface)] p-5"
+                className="rounded-[24px] border border-[color:var(--public-border)] bg-[linear-gradient(160deg,var(--public-surface-strong),var(--public-surface))] p-5 shadow-[0_14px_34px_rgba(2,2,2,0.34)]"
               >
                 <Dumbbell className="h-6 w-6 text-[color:var(--public-teal)]" />
                 <p className="mt-4 text-sm font-medium leading-7 text-[color:var(--public-text-soft)]">{item}</p>
@@ -388,7 +394,7 @@ export const PublicLandingPage = () => {
         </div>
       </section>
 
-      <section id="experiencia" className="px-5 py-20 sm:px-6 lg:px-8">
+      <section id="experiencia" className="bg-[linear-gradient(180deg,var(--public-bg),var(--public-bg-alt)_48%,var(--public-bg))] px-5 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl space-y-10">
           <div className="mx-auto max-w-[48rem] space-y-4 text-center">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--public-teal)]">
@@ -400,10 +406,14 @@ export const PublicLandingPage = () => {
           </div>
 
           <div className="grid gap-5 lg:grid-cols-3">
-            {experienceValues.map((item) => (
+            {experienceValues.map((item, index) => (
               <div
                 key={item.title}
-                className="rounded-[28px] border border-[color:var(--public-border)] bg-[linear-gradient(160deg,var(--public-surface-strong),var(--public-surface))] p-6 sm:p-7"
+                className={`rounded-[28px] border bg-[linear-gradient(160deg,var(--public-surface-strong),var(--public-surface))] p-6 shadow-[0_14px_40px_rgba(2,2,2,0.34)] sm:p-7 ${
+                  index === 1
+                    ? "border-[color:var(--public-border-strong)]"
+                    : "border-[color:var(--public-border)]"
+                }`}
               >
                 <p className="text-[1.22rem] font-semibold leading-7 text-[color:var(--public-text)]">{item.title}</p>
                 <p className="mt-4 text-sm leading-7 text-[color:var(--public-text-soft)]">
@@ -415,7 +425,7 @@ export const PublicLandingPage = () => {
         </div>
       </section>
 
-      <section className="bg-[color:var(--public-bg-alt)] px-5 py-20 sm:px-6 lg:px-8">
+      <section className="border-y border-[color:var(--public-border)] bg-[linear-gradient(180deg,var(--public-bg-alt),var(--public-bg)_65%)] px-5 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-center xl:gap-12">
           <div className="space-y-4 lg:max-w-[36rem]">
             <p className="inline-flex max-w-full flex-wrap items-center gap-5 rounded-full border border-[color:var(--public-border)] bg-[color:var(--public-surface)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[color:var(--public-text-soft)] sm:tracking-[0.18em]">
@@ -458,11 +468,11 @@ export const PublicLandingPage = () => {
       </section>
 
       <section className="px-5 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-5xl rounded-[36px] border border-[color:var(--public-border)] bg-[linear-gradient(135deg,var(--public-accent-surface),var(--public-surface-strong)_40%,var(--public-teal-surface))] px-6 py-10 text-center sm:px-10">
+        <div className="mx-auto max-w-5xl rounded-[36px] border border-[color:var(--public-border-strong)] bg-[linear-gradient(135deg,var(--public-accent-surface),var(--public-surface-strong)_42%,var(--public-teal-surface))] px-6 py-10 text-center shadow-[0_22px_54px_rgba(2,2,2,0.46)] sm:px-10">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[color:var(--public-accent)]">
             Próximo passo
           </p>
-          <h2 className="mt-4 text-3xl tracking[-0.01em] font-semibold text-[color:var(--public-text)] sm:text-5xl lg:text-[3rem]">
+          <h2 className="mt-4 text-3xl font-semibold tracking-[-0.01em] text-[color:var(--public-text)] sm:text-5xl lg:text-[3rem]">
             Se você quer tratar treino e dieta com mais clareza, o ponto de partida é organizar a experiência.
           </h2>
           <p className="mx-auto mt-5 max-w-3xl text-base leading-8 text-[color:var(--public-text-soft)]">

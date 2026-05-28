@@ -159,12 +159,12 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
 
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-zinc-200 mb-1">
+          <label className="block text-sm font-medium text-[color:var(--student-text-soft)] mb-1">
             Data do Registro
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Calendar className="h-5 w-5 text-zinc-500" />
+              <Calendar className="h-5 w-5 text-[color:var(--student-text-muted)]" />
             </div>
             <input
               type="datetime-local"
@@ -172,10 +172,10 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
               onChange={(e) =>
                 setFormData({ ...formData, dataRegistro: e.target.value })
               }
-              className="w-full pl-10 pr-3 py-2 bg-zinc-900 text-white border border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-300 focus:border-transparent"
+              className="w-full pl-10 pr-3 py-2 bg-[color:var(--student-surface)] text-[color:var(--student-text)] border border-[color:var(--student-border)] rounded-lg focus:ring-2 focus:ring-[color:var(--student-border-strong)] focus:border-transparent"
             />
           </div>
-          <p className="text-xs text-zinc-400 mt-1">
+          <p className="text-xs text-[color:var(--student-text-muted)] mt-1">
             Deixe em branco para usar a data/hora atual
           </p>
         </div>
@@ -236,8 +236,8 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
           />
         </div>
 
-        <div className="mt-2 p-3 rounded-lg border border-blue-500/30 bg-blue-950/40">
-          <p className="text-sm font-medium text-white">
+        <div className="mt-2 p-3 rounded-lg border border-[color:var(--student-border-strong)] bg-[color:var(--student-info-surface)]">
+          <p className="text-sm font-medium text-[color:var(--student-text)]">
             Cálculo automático de composição corporal (Navy)
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2">
@@ -248,18 +248,18 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
                 setSexoCalculo(e.target.value as SexoBiologico | "")
               }
             >
-              <option value="" className="bg-zinc-900 text-white">
+              <option value="" className="bg-[color:var(--student-surface)] text-[color:var(--student-text)]">
                 Selecione
               </option>
-              <option value="MASCULINO" className="bg-zinc-900 text-white">
+              <option value="MASCULINO" className="bg-[color:var(--student-surface)] text-[color:var(--student-text)]">
                 Masculino
               </option>
-              <option value="FEMININO" className="bg-zinc-900 text-white">
+              <option value="FEMININO" className="bg-[color:var(--student-surface)] text-[color:var(--student-text)]">
                 Feminino
               </option>
             </Select>
             <div className="flex items-end">
-              <label className="flex items-center gap-2 text-sm text-zinc-200">
+              <label className="flex items-center gap-2 text-sm text-[color:var(--student-text-soft)]">
                 <input
                   type="checkbox"
                   checked={autoCalcularComposicao}
@@ -268,14 +268,14 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
                 Preencher automaticamente
               </label>
             </div>
-            <div className="text-xs text-zinc-100 flex items-end">
+            <div className="text-xs text-[color:var(--student-text)] flex items-end">
               Preencha altura, cintura e pescoço. Para mulheres, inclua quadril.
             </div>
           </div>
         </div>
 
         <div className="border-t pt-4">
-          <h3 className="text-sm font-medium text-zinc-200 mb-3">
+          <h3 className="text-sm font-medium text-[color:var(--student-text-soft)] mb-3">
             Medidas de Membros
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -323,7 +323,7 @@ export const HistoricoForm: React.FC<HistoricoFormProps> = ({
         </div>
 
         <div className="border-t pt-4">
-          <h3 className="text-sm font-medium text-zinc-200 mb-3">
+          <h3 className="text-sm font-medium text-[color:var(--student-text-soft)] mb-3">
             Composição Corporal
           </h3>
           <div className="grid grid-cols-2 gap-4">

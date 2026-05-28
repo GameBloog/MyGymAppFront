@@ -13,10 +13,14 @@ export const Badge: React.FC<BadgeProps> = ({
   variant = "default",
 }) => {
   const variants: Record<BadgeVariant, string> = {
-    default: "bg-blue-950/50 text-white border border-blue-500/30",
-    success: "bg-emerald-950/50 text-white border border-emerald-500/30",
-    warning: "bg-amber-950/50 text-white border border-amber-500/30",
-    danger: "bg-red-950/50 text-white border border-red-500/30",
+    default:
+      "bg-[color:var(--student-info-surface)] text-[color:var(--student-text)] border border-[color:var(--student-border-strong)]",
+    success:
+      "bg-[color:var(--student-success-surface)] text-[color:var(--student-success)] border border-[color:rgba(125,224,211,0.45)]",
+    warning:
+      "bg-[color:var(--student-warning-surface)] text-[color:var(--student-warning)] border border-[color:rgba(241,211,139,0.45)]",
+    danger:
+      "bg-[color:var(--student-danger-surface)] text-[color:var(--student-danger)] border border-[color:rgba(239,68,68,0.45)]",
   }
 
   return (

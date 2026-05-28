@@ -131,19 +131,19 @@ export const FotosArquivosPage: React.FC = () => {
   if (loadingAluno) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
-        <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
-        <p className="text-zinc-300">Carregando...</p>
+        <Loader2 className="h-12 w-12 animate-spin text-[color:var(--student-info)]" />
+        <p className="text-[color:var(--student-text-soft)]">Carregando...</p>
       </div>
     )
   }
 
   if (!aluno) {
     return (
-      <Card className="bg-red-950/40 border-2 border-red-500/30">
+      <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:rgba(239,68,68,0.45)]">
         <div className="flex items-start gap-3">
-          <AlertCircle className="h-6 w-6 text-red-300 flex-shrink-0 mt-1" />
+          <AlertCircle className="h-6 w-6 text-[color:var(--student-danger)] flex-shrink-0 mt-1" />
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-white mb-2">
+            <h3 className="text-lg font-semibold text-[color:var(--student-text)] mb-2">
               Aluno não encontrado
             </h3>
             <Button
@@ -164,22 +164,22 @@ export const FotosArquivosPage: React.FC = () => {
         <div className="flex items-center gap-4 mb-6">
           <button
             onClick={() => navigate(getBackRoute())}
-            className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
+            className="p-2 hover:bg-[color:var(--student-surface-soft)] rounded-lg transition-colors"
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
-          <h1 className="text-3xl font-bold text-white">
+          <h1 className="text-3xl font-bold text-[color:var(--student-text)]">
             Erro ao carregar dados
           </h1>
         </div>
-        <Card className="bg-red-950/40 border-2 border-red-500/30">
+        <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:rgba(239,68,68,0.45)]">
           <div className="flex items-start gap-3">
-            <AlertCircle className="h-6 w-6 text-red-300 flex-shrink-0 mt-1" />
+            <AlertCircle className="h-6 w-6 text-[color:var(--student-danger)] flex-shrink-0 mt-1" />
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-white mb-2">
+              <h3 className="text-lg font-semibold text-[color:var(--student-text)] mb-2">
                 Erro ao carregar
               </h3>
-              <p className="text-zinc-100">
+              <p className="text-[color:var(--student-text)]">
                 {fotoHook.error || arquivoHook.error}
               </p>
               <div className="mt-4">
@@ -208,17 +208,17 @@ export const FotosArquivosPage: React.FC = () => {
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate(getBackRoute())}
-            className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
+            className="p-2 hover:bg-[color:var(--student-surface-soft)] rounded-lg transition-colors"
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div>
-            <h1 className="text-3xl font-bold text-white">
+            <h1 className="text-3xl font-bold text-[color:var(--student-text)]">
               {isAluno
                 ? "Minhas Fotos e Arquivos"
                 : `Fotos e Arquivos - ${aluno.user?.nome}`}
             </h1>
-            <p className="text-zinc-300 mt-1">
+            <p className="text-[color:var(--student-text-soft)] mt-1">
               {fotoHook.fotos.length} foto(s) • {arquivoHook.treinos.length}{" "}
               treino(s) • {arquivoHook.dietas.length} dieta(s)
             </p>
@@ -244,14 +244,14 @@ export const FotosArquivosPage: React.FC = () => {
 
           {fotoHook.loading && fotoHook.fotos.length === 0 ? (
             <div className="text-center py-8">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto" />
+              <Loader2 className="h-8 w-8 animate-spin text-[color:var(--student-info)] mx-auto" />
             </div>
           ) : fotoHook.fotos.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {fotoHook.fotos.map((foto) => (
                 <div
                   key={foto.id}
-                  className="relative group rounded-lg overflow-hidden border-2 border-zinc-700 hover:border-blue-500 transition-colors"
+                  className="relative group rounded-lg overflow-hidden border-2 border-[color:var(--student-border)] hover:border-[color:var(--student-border-strong)] transition-colors"
                 >
                   <img
                     src={foto.url}
@@ -261,20 +261,20 @@ export const FotosArquivosPage: React.FC = () => {
                   <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all flex items-center justify-center">
                     <button
                       onClick={() => handleDeleteFoto(foto.id)}
-                      className="opacity-0 group-hover:opacity-100 p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
+                      className="opacity-0 group-hover:opacity-100 p-2 bg-[color:var(--student-danger-surface)] text-[color:var(--student-text)] rounded-lg hover:bg-[color:rgba(239,68,68,0.28)] transition-all"
                       title="Excluir"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
-                  <div className="p-2 bg-zinc-900">
-                    <p className="text-xs text-zinc-300">
+                  <div className="p-2 bg-[color:var(--student-surface)]">
+                    <p className="text-xs text-[color:var(--student-text-soft)]">
                       {format(new Date(foto.createdAt), "dd/MM/yyyy HH:mm", {
                         locale: ptBR,
                       })}
                     </p>
                     {foto.descricao && (
-                      <p className="text-sm text-white mt-1">
+                      <p className="text-sm text-[color:var(--student-text)] mt-1">
                         {foto.descricao}
                       </p>
                     )}
@@ -283,12 +283,12 @@ export const FotosArquivosPage: React.FC = () => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 bg-zinc-900 rounded-lg border-2 border-dashed border-zinc-700">
-              <ImageIcon className="h-12 w-12 text-zinc-500 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-white mb-2">
+            <div className="text-center py-12 bg-[color:var(--student-surface)] rounded-lg border-2 border-dashed border-[color:var(--student-border)]">
+              <ImageIcon className="h-12 w-12 text-[color:var(--student-text-muted)] mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-[color:var(--student-text)] mb-2">
                 Nenhuma foto enviada ainda
               </h3>
-              <p className="text-zinc-300 mb-4">
+              <p className="text-[color:var(--student-text-soft)] mb-4">
                 Envie fotos para acompanhar sua evolução física
               </p>
               <Button icon={Plus} onClick={() => setShowModalFoto(true)}>
@@ -310,14 +310,14 @@ export const FotosArquivosPage: React.FC = () => {
 
           {fotoHook.loading && fotoHook.fotos.length === 0 ? (
             <div className="text-center py-8">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto" />
+              <Loader2 className="h-8 w-8 animate-spin text-[color:var(--student-info)] mx-auto" />
             </div>
           ) : fotoHook.fotos.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {fotoHook.fotos.map((foto) => (
                 <div
                   key={foto.id}
-                  className="relative group rounded-lg overflow-hidden border-2 border-zinc-700 hover:border-blue-500 transition-colors"
+                  className="relative group rounded-lg overflow-hidden border-2 border-[color:var(--student-border)] hover:border-[color:var(--student-border-strong)] transition-colors"
                 >
                   <img
                     src={foto.url}
@@ -328,21 +328,21 @@ export const FotosArquivosPage: React.FC = () => {
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all flex items-center justify-center">
                       <button
                         onClick={() => handleDeleteFoto(foto.id)}
-                        className="opacity-0 group-hover:opacity-100 p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
+                        className="opacity-0 group-hover:opacity-100 p-2 bg-[color:var(--student-danger-surface)] text-[color:var(--student-text)] rounded-lg hover:bg-[color:rgba(239,68,68,0.28)] transition-all"
                         title="Excluir"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
                   )}
-                  <div className="p-2 bg-zinc-900">
-                    <p className="text-xs text-zinc-300">
+                  <div className="p-2 bg-[color:var(--student-surface)]">
+                    <p className="text-xs text-[color:var(--student-text-soft)]">
                       {format(new Date(foto.createdAt), "dd/MM/yyyy HH:mm", {
                         locale: ptBR,
                       })}
                     </p>
                     {foto.descricao && (
-                      <p className="text-sm text-white mt-1">
+                      <p className="text-sm text-[color:var(--student-text)] mt-1">
                         {foto.descricao}
                       </p>
                     )}
@@ -351,12 +351,12 @@ export const FotosArquivosPage: React.FC = () => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 bg-zinc-900 rounded-lg border-2 border-dashed border-zinc-700">
-              <ImageIcon className="h-12 w-12 text-zinc-500 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-white mb-2">
+            <div className="text-center py-12 bg-[color:var(--student-surface)] rounded-lg border-2 border-dashed border-[color:var(--student-border)]">
+              <ImageIcon className="h-12 w-12 text-[color:var(--student-text-muted)] mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-[color:var(--student-text)] mb-2">
                 Nenhuma foto disponível
               </h3>
-              <p className="text-zinc-300">O aluno ainda não enviou fotos</p>
+              <p className="text-[color:var(--student-text-soft)]">O aluno ainda não enviou fotos</p>
             </div>
           )}
         </Card>
@@ -384,18 +384,18 @@ export const FotosArquivosPage: React.FC = () => {
             {arquivoHook.treinos.map((arquivo) => (
               <div
                 key={arquivo.id}
-                className="flex items-start justify-between p-4 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-colors"
+                className="flex items-start justify-between p-4 bg-[color:var(--student-surface)] rounded-lg hover:bg-[color:var(--student-surface-soft)] transition-colors"
               >
                 <div className="flex-1">
-                  <h3 className="font-semibold text-white">
+                  <h3 className="font-semibold text-[color:var(--student-text)]">
                     {arquivo.titulo}
                   </h3>
                   {arquivo.descricao && (
-                    <p className="text-sm text-zinc-300 mt-1">
+                    <p className="text-sm text-[color:var(--student-text-soft)] mt-1">
                       {arquivo.descricao}
                     </p>
                   )}
-                  <p className="text-xs text-zinc-400 mt-2">
+                  <p className="text-xs text-[color:var(--student-text-muted)] mt-2">
                     {format(new Date(arquivo.createdAt), "dd/MM/yyyy HH:mm", {
                       locale: ptBR,
                     })}
@@ -406,18 +406,18 @@ export const FotosArquivosPage: React.FC = () => {
                     href={arquivo.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 hover:bg-blue-950/30 rounded-lg transition-colors"
+                    className="p-2 hover:bg-[color:var(--student-info-surface)] rounded-lg transition-colors"
                     title="Abrir PDF"
                   >
-                    <Download className="h-4 w-4 text-blue-300" />
+                    <Download className="h-4 w-4 text-[color:var(--student-info)]" />
                   </a>
                   {podeDeletarArquivo && (
                     <button
                       onClick={() => handleDeleteArquivo(arquivo.id)}
-                      className="p-2 hover:bg-red-950/30 rounded-lg transition-colors"
+                      className="p-2 hover:bg-[color:var(--student-danger-surface)] rounded-lg transition-colors"
                       title="Excluir"
                     >
-                      <Trash2 className="h-4 w-4 text-red-300" />
+                      <Trash2 className="h-4 w-4 text-[color:var(--student-danger)]" />
                     </button>
                   )}
                 </div>
@@ -425,12 +425,12 @@ export const FotosArquivosPage: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 bg-zinc-900 rounded-lg border-2 border-dashed border-zinc-700">
-            <Dumbbell className="h-12 w-12 text-zinc-500 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-white mb-2">
+          <div className="text-center py-12 bg-[color:var(--student-surface)] rounded-lg border-2 border-dashed border-[color:var(--student-border)]">
+            <Dumbbell className="h-12 w-12 text-[color:var(--student-text-muted)] mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-[color:var(--student-text)] mb-2">
               Nenhum treino disponível
             </h3>
-            <p className="text-zinc-300 mb-4">
+            <p className="text-[color:var(--student-text-soft)] mb-4">
               {podeEnviarArquivo
                 ? "Envie o plano de treino para o aluno"
                 : "Seu professor ainda não enviou nenhum treino"}
@@ -466,18 +466,18 @@ export const FotosArquivosPage: React.FC = () => {
             {arquivoHook.dietas.map((arquivo) => (
               <div
                 key={arquivo.id}
-                className="flex items-start justify-between p-4 bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-colors"
+                className="flex items-start justify-between p-4 bg-[color:var(--student-surface)] rounded-lg hover:bg-[color:var(--student-surface-soft)] transition-colors"
               >
                 <div className="flex-1">
-                  <h3 className="font-semibold text-white">
+                  <h3 className="font-semibold text-[color:var(--student-text)]">
                     {arquivo.titulo}
                   </h3>
                   {arquivo.descricao && (
-                    <p className="text-sm text-zinc-300 mt-1">
+                    <p className="text-sm text-[color:var(--student-text-soft)] mt-1">
                       {arquivo.descricao}
                     </p>
                   )}
-                  <p className="text-xs text-zinc-400 mt-2">
+                  <p className="text-xs text-[color:var(--student-text-muted)] mt-2">
                     {format(new Date(arquivo.createdAt), "dd/MM/yyyy HH:mm", {
                       locale: ptBR,
                     })}
@@ -488,18 +488,18 @@ export const FotosArquivosPage: React.FC = () => {
                     href={arquivo.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 hover:bg-blue-950/30 rounded-lg transition-colors"
+                    className="p-2 hover:bg-[color:var(--student-info-surface)] rounded-lg transition-colors"
                     title="Abrir PDF"
                   >
-                    <Download className="h-4 w-4 text-blue-300" />
+                    <Download className="h-4 w-4 text-[color:var(--student-info)]" />
                   </a>
                   {podeDeletarArquivo && (
                     <button
                       onClick={() => handleDeleteArquivo(arquivo.id)}
-                      className="p-2 hover:bg-red-950/30 rounded-lg transition-colors"
+                      className="p-2 hover:bg-[color:var(--student-danger-surface)] rounded-lg transition-colors"
                       title="Excluir"
                     >
-                      <Trash2 className="h-4 w-4 text-red-300" />
+                      <Trash2 className="h-4 w-4 text-[color:var(--student-danger)]" />
                     </button>
                   )}
                 </div>
@@ -507,12 +507,12 @@ export const FotosArquivosPage: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 bg-zinc-900 rounded-lg border-2 border-dashed border-zinc-700">
-            <Utensils className="h-12 w-12 text-zinc-500 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-white mb-2">
+          <div className="text-center py-12 bg-[color:var(--student-surface)] rounded-lg border-2 border-dashed border-[color:var(--student-border)]">
+            <Utensils className="h-12 w-12 text-[color:var(--student-text-muted)] mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-[color:var(--student-text)] mb-2">
               Nenhuma dieta disponível
             </h3>
-            <p className="text-zinc-300 mb-4">
+            <p className="text-[color:var(--student-text-soft)] mb-4">
               {podeEnviarArquivo
                 ? "Envie o plano de dieta para o aluno"
                 : "Seu professor ainda não enviou nenhuma dieta"}

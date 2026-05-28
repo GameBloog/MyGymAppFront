@@ -86,19 +86,19 @@ export const EvolucaoPage: React.FC = () => {
   if (loadingAluno || loadingHistorico) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
-        <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
-        <p className="text-zinc-300">Carregando...</p>
+        <Loader2 className="h-12 w-12 animate-spin text-[color:var(--student-info)]" />
+        <p className="text-[color:var(--student-text-soft)]">Carregando...</p>
       </div>
     )
   }
 
   if (!aluno) {
     return (
-      <Card className="bg-red-950/40 border-2 border-red-500/30">
+      <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:rgba(239,68,68,0.45)]">
         <div className="flex items-start gap-3">
-          <AlertCircle className="h-6 w-6 text-red-300 flex-shrink-0 mt-1" />
+          <AlertCircle className="h-6 w-6 text-[color:var(--student-danger)] flex-shrink-0 mt-1" />
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-white mb-2">
+            <h3 className="text-lg font-semibold text-[color:var(--student-text)] mb-2">
               Aluno não encontrado
             </h3>
             <Button
@@ -119,16 +119,16 @@ export const EvolucaoPage: React.FC = () => {
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate(getBackRoute())}
-            className="p-2 hover:bg-zinc-800 rounded-lg transition-colors"
+            className="p-2 hover:bg-[color:var(--student-surface-soft)] rounded-lg transition-colors"
             title="Voltar"
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div>
-            <h1 className="text-3xl font-bold text-white">
+            <h1 className="text-3xl font-bold text-[color:var(--student-text)]">
               Evolução - {aluno.user?.nome || "Aluno"}
             </h1>
-            <p className="text-zinc-300 mt-1">
+            <p className="text-[color:var(--student-text-soft)] mt-1">
               {historico?.length || 0}{" "}
               {historico?.length === 1 ? "registro" : "registros"}
             </p>
@@ -159,7 +159,7 @@ export const EvolucaoPage: React.FC = () => {
       )}
 
       <Card className="mb-6">
-        <label className="block text-sm font-medium text-zinc-200 mb-3">
+        <label className="block text-sm font-medium text-[color:var(--student-text-soft)] mb-3">
           Selecione a métrica para visualizar:
         </label>
         <select
@@ -167,7 +167,7 @@ export const EvolucaoPage: React.FC = () => {
           onChange={(e) =>
             setMetricaSelecionada(e.target.value as MetricaEvolucao)
           }
-          className="w-full md:w-auto px-4 py-2 bg-zinc-900 text-white border border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-300 focus:border-transparent"
+          className="w-full md:w-auto px-4 py-2 bg-[color:var(--student-surface)] text-[color:var(--student-text)] border border-[color:var(--student-border)] rounded-lg focus:ring-2 focus:ring-[color:var(--student-border-strong)] focus:border-transparent"
         >
           <option value="pesoKg">Peso (kg)</option>
           <option value="cinturaCm">Cintura (cm)</option>
@@ -187,33 +187,33 @@ export const EvolucaoPage: React.FC = () => {
       </div>
 
       <Card>
-        <h2 className="text-xl font-semibold text-white mb-4">Histórico Completo</h2>
+        <h2 className="text-xl font-semibold text-[color:var(--student-text)] mb-4">Histórico Completo</h2>
 
         {historico && historico.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-zinc-800">
+              <thead className="bg-[color:var(--student-surface-soft)]">
                 <tr>
-                  <th className="p-3 text-left text-sm font-medium text-zinc-200">
+                  <th className="p-3 text-left text-sm font-medium text-[color:var(--student-text-soft)]">
                     Data
                   </th>
-                  <th className="p-3 text-center text-sm font-medium text-zinc-200">
+                  <th className="p-3 text-center text-sm font-medium text-[color:var(--student-text-soft)]">
                     Peso
                   </th>
-                  <th className="p-3 text-center text-sm font-medium text-zinc-200">
+                  <th className="p-3 text-center text-sm font-medium text-[color:var(--student-text-soft)]">
                     Altura
                   </th>
-                  <th className="p-3 text-center text-sm font-medium text-zinc-200">
+                  <th className="p-3 text-center text-sm font-medium text-[color:var(--student-text-soft)]">
                     Cintura
                   </th>
-                  <th className="p-3 text-center text-sm font-medium text-zinc-200">
+                  <th className="p-3 text-center text-sm font-medium text-[color:var(--student-text-soft)]">
                     % Gordura
                   </th>
-                  <th className="p-3 text-left text-sm font-medium text-zinc-200">
+                  <th className="p-3 text-left text-sm font-medium text-[color:var(--student-text-soft)]">
                     Observações
                   </th>
                   {podeEditar && (
-                    <th className="p-3 text-center text-sm font-medium text-zinc-200">
+                    <th className="p-3 text-center text-sm font-medium text-[color:var(--student-text-soft)]">
                       Ações
                     </th>
                   )}
@@ -221,7 +221,7 @@ export const EvolucaoPage: React.FC = () => {
               </thead>
               <tbody>
                 {historico.map((item) => (
-                  <tr key={item.id} className="border-b hover:bg-zinc-900">
+                  <tr key={item.id} className="border-b hover:bg-[color:var(--student-surface)]">
                     <td className="p-3 text-sm">
                       {format(new Date(item.dataRegistro), "dd/MM/yyyy HH:mm", {
                         locale: ptBR,
@@ -231,21 +231,21 @@ export const EvolucaoPage: React.FC = () => {
                       {item.pesoKg ? (
                         <Badge variant="success">{item.pesoKg} kg</Badge>
                       ) : (
-                        <span className="text-zinc-500">-</span>
+                        <span className="text-[color:var(--student-text-muted)]">-</span>
                       )}
                     </td>
                     <td className="p-3 text-center text-sm">
                       {item.alturaCm ? (
                         <Badge>{item.alturaCm} cm</Badge>
                       ) : (
-                        <span className="text-zinc-500">-</span>
+                        <span className="text-[color:var(--student-text-muted)]">-</span>
                       )}
                     </td>
                     <td className="p-3 text-center text-sm">
                       {item.cinturaCm ? (
                         <Badge variant="warning">{item.cinturaCm} cm</Badge>
                       ) : (
-                        <span className="text-zinc-500">-</span>
+                        <span className="text-[color:var(--student-text-muted)]">-</span>
                       )}
                     </td>
                     <td className="p-3 text-center text-sm">
@@ -254,10 +254,10 @@ export const EvolucaoPage: React.FC = () => {
                           {item.percentualGordura}%
                         </Badge>
                       ) : (
-                        <span className="text-zinc-500">-</span>
+                        <span className="text-[color:var(--student-text-muted)]">-</span>
                       )}
                     </td>
-                    <td className="p-3 text-sm text-zinc-300">
+                    <td className="p-3 text-sm text-[color:var(--student-text-soft)]">
                       {item.observacoes || "-"}
                     </td>
                     {podeEditar && (
@@ -265,10 +265,10 @@ export const EvolucaoPage: React.FC = () => {
                         <button
                           onClick={() => handleDelete(item.id)}
                           disabled={deleteHistorico.isLoading}
-                          className="p-2 hover:bg-red-950/30 rounded-lg transition-colors disabled:opacity-50"
+                          className="p-2 hover:bg-[color:var(--student-danger-surface)] rounded-lg transition-colors disabled:opacity-50"
                           title="Excluir"
                         >
-                          <Trash2 className="h-4 w-4 text-red-300" />
+                          <Trash2 className="h-4 w-4 text-[color:var(--student-danger)]" />
                         </button>
                       </td>
                     )}
@@ -279,11 +279,11 @@ export const EvolucaoPage: React.FC = () => {
           </div>
         ) : (
           <div className="text-center py-12">
-            <TrendingUp className="h-12 w-12 text-zinc-500 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-white mb-2">
+            <TrendingUp className="h-12 w-12 text-[color:var(--student-text-muted)] mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-[color:var(--student-text)] mb-2">
               Nenhum registro de evolução
             </h3>
-            <p className="text-zinc-400 mb-6">
+            <p className="text-[color:var(--student-text-muted)] mb-6">
               {podeEditar
                 ? "Adicione o primeiro registro para começar o acompanhamento"
                 : "Ainda não há registros de evolução disponíveis"}
