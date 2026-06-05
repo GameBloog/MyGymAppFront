@@ -1,29 +1,23 @@
-import React, { useEffect, useMemo } from "react"
+import React, { useMemo } from "react"
 import { useNavigate } from "react-router-dom"
 import {
   CalendarDays,
-  Camera,
   ClipboardList,
   Dumbbell,
   ExternalLink,
-  FileText,
   Flame,
   Loader2,
   MessageSquareText,
   PlayCircle,
   Target,
-  TrendingUp,
-  User,
   UtensilsCrossed,
   Youtube,
 } from "lucide-react"
 import { format, addDays, endOfWeek, isWithinInterval, set, startOfDay, startOfWeek, subDays, subWeeks } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { Badge, Button, Card } from "../../components/ui"
-import { useAuth } from "../../hooks/useAuth"
 import { useMyAluno } from "../../hooks/useMyAluno"
 import { useHistorico } from "../../hooks/useHistorico"
-import { useArquivoAluno } from "../../hooks/useArquivoAluno"
 import { usePlanoDietaAtivo, useDietaCheckins } from "../../hooks/useDieta"
 import { usePlanoTreinoAtivo, useTreinoCheckins, useTreinoTimeline } from "../../hooks/useTreino"
 import { useLatestYoutubeContent } from "../../hooks/useYoutubeContent"
@@ -96,7 +90,6 @@ const treinoTimelineLabel = (
 
 export const AlunoDashboardPage: React.FC = () => {
   const navigate = useNavigate()
-  const { token } = useAuth()
   const { data: aluno, isLoading: loadingAluno } = useMyAluno()
   const { data: youtubeContent, isLoading: loadingYoutubeContent } = useLatestYoutubeContent()
   const alunoId = aluno?.id || ""
@@ -133,14 +126,6 @@ export const AlunoDashboardPage: React.FC = () => {
     { limite: 30 },
     { enabled: !!alunoId },
   )
-
-  const arquivoHook = useArquivoAluno(token || "")
-  useEffect(() => {
-    if (alunoId && token) {
-      arquivoHook.fetchArquivos(alunoId)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [alunoId, token])
 
   const treinoNaoEncontrado =
     treinoError?.message?.toLowerCase().includes("não encontrado") ||
@@ -296,18 +281,6 @@ export const AlunoDashboardPage: React.FC = () => {
     candidates.sort((a, b) => a.dataHora.getTime() - b.dataHora.getTime())
     return candidates[0]
   }, [planoDieta])
-
-  const ultimaDietaPdf = useMemo(() => {
-    return [...arquivoHook.dietas].sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    )[0]
-  }, [arquivoHook.dietas])
-
-  const ultimoTreinoPdf = useMemo(() => {
-    return [...arquivoHook.treinos].sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    )[0]
-  }, [arquivoHook.treinos])
 
   const inicioSemana = startOfWeek(new Date(), { weekStartsOn: 1 })
   const fimSemana = endOfWeek(new Date(), { weekStartsOn: 1 })
@@ -635,22 +608,6 @@ export const AlunoDashboardPage: React.FC = () => {
               <p className="text-sm text-[color:var(--student-text-soft)]">
                 Nenhum plano de treino dinâmico ativo no momento.
               </p>
-              {ultimoTreinoPdf ? (
-                <a
-                  href={ultimoTreinoPdf.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex w-full sm:inline-flex sm:w-auto"
-                >
-                  <Button icon={FileText} className={mobileDashboardButtonClass}>
-                    Abrir último treino em PDF
-                  </Button>
-                </a>
-              ) : (
-                <p className="text-sm text-[color:var(--student-text-muted)]">
-                  Também não há PDF de treino disponível.
-                </p>
-              )}
             </div>
           )}
 
@@ -822,22 +779,6 @@ export const AlunoDashboardPage: React.FC = () => {
               <p className="text-sm text-[color:var(--student-text-soft)]">
                 Nenhum plano de dieta dinâmico ativo no momento.
               </p>
-              {ultimaDietaPdf ? (
-                <a
-                  href={ultimaDietaPdf.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex w-full sm:inline-flex sm:w-auto"
-                >
-                  <Button icon={FileText} className={mobileDashboardButtonClass}>
-                    Abrir última dieta em PDF
-                  </Button>
-                </a>
-              ) : (
-                <p className="text-sm text-[color:var(--student-text-muted)]">
-                  Também não há PDF de dieta disponível.
-                </p>
-              )}
             </div>
           )}
         </Card>

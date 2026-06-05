@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import {
   ArrowLeft,
@@ -45,6 +45,7 @@ import type { TreinoModelo } from "../../modules/treino-modelos/types"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { ExercicioMediaModal } from "../../modules/exercise-media/components/ExercicioMediaModal"
+import { TreinoDayNavigator } from "../../components/treino/TreinoDayNavigator"
 
 type PlanoDiaPayload = UpsertPlanoTreinoDTO["dias"][number]
 type PlanoDiaExercicioPayload = PlanoDiaPayload["exercicios"][number]
@@ -172,6 +173,7 @@ export const PlanoTreinoEditorPage: React.FC = () => {
   const [comentariosProfessor, setComentariosProfessor] = useState<Record<string, string>>({})
   const [mediaExercise, setMediaExercise] = useState<Exercicio | null>(null)
   const [initializedFromBackend, setInitializedFromBackend] = useState(false)
+  const exerciseBankRef = useRef<HTMLDivElement | null>(null)
 
   const { data: aluno, isLoading: loadingAluno } = useAluno(alunoId || "", {
     enabled: !!alunoId,
@@ -480,6 +482,74 @@ export const PlanoTreinoEditorPage: React.FC = () => {
   }
 
   const selectedDay = dias.find((day) => day.localId === selectedDayId)
+  const visibleDays = selectedDay ? [selectedDay] : []
+
+  const dayNavigationItems = useMemo(
+    () =>
+      dias.map((day) => ({
+        id: day.localId,
+        title: day.titulo || `Treino ${day.ordem}`,
+        subtitle: formatDiaSemana(day.diaSemana),
+        countLabel: `${day.exercicios.length} exercício(s)`,
+      })),
+    [dias],
+  )
+
+  const handleFocusExerciseBank = () => {
+    exerciseBankRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    })
+  }
+
+  const moveExerciseToDay = (
+    sourceDayId: string,
+    localExerciseId: string,
+    targetDayId: string,
+  ) => {
+    if (!targetDayId || sourceDayId === targetDayId) {
+      return
+    }
+
+    setDias((prev) => {
+      const sourceDay = prev.find((day) => day.localId === sourceDayId)
+      const movingExercise = sourceDay?.exercicios.find(
+        (item) => item.localId === localExerciseId,
+      )
+
+      if (!sourceDay || !movingExercise) {
+        return prev
+      }
+
+      return prev.map((day) => {
+        if (day.localId === sourceDayId) {
+          return {
+            ...day,
+            exercicios: day.exercicios
+              .filter((item) => item.localId !== localExerciseId)
+              .map((item, index) => ({
+                ...item,
+                ordem: index + 1,
+              })),
+          }
+        }
+
+        if (day.localId === targetDayId) {
+          return {
+            ...day,
+            exercicios: [...day.exercicios, movingExercise].map((item, index) => ({
+              ...item,
+              ordem: index + 1,
+            })),
+          }
+        }
+
+        return day
+      })
+    })
+
+    setSelectedDayId(targetDayId)
+  }
 
   const ensureDaySelection = () => {
     if (selectedDayId) {
@@ -865,15 +935,38 @@ export const PlanoTreinoEditorPage: React.FC = () => {
       <Card>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">Divisão de Treino por Dias</h2>
-          <Button icon={Plus} onClick={addDay} variant="secondary">
+          <Button icon={Plus} onClick={addDay} variant="secondary" className="hidden md:flex">
             Adicionar Dia
           </Button>
         </div>
 
+        <TreinoDayNavigator
+          days={dayNavigationItems}
+          selectedDayId={selectedDayId}
+          onSelectDay={setSelectedDayId}
+          label="Dias do treino"
+          mobileLabel="Dias do treino"
+          actions={[
+            {
+              label: "Adicionar novo dia",
+              icon: Plus,
+              onClick: addDay,
+            },
+            {
+              label: "Adicionar exercício ao dia atual",
+              icon: Search,
+              onClick: handleFocusExerciseBank,
+            },
+          ]}
+        />
+
         <div className="space-y-4">
-          {dias.map((day) => (
+          {visibleDays.map((day) => (
             <div
               key={day.localId}
+              id={`treino-day-panel-${day.localId}`}
+              role="tabpanel"
+              aria-labelledby={`treino-day-tab-${day.localId}`}
               className={`border rounded-lg p-4 transition-colors ${
                 selectedDayId === day.localId
                   ? "border-blue-400 bg-blue-950/30"
@@ -1072,6 +1165,34 @@ export const PlanoTreinoEditorPage: React.FC = () => {
                             <ImageIcon className="h-4 w-4" />
                             Gerenciar mídia
                           </Button>
+                          {dias.length > 1 && (
+                            <label className="flex min-w-48 flex-col gap-1 text-xs text-zinc-300">
+                              Mover para dia
+                              <select
+                                value=""
+                                onChange={(event) =>
+                                  moveExerciseToDay(
+                                    day.localId,
+                                    item.localId,
+                                    event.target.value,
+                                  )
+                                }
+                                className="rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white focus:border-transparent focus:ring-2 focus:ring-zinc-300"
+                              >
+                                <option value="">Selecionar destino</option>
+                                {dias
+                                  .filter((targetDay) => targetDay.localId !== day.localId)
+                                  .map((targetDay) => (
+                                    <option
+                                      key={targetDay.localId}
+                                      value={targetDay.localId}
+                                    >
+                                      {targetDay.titulo || `Treino ${targetDay.ordem}`}
+                                    </option>
+                                  ))}
+                              </select>
+                            </label>
+                          )}
                         </div>
                       </div>
 
@@ -1100,8 +1221,9 @@ export const PlanoTreinoEditorPage: React.FC = () => {
         </div>
       </Card>
 
-      <Card>
-        <h2 className="text-lg font-semibold mb-4">Banco de Exercícios</h2>
+      <div ref={exerciseBankRef}>
+        <Card>
+          <h2 className="text-lg font-semibold mb-4">Banco de Exercícios</h2>
 
         <div className="mb-4 p-3 rounded-lg bg-blue-950/40 border border-blue-500/30">
           <p className="text-sm text-white">
@@ -1313,7 +1435,8 @@ export const PlanoTreinoEditorPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </Card>
+        </Card>
+      </div>
 
       <Card>
         <div className="flex items-center gap-2 mb-4">

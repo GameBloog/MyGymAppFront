@@ -237,7 +237,7 @@ export const ProfessorDashboard: React.FC = () => {
                       navigate(`/professor/alunos/${aluno.id}/fotos-arquivos`)
                     }
                     className="p-2 hover:bg-purple-950/40 rounded-lg transition-colors"
-                    title="Ver Fotos e Arquivos"
+                    title="Ver Fotos"
                   >
                     <Camera className="h-5 w-5 text-purple-600" />
                   </button>

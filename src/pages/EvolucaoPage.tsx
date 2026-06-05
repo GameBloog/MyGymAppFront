@@ -114,18 +114,18 @@ export const EvolucaoPage: React.FC = () => {
   }
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-4">
+    <div className="min-w-0">
+      <div className="mb-6 flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex min-w-0 items-start gap-3 sm:gap-4">
           <button
             onClick={() => navigate(getBackRoute())}
-            className="p-2 hover:bg-[color:var(--student-surface-soft)] rounded-lg transition-colors"
+            className="mt-1 flex-shrink-0 p-2 hover:bg-[color:var(--student-surface-soft)] rounded-lg transition-colors"
             title="Voltar"
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
-          <div>
-            <h1 className="text-3xl font-bold text-[color:var(--student-text)]">
+          <div className="min-w-0">
+            <h1 className="break-words text-2xl font-bold leading-tight text-[color:var(--student-text)] sm:text-3xl">
               Evolução - {aluno.user?.nome || "Aluno"}
             </h1>
             <p className="text-[color:var(--student-text-soft)] mt-1">
@@ -140,8 +140,14 @@ export const EvolucaoPage: React.FC = () => {
             icon={TrendingUp}
             onClick={() => setShowForm(!showForm)}
             variant={showForm ? "secondary" : "primary"}
+            className="min-h-10 self-start px-3 py-2 text-sm sm:px-4 sm:text-base"
           >
-            {showForm ? "Ocultar Formulário" : "Novo Registro"}
+            <span className="sm:hidden">
+              {showForm ? "Ocultar" : "Registrar"}
+            </span>
+            <span className="hidden sm:inline">
+              {showForm ? "Ocultar Formulário" : "Novo Registro"}
+            </span>
           </Button>
         )}
       </div>
@@ -191,7 +197,7 @@ export const EvolucaoPage: React.FC = () => {
 
         {historico && historico.length > 0 ? (
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[720px]">
               <thead className="bg-[color:var(--student-surface-soft)]">
                 <tr>
                   <th className="p-3 text-left text-sm font-medium text-[color:var(--student-text-soft)]">
@@ -229,21 +235,33 @@ export const EvolucaoPage: React.FC = () => {
                     </td>
                     <td className="p-3 text-center text-sm">
                       {item.pesoKg ? (
-                        <Badge variant="success">{item.pesoKg} kg</Badge>
+                        <Badge variant="success">
+                          <span className="whitespace-nowrap">
+                            {item.pesoKg} kg
+                          </span>
+                        </Badge>
                       ) : (
                         <span className="text-[color:var(--student-text-muted)]">-</span>
                       )}
                     </td>
                     <td className="p-3 text-center text-sm">
                       {item.alturaCm ? (
-                        <Badge>{item.alturaCm} cm</Badge>
+                        <Badge>
+                          <span className="whitespace-nowrap">
+                            {item.alturaCm} cm
+                          </span>
+                        </Badge>
                       ) : (
                         <span className="text-[color:var(--student-text-muted)]">-</span>
                       )}
                     </td>
                     <td className="p-3 text-center text-sm">
                       {item.cinturaCm ? (
-                        <Badge variant="warning">{item.cinturaCm} cm</Badge>
+                        <Badge variant="warning">
+                          <span className="whitespace-nowrap">
+                            {item.cinturaCm} cm
+                          </span>
+                        </Badge>
                       ) : (
                         <span className="text-[color:var(--student-text-muted)]">-</span>
                       )}
@@ -251,7 +269,9 @@ export const EvolucaoPage: React.FC = () => {
                     <td className="p-3 text-center text-sm">
                       {item.percentualGordura ? (
                         <Badge variant="danger">
-                          {item.percentualGordura}%
+                          <span className="whitespace-nowrap">
+                            {item.percentualGordura}%
+                          </span>
                         </Badge>
                       ) : (
                         <span className="text-[color:var(--student-text-muted)]">-</span>

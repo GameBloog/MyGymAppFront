@@ -11,6 +11,10 @@ import {
   Target,
 } from "lucide-react"
 import { Badge, Button, Card, Input, Textarea } from "../../components/ui"
+import {
+  ActivityProgressSummary,
+  CompletionToggle,
+} from "../../components/aluno/ActivityCompletionUX"
 import { useMyAluno } from "../../hooks/useMyAluno"
 import {
   useFinalizeTreinoCheckin,
@@ -23,6 +27,7 @@ import {
 } from "../../hooks/useTreino"
 import { showToast } from "../../utils/toast"
 import { formatDiaSemana, grupamentoLabels } from "../../utils/treino"
+import { TreinoDayNavigator } from "../../components/treino/TreinoDayNavigator"
 import type {
   ProgressSerieTreino,
   TimelineEventoTreino,
@@ -101,13 +106,41 @@ const timelineBadge = (
   }
 }
 
-const getCompletionProgress = (checkin: TreinoCheckin | null): number => {
-  if (!checkin || checkin.exercicios.length === 0) {
+const getCompletedExerciseCount = (
+  checkin: TreinoCheckin | null,
+  drafts: Record<string, ExerciseDraft>,
+) => {
+  if (!checkin) {
     return 0
   }
-  const done = checkin.exercicios.filter((item) => item.concluido).length
-  return Math.round((done / checkin.exercicios.length) * 100)
+
+  return checkin.exercicios.filter((item) => {
+    const draft = drafts[item.treinoDiaExercicioId]
+    return draft ? draft.concluido : item.concluido
+  }).length
 }
+
+const isSameDraftNumber = (draftValue: string, persistedValue?: number | null) => {
+  if (!draftValue.trim()) {
+    return persistedValue === null || persistedValue === undefined
+  }
+
+  const parsed = Number(draftValue)
+  if (Number.isNaN(parsed)) {
+    return false
+  }
+
+  return persistedValue !== null && persistedValue !== undefined && parsed === persistedValue
+}
+
+const isExerciseDraftDirty = (
+  exercise: TreinoCheckin["exercicios"][number],
+  draft: ExerciseDraft,
+) =>
+  draft.concluido !== exercise.concluido ||
+  !isSameDraftNumber(draft.cargaReal, exercise.cargaReal) ||
+  draft.repeticoesReal.trim() !== (exercise.repeticoesReal || "") ||
+  draft.comentarioAluno.trim() !== (exercise.comentarioAluno || "")
 
 export const MeuTreinoPage: React.FC = () => {
   const { data: aluno, isLoading: loadingAluno } = useMyAluno()
@@ -399,13 +432,23 @@ export const MeuTreinoPage: React.FC = () => {
     showToast.success("Dia de treino marcado como concluído")
   }
 
-  const progresso = getCompletionProgress(checkinAtual)
   const selectedDia = useMemo(() => {
     if (!planoAtivo) {
       return undefined
     }
     return planoAtivo.dias.find((dia) => dia.id === selectedDiaId)
   }, [planoAtivo, selectedDiaId])
+
+  const dayNavigationItems = useMemo(
+    () =>
+      (planoAtivo?.dias || []).map((dia) => ({
+        id: dia.id,
+        title: dia.titulo,
+        subtitle: formatDiaSemana(dia.diaSemana),
+        countLabel: `${dia.exercicios.length} exercício(s)`,
+      })),
+    [planoAtivo],
+  )
 
   const exerciciosOrdenados = useMemo(() => {
     if (!checkinAtual) {
@@ -414,6 +457,11 @@ export const MeuTreinoPage: React.FC = () => {
 
     return sortCheckinExercises(checkinAtual.exercicios)
   }, [checkinAtual])
+
+  const completedExercises = useMemo(
+    () => getCompletedExerciseCount(checkinAtual, exerciseDrafts),
+    [checkinAtual, exerciseDrafts],
+  )
 
   const renderProgressGraphic = (serie: ProgressSerieTreino) => {
     const pontosComCarga = serie.pontos.filter(
@@ -545,30 +593,13 @@ export const MeuTreinoPage: React.FC = () => {
           <CalendarCheck className="h-5 w-5" />
           Selecionar dia para treinar
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-          {planoAtivo.dias.map((dia) => (
-            <button
-              key={dia.id}
-              onClick={() => setSelectedDiaId(dia.id)}
-              className={`p-4 rounded-lg border text-left transition-colors ${
-                selectedDiaId === dia.id
-                  ? "border-[#d4a548]/40 bg-[#22180a]"
-                  : "border-zinc-700 hover:border-[#d4a548]/25"
-              }`}
-            >
-              <p className="font-semibold text-[color:var(--student-text)]">{dia.titulo}</p>
-              <p className="text-sm text-[color:var(--student-text-soft)]">{formatDiaSemana(dia.diaSemana)}</p>
-              <p className="text-xs text-[color:var(--student-text-muted)] mt-1">
-                {dia.exercicios.length} exercício(s)
-              </p>
-              {(dia.metodo || dia.observacoes) && (
-                <p className="mt-2 text-[11px] uppercase tracking-[0.12em] text-[#f1d38b]">
-                  Possui orientações do professor
-                </p>
-              )}
-            </button>
-          ))}
-        </div>
+        <TreinoDayNavigator
+          days={dayNavigationItems}
+          selectedDayId={selectedDiaId}
+          onSelectDay={setSelectedDiaId}
+          label="Dias do meu treino"
+          mobileLabel="Dias do treino"
+        />
 
         <div className="mt-4">
           <Button
@@ -583,73 +614,80 @@ export const MeuTreinoPage: React.FC = () => {
       </Card>
 
       {selectedDia && (
-        <Card className="border border-[#49b4a6]/20 bg-[#0f1716]">
-          <h2 className="text-lg font-semibold text-white mb-2">
-            Orientações do dia: {selectedDia.titulo}
-          </h2>
-          {(selectedDia.metodo || selectedDia.observacoes) ? (
-            <div className="space-y-3">
-              {selectedDia.metodo && (
-                <div className="rounded-lg border border-[#49b4a6]/25 bg-[#12302c] p-3">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7de0d3]">
-                    Método
-                  </p>
-                  <p className="mt-1 text-sm text-zinc-100">{selectedDia.metodo}</p>
-                </div>
-              )}
-              {selectedDia.observacoes && (
-                <div className="rounded-lg border border-zinc-700 bg-zinc-900 p-3">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-300">
-                    Observações do professor
-                  </p>
-                  <p className="mt-1 text-sm text-zinc-200">{selectedDia.observacoes}</p>
-                </div>
-              )}
-            </div>
-          ) : (
-            <p className="text-sm text-zinc-400">
-              Este dia não possui método ou observações cadastradas.
-            </p>
-          )}
-        </Card>
-      )}
-
-      {selectedDia && !checkinAtual && (
-        <Card className="border border-[#49b4a6]/20 bg-[#0f1716]">
-          <h2 className="text-lg font-semibold mb-4">Exercícios planejados do dia</h2>
-          <div className="space-y-3">
-            {selectedDia.exercicios.map((item) => (
-              <div
-                key={item.id}
-                className="border border-[#49b4a6]/20 rounded-lg p-4 bg-[#12302c]/40"
-              >
-                <p className="font-semibold text-white">{item.exercicio.nome}</p>
-                <p className="text-xs text-zinc-300 mt-1">
-                  {grupamentoLabels[item.exercicio.grupamentoMuscular]} •{" "}
-                  {item.series || "-"} séries • {item.repeticoes || "-"} reps
-                  {item.cargaSugerida ? ` • carga sugerida: ${item.cargaSugerida} kg` : ""}
-                </p>
-                {(item.metodo || item.observacoes) && (
-                  <div className="mt-2 space-y-2">
-                    {item.metodo && (
-                      <div className="rounded-md border border-[#49b4a6]/25 bg-[#12302c] px-3 py-2">
-                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7de0d3]">
-                          Método
-                        </p>
-                        <p className="text-sm text-zinc-100">{item.metodo}</p>
-                      </div>
-                    )}
-                    {item.observacoes && (
-                      <p className="text-sm text-zinc-200">
-                        <strong>Observações do professor:</strong> {item.observacoes}
-                      </p>
-                    )}
+        <div
+          id={`treino-day-panel-${selectedDia.id}`}
+          role="tabpanel"
+          aria-labelledby={`treino-day-tab-${selectedDia.id}`}
+          className="space-y-6"
+        >
+          <Card className="border border-[#49b4a6]/20 bg-[#0f1716]">
+            <h2 className="text-lg font-semibold text-white mb-2">
+              Orientações do dia: {selectedDia.titulo}
+            </h2>
+            {(selectedDia.metodo || selectedDia.observacoes) ? (
+              <div className="space-y-3">
+                {selectedDia.metodo && (
+                  <div className="rounded-lg border border-[#49b4a6]/25 bg-[#12302c] p-3">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7de0d3]">
+                      Método
+                    </p>
+                    <p className="mt-1 text-sm text-zinc-100">{selectedDia.metodo}</p>
+                  </div>
+                )}
+                {selectedDia.observacoes && (
+                  <div className="rounded-lg border border-zinc-700 bg-zinc-900 p-3">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-300">
+                      Observações do professor
+                    </p>
+                    <p className="mt-1 text-sm text-zinc-200">{selectedDia.observacoes}</p>
                   </div>
                 )}
               </div>
-            ))}
-          </div>
-        </Card>
+            ) : (
+              <p className="text-sm text-zinc-400">
+                Este dia não possui método ou observações cadastradas.
+              </p>
+            )}
+          </Card>
+
+          {!checkinAtual && (
+            <Card className="border border-[#49b4a6]/20 bg-[#0f1716]">
+              <h2 className="text-lg font-semibold mb-4">Exercícios planejados do dia</h2>
+              <div className="space-y-3">
+                {selectedDia.exercicios.map((item) => (
+                  <div
+                    key={item.id}
+                    className="border border-[#49b4a6]/20 rounded-lg p-4 bg-[#12302c]/40"
+                  >
+                    <p className="font-semibold text-white">{item.exercicio.nome}</p>
+                    <p className="text-xs text-zinc-300 mt-1">
+                      {grupamentoLabels[item.exercicio.grupamentoMuscular]} •{" "}
+                      {item.series || "-"} séries • {item.repeticoes || "-"} reps
+                      {item.cargaSugerida ? ` • carga sugerida: ${item.cargaSugerida} kg` : ""}
+                    </p>
+                    {(item.metodo || item.observacoes) && (
+                      <div className="mt-2 space-y-2">
+                        {item.metodo && (
+                          <div className="rounded-md border border-[#49b4a6]/25 bg-[#12302c] px-3 py-2">
+                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7de0d3]">
+                              Método
+                            </p>
+                            <p className="text-sm text-zinc-100">{item.metodo}</p>
+                          </div>
+                        )}
+                        {item.observacoes && (
+                          <p className="text-sm text-zinc-200">
+                            <strong>Observações do professor:</strong> {item.observacoes}
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </Card>
+          )}
+        </div>
       )}
 
       {checkinAtual && (
@@ -671,18 +709,13 @@ export const MeuTreinoPage: React.FC = () => {
             </Badge>
           </div>
 
-          <div className="mb-4">
-            <div className="flex justify-between text-sm text-[color:var(--student-text-soft)] mb-1">
-              <span>Progresso do dia</span>
-              <span>{progresso}%</span>
-            </div>
-            <div className="h-2 bg-[color:var(--student-surface-soft)] rounded-full overflow-hidden">
-              <div
-                className="h-full bg-[color:var(--student-success)] rounded-full transition-all"
-                style={{ width: `${progresso}%` }}
-              />
-            </div>
-          </div>
+          <ActivityProgressSummary
+            completed={completedExercises}
+            total={checkinAtual.exercicios.length}
+            label="Progresso do treino"
+            completedLabel="exercício(s) concluído(s)"
+            remainingLabel="exercício(s) restante(s)"
+          />
 
           <div className="space-y-4">
             {exerciciosOrdenados.map((exercise) => {
@@ -695,6 +728,8 @@ export const MeuTreinoPage: React.FC = () => {
               const latestPerformance = latestPerformanceByExerciseId.get(
                 exercise.exercicioId,
               )
+              const isCompleted = draft.concluido
+              const hasPendingChange = isExerciseDraftDirty(exercise, draft)
               const hasVisualMedia =
                 !!exercise.exercicio.executionGifUrl ||
                 !!exercise.exercicio.equipmentImageUrl
@@ -702,9 +737,13 @@ export const MeuTreinoPage: React.FC = () => {
               return (
                 <div
                   key={exercise.id}
-                  className="border border-[color:var(--student-border)] rounded-lg p-4 bg-[color:var(--student-surface)]"
+                  className={`rounded-lg border p-4 transition-colors duration-200 motion-reduce:transition-none ${
+                    isCompleted
+                      ? "border-[color:rgba(125,224,211,0.55)] bg-[color:var(--student-success-surface)]"
+                      : "border-[color:var(--student-border)] bg-[color:var(--student-surface)]"
+                  }`}
                 >
-                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                  <div className="flex flex-col justify-between gap-3 mb-3 lg:flex-row lg:items-start">
                     <div>
                       <h3 className="font-semibold text-[color:var(--student-text)]">
                         {exercise.exercicio.nome}
@@ -738,18 +777,24 @@ export const MeuTreinoPage: React.FC = () => {
                         </div>
                       )}
                     </div>
-                    <label className="flex items-center gap-2 text-sm text-[color:var(--student-text-soft)]">
-                      <input
-                        type="checkbox"
-                        checked={draft.concluido}
-                        onChange={(event) =>
-                          handleExerciseDraftChange(exercise.treinoDiaExercicioId, {
-                            concluido: event.target.checked,
-                          })
-                        }
-                      />
-                      Exercício concluído
-                    </label>
+                    <CompletionToggle
+                      checked={draft.concluido}
+                      pendingChange={hasPendingChange}
+                      title={exercise.exercicio.nome}
+                      description={
+                        draft.concluido
+                          ? "Registrado no progresso do treino"
+                          : "Toque para marcar como feito"
+                      }
+                      checkedLabel="Exercício concluído"
+                      uncheckedLabel="Exercício pendente"
+                      icon={Dumbbell}
+                      onChange={(checked) =>
+                        handleExerciseDraftChange(exercise.treinoDiaExercicioId, {
+                          concluido: checked,
+                        })
+                      }
+                    />
                   </div>
 
                   {hasVisualMedia && (
