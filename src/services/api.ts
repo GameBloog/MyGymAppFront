@@ -33,6 +33,8 @@ import {
   type UpdateFinanceEntryDTO,
   type FinanceEntryType,
   type FinanceMonthState,
+  type ProfessorDashboardResponse,
+  type ProfessorFinanceDashboardResponse,
 } from "../types"
 
 export const api = axios.create({
@@ -534,6 +536,32 @@ export const financeApi = {
 
   reopenMonth: async (month: string): Promise<FinanceMonthState> => {
     const response = await api.patch<FinanceMonthState>(`/finance/months/${month}/reopen`)
+    return response.data
+  },
+}
+
+export const professorOperationsApi = {
+  getDashboard: async (): Promise<ProfessorDashboardResponse> => {
+    const response = await api.get<ProfessorDashboardResponse>(
+      "/professor/dashboard",
+    )
+    return response.data
+  },
+
+  getFinanceDashboard: async (
+    from?: string,
+    to?: string,
+  ): Promise<ProfessorFinanceDashboardResponse> => {
+    const params = new URLSearchParams()
+
+    if (from) params.set("from", from)
+    if (to) params.set("to", to)
+
+    const query = params.toString()
+    const path = query
+      ? `/professor/finance/dashboard?${query}`
+      : "/professor/finance/dashboard"
+    const response = await api.get<ProfessorFinanceDashboardResponse>(path)
     return response.data
   },
 }

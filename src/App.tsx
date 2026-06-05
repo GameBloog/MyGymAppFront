@@ -29,7 +29,8 @@ import { ProfessorForm } from "./pages/admin/ProfessorForm"
 import { FinanceiroPage } from "./pages/admin/FinanceiroPage"
 
 // Professor Pages
-import { ProfessorDashboard } from "./pages/professor/ProfessorDashboard"
+import { ProfessorHomeDashboardPage } from "./pages/professor/ProfessorHomeDashboardPage"
+import { ProfessorFinanceiroPage } from "./pages/professor/ProfessorFinanceiroPage"
 import { PlanoTreinoEditorPage } from "./pages/professor/PlanoTreinoEditorPage"
 import { PlanoDietaEditorPage } from "./pages/professor/PlanoDietaEditorPage"
 
@@ -139,7 +140,7 @@ function AppRoutes() {
             <AuthGuard allowedRoles={["PROFESSOR"]}>
               <Layout>
                 <Routes>
-                  <Route path="dashboard" element={<ProfessorDashboard />} />
+                  <Route path="dashboard" element={<ProfessorHomeDashboardPage />} />
                   <Route path="alunos" element={<AnswersList />} />
                   <Route path="alunos/new" element={<AnswerForm />} />
                   <Route path="alunos/:id/edit" element={<AnswerForm />} />
@@ -159,6 +160,7 @@ function AppRoutes() {
                     path="alunos/:id/dieta"
                     element={<PlanoDietaEditorPage />}
                   />
+                  <Route path="financeiro" element={<ProfessorFinanceiroPage />} />
                   <Route path="*" element={<Navigate to="dashboard" replace />} />
                 </Routes>
               </Layout>

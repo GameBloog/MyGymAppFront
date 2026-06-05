@@ -327,6 +327,118 @@ export interface FinanceMonthState {
   updatedAt: string
 }
 
+export type ProfessorFeedbackStatus = "AGUARDANDO_RESPOSTA" | "RESPONDIDO"
+
+export interface ProfessorFeedbackItem {
+  id: string
+  checkinId: string
+  alunoId: string
+  alunoNome: string
+  data: string
+  status: ProfessorFeedbackStatus
+  resumo: string
+  detailPath: string
+}
+
+export interface ProfessorReavaliacaoItem {
+  alunoId: string
+  alunoNome: string
+  ultimaAvaliacaoEm: string | null
+  proximaAvaliacaoEm: string
+  diasRestantes: number
+  detailPath: string
+}
+
+export interface ProfessorAcompanhamentoItem {
+  alunoId: string
+  alunoNome: string
+  desde: string
+  dias: number
+  detailPath: string
+}
+
+export interface ProfessorDashboardResponse {
+  summary: {
+    alunosAtivos: number
+    alunosInativos: number
+    alunosRecemCadastrados: number
+    semTreinoAtivo: number
+    semDietaAtiva: number
+    semFeedbackRecente: number
+    aguardandoResposta: number
+    reavaliacoesProximas: number
+    maiorTempoAcompanhamento: ProfessorAcompanhamentoItem[]
+  }
+  feedbacks: {
+    treino: ProfessorFeedbackItem[]
+    dieta: ProfessorFeedbackItem[]
+  }
+  reavaliacoesProximas: ProfessorReavaliacaoItem[]
+}
+
+export interface ProfessorFinanceDashboardResponse {
+  period: {
+    from: string
+    to: string
+  }
+  totals: {
+    receita: number
+    receitaMensalAtual: number
+    receitaAnual: number
+    alunosAtivos: number
+    alunosPagantesPeriodo: number
+    pendentesMesAtual: number
+    ticketMedio: number
+    renewals: {
+      total: number
+      completo: number
+      treino: number
+      dieta: number
+    }
+  }
+  months: Array<{
+    month: string
+    receita: number
+    alunosPagantes: number
+    ticketMedio: number
+    renewals: {
+      total: number
+      completo: number
+      treino: number
+      dieta: number
+    }
+  }>
+  charts: {
+    evolucaoMensal: Array<{
+      month: string
+      receita: number
+      alunosPagantes: number
+    }>
+    composicaoPlanos: Array<{
+      tipoPlano: FinanceRenewalPlanType
+      total: number
+      valor: number
+    }>
+  }
+  pendencias: Array<{
+    alunoId: string
+    alunoNome: string
+    motivo: "SEM_RENOVACAO_NO_MES"
+    detailPath: string
+  }>
+  ultimasRenovacoes: Array<{
+    id: string
+    alunoId: string
+    alunoNome: string
+    tipoPlano: FinanceRenewalPlanType
+    valor: number
+    month: string
+    renovadoEm: string
+    observacao?: string | null
+    detailPath: string
+  }>
+}
+
 export interface Professor {
   id: string
   userId: string

@@ -9,6 +9,9 @@ import {
   Dumbbell,
   UtensilsCrossed,
   Home,
+  Wallet,
+  Users,
+  ClipboardList,
 } from "lucide-react"
 import { Button } from "./ui/Button"
 import { useAuth } from "../hooks/useAuth"
@@ -60,6 +63,45 @@ const alunoShortcuts: AlunoShortcut[] = [
   },
 ]
 
+const professorShortcuts: AlunoShortcut[] = [
+  {
+    label: "Dashboard",
+    title: "Abrir Dashboard",
+    path: "/professor/dashboard",
+    icon: Home,
+  },
+  {
+    label: "Alunos",
+    title: "Ver Alunos",
+    path: "/professor/alunos",
+    icon: Users,
+  },
+  {
+    label: "Treino",
+    title: "Prescrição de Treino",
+    path: "/professor/alunos",
+    icon: Dumbbell,
+  },
+  {
+    label: "Dieta",
+    title: "Prescrição Alimentar",
+    path: "/professor/alunos",
+    icon: UtensilsCrossed,
+  },
+  {
+    label: "Pendências",
+    title: "Ver Pendências",
+    path: "/professor/dashboard",
+    icon: ClipboardList,
+  },
+  {
+    label: "Financeiro",
+    title: "Abrir Financeiro",
+    path: "/professor/financeiro",
+    icon: Wallet,
+  },
+]
+
 export const Layout: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -73,6 +115,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
   }
 
   const isAluno = user?.role === "ALUNO"
+  const isProfessor = user?.role === "PROFESSOR"
   const mobileTopbarButtonClass =
     "!h-9 !w-9 !justify-center !gap-0 !rounded-md !p-0 sm:!h-auto sm:!w-auto sm:!rounded-lg sm:!p-2"
   const activeShortcutClass =
@@ -105,6 +148,29 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
                   return (
                     <Button
                       key={shortcut.path}
+                      variant="secondary"
+                      icon={shortcut.icon}
+                      onClick={() => navigate(shortcut.path)}
+                      className={`${mobileTopbarButtonClass} ${isActive ? activeShortcutClass : ""}`}
+                      title={shortcut.title}
+                      aria-label={shortcut.label}
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      <span className="hidden sm:inline">{shortcut.label}</span>
+                    </Button>
+                  )
+                })}
+
+              {isProfessor &&
+                professorShortcuts.map((shortcut) => {
+                  const isActive =
+                    location.pathname === shortcut.path ||
+                    (shortcut.path !== "/professor/dashboard" &&
+                      location.pathname.startsWith(shortcut.path))
+
+                  return (
+                    <Button
+                      key={`${shortcut.path}-${shortcut.label}`}
                       variant="secondary"
                       icon={shortcut.icon}
                       onClick={() => navigate(shortcut.path)}
