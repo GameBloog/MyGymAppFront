@@ -6,6 +6,7 @@ export interface User {
   nome: string
   email: string
   role: UserRole
+  requiresLegalAcceptance?: boolean
   createdAt: string
   updatedAt: string
 }
@@ -29,6 +30,136 @@ export interface RegisterDTO {
   telefone?: string
   especialidade?: string
   leadSlug?: string
+  acceptedDocuments?: AcceptedDocument[]
+  privacyPreferences?: PrivacyPreferencesInput
+}
+
+export type LegalDocumentType = "PRIVACY_POLICY" | "TERMS_OF_USE"
+
+export interface LegalDocumentVersion {
+  id: string
+  documentType: LegalDocumentType
+  version: string
+  title: string
+  content: string
+  isCurrent: boolean
+  publishedAt: string
+  createdAt: string
+}
+
+export interface LegalDocumentsResponse {
+  controller: {
+    name: string
+    documentType: "CPF" | "CNPJ"
+    document: string
+    cnpj?: string
+    address: string
+    privacyContact: string
+  }
+  documents: LegalDocumentVersion[]
+  processingInventory: Array<{
+    category: string
+    purpose: string
+    legalBasis: string
+  }>
+}
+
+export interface AcceptedDocument {
+  documentType: LegalDocumentType
+  version: string
+}
+
+export interface PrivacyPreferences {
+  id: string
+  userId: string
+  analyticsConsent: boolean
+  marketingConsent: boolean
+  emailConsent: boolean
+  whatsappConsent: boolean
+  documentVersion?: string | null
+  createdAt: string
+  updatedAt: string
+}
+
+export interface PrivacyPreferencesInput {
+  analyticsConsent?: boolean
+  marketingConsent?: boolean
+  emailConsent?: boolean
+  whatsappConsent?: boolean
+}
+
+export type DataSubjectRequestType =
+  | "EXPORT"
+  | "DELETE"
+  | "CORRECTION"
+  | "CONSENT_REVOKE"
+  | "OTHER"
+
+export type DataSubjectRequestStatus =
+  | "OPEN"
+  | "IN_PROGRESS"
+  | "COMPLETED"
+  | "REJECTED"
+  | "FAILED"
+
+export interface DataSubjectRequest {
+  id: string
+  userId: string
+  type: DataSubjectRequestType
+  status: DataSubjectRequestStatus
+  description?: string | null
+  response?: string | null
+  requestedAt: string
+  processedAt?: string | null
+  processedBy?: string | null
+  createdAt: string
+  updatedAt: string
+}
+
+export type OnboardingStatus =
+  | "NOT_STARTED"
+  | "IN_PROGRESS"
+  | "COMPLETED"
+  | "DISMISSED"
+
+export interface OnboardingState {
+  id: string
+  userId: string
+  role: UserRole
+  flowVersion: string
+  status: OnboardingStatus
+  currentStepKey?: string | null
+  completedChecklistItems: string[]
+  startedAt?: string | null
+  completedAt?: string | null
+  dismissedAt?: string | null
+  restartedAt?: string | null
+  createdAt: string
+  updatedAt: string
+}
+
+export interface OnboardingChecklistItem {
+  key: string
+  label: string
+  description: string
+  completed: boolean
+}
+
+export interface OnboardingResponse {
+  flow: {
+    role: UserRole
+    version: string
+    steps: string[]
+  }
+  state: OnboardingState
+  checklist: OnboardingChecklistItem[]
+  checklistCompleted: boolean
+  context: {
+    professorId?: string | null
+    firstAlunoId?: string | null
+    alunoId?: string | null
+  }
+  shouldStart: boolean
 }
 
 export interface InviteCode {
@@ -81,6 +212,7 @@ export interface UpdateLeadLinkDTO {
 
 export interface TrackLeadClickDTO {
   leadSlug: string
+  analyticsConsent: true
   referrer?: string
   path?: string
   utmSource?: string

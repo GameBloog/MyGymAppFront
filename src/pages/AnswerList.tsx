@@ -263,7 +263,11 @@ export const AnswersList: React.FC = () => {
           )}
         </div>
         {canCreate && (
-          <Button icon={Plus} onClick={() => navigate(getNewRoute())}>
+          <Button
+            icon={Plus}
+            onClick={() => navigate(getNewRoute())}
+            data-onboarding-target="onboarding-student-create"
+          >
             <span className="hidden sm:inline">Novo Aluno</span>
             <span className="sm:hidden">Novo</span>
           </Button>

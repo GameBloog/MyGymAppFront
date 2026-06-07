@@ -246,7 +246,7 @@ export const MinhaDietaPage: React.FC = () => {
 
   if (!aluno) {
     return (
-      <Card className="bg-[color:var(--student-warning-surface)] border-2 border-[color:rgba(241,211,139,0.45)]">
+      <Card className="bg-[color:var(--student-warning-surface)] border-2 border-[color:var(--app-warning-border)]">
         <p className="text-[color:var(--student-text)]">
           Não foi possível localizar seu perfil de aluno para carregar a dieta.
         </p>
@@ -256,7 +256,7 @@ export const MinhaDietaPage: React.FC = () => {
 
   if (erroPlano && !erroPlanoNaoEncontrado) {
     return (
-      <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:rgba(239,68,68,0.45)]">
+      <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:var(--app-danger-border)]">
         <p className="text-[color:var(--student-danger)]">{erroPlano.message}</p>
       </Card>
     )
@@ -412,7 +412,8 @@ export const MinhaDietaPage: React.FC = () => {
       )}
 
       {checkinAtual && (
-        <Card>
+        <div data-onboarding-target="onboarding-meal-checkin">
+          <Card>
           <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
             <h2 className="text-lg font-semibold">
               Check-in atual: {checkinAtual.dietaDia.titulo}
@@ -448,7 +449,7 @@ export const MinhaDietaPage: React.FC = () => {
                   key={refeicao.id}
                   className={`rounded-lg border p-4 transition-colors duration-200 motion-reduce:transition-none ${
                     isCompleted
-                      ? "border-[color:rgba(125,224,211,0.55)] bg-[color:var(--student-success-surface)]"
+                      ? "border-[color:var(--app-success-border)] bg-[color:var(--student-success-surface)]"
                       : "border-[color:var(--student-border)] bg-[color:var(--student-surface)]"
                   }`}
                 >
@@ -544,7 +545,8 @@ export const MinhaDietaPage: React.FC = () => {
                 : "Marcar dia como concluído"}
             </Button>
           </div>
-        </Card>
+          </Card>
+        </div>
       )}
 
       <Card>

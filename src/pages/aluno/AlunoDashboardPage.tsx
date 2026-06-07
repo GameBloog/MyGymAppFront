@@ -486,7 +486,7 @@ export const AlunoDashboardPage: React.FC = () => {
 
   if (!aluno) {
     return (
-      <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:rgba(239,68,68,0.45)]">
+      <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:var(--app-danger-border)]">
         <p className="text-[color:var(--student-danger)]">
           Não foi possível carregar seu perfil de aluno para montar o dashboard.
         </p>
@@ -506,11 +506,13 @@ export const AlunoDashboardPage: React.FC = () => {
   const mobileDashboardButtonClass = "w-full justify-center text-center sm:w-auto"
 
   return (
-    <div className="min-w-0 space-y-6">
-      <Card className="relative overflow-hidden border border-[color:var(--student-border-strong)] bg-[linear-gradient(120deg,_var(--student-warning-surface),_rgba(8,33,38,0.94)_40%,_var(--student-info-surface))] text-[color:var(--student-text)]">
+    <div className="min-w-0 space-y-6" data-onboarding-target="onboarding-aluno-dashboard-main">
+      <Card
+        className="relative overflow-hidden border border-[color:var(--student-border-strong)] bg-[linear-gradient(120deg,_var(--student-warning-surface),_var(--app-surface-strong)_40%,_var(--student-info-surface))] text-[color:var(--student-text)]"
+      >
         <div className="absolute inset-0 bg-black/30" />
         <div className="relative flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div>
+          <div data-onboarding-target="onboarding-aluno-dashboard-title">
             <h1 className="text-2xl sm:text-3xl font-bold">
               Dashboard do Aluno
             </h1>
@@ -530,7 +532,7 @@ export const AlunoDashboardPage: React.FC = () => {
       </Card>
 
       <div className="grid grid-cols-1 xl:grid-cols-[0.95fr_1.05fr] gap-6">
-        <Card className="border border-[color:rgba(125,224,211,0.45)] bg-[color:var(--student-surface-strong)]">
+        <Card className="border border-[color:var(--app-success-border)] bg-[color:var(--student-surface-strong)]">
           <div className="flex items-center gap-2 mb-4">
             <MessageSquareText className="h-5 w-5 text-[color:var(--student-success)]" />
             <h2 className="text-lg font-semibold">Recados do professor</h2>
@@ -550,7 +552,7 @@ export const AlunoDashboardPage: React.FC = () => {
                 key={comment.id}
                 className={`rounded-2xl border p-4 ${
                   index === 0
-                    ? "border-[color:rgba(125,224,211,0.45)] bg-[color:var(--student-success-surface)]"
+                    ? "border-[color:var(--app-success-border)] bg-[color:var(--student-success-surface)]"
                     : "border-[color:var(--student-border)] bg-[color:var(--student-surface)]"
                 }`}
               >
@@ -568,7 +570,7 @@ export const AlunoDashboardPage: React.FC = () => {
           </div>
         </Card>
 
-        <Card className="border border-[color:rgba(241,211,139,0.45)] bg-[color:var(--student-surface-strong)]">
+        <Card className="border border-[color:var(--app-warning-border)] bg-[color:var(--student-surface-strong)]">
           <div className="flex items-center gap-2 mb-4">
             <CalendarDays className="h-5 w-5 text-[color:var(--student-warning)]" />
             <h2 className="text-lg font-semibold">Cronograma de treino</h2>
@@ -579,7 +581,7 @@ export const AlunoDashboardPage: React.FC = () => {
           )}
 
           {!loadingTreino && proximoTreino && (
-            <div className="mb-4 rounded-2xl border border-[color:rgba(241,211,139,0.45)] bg-[color:var(--student-warning-surface)] p-4">
+            <div className="mb-4 rounded-2xl border border-[color:var(--app-warning-border)] bg-[color:var(--student-warning-surface)] p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--student-warning)]">
                 Próximo treino
               </p>
@@ -618,7 +620,7 @@ export const AlunoDashboardPage: React.FC = () => {
                   key={item.id}
                   className={`rounded-2xl border p-4 ${
                     item.isNext
-                      ? "border-[color:rgba(241,211,139,0.45)] bg-[color:var(--student-warning-surface)]"
+                      ? "border-[color:var(--app-warning-border)] bg-[color:var(--student-warning-surface)]"
                       : "border-[color:var(--student-border)] bg-[color:var(--student-surface)]"
                   }`}
                 >
@@ -637,7 +639,7 @@ export const AlunoDashboardPage: React.FC = () => {
         </Card>
       </div>
 
-      <Card className="relative overflow-hidden border border-[color:var(--student-border-strong)] bg-[linear-gradient(120deg,_rgba(241,211,139,0.16)_0%,_rgba(8,33,38,0.92)_45%,_rgba(142,155,255,0.18)_100%)]">
+      <Card className="relative overflow-hidden border border-[color:var(--student-border-strong)] bg-[linear-gradient(120deg,_var(--app-warning-surface)_0%,_var(--app-surface-strong)_45%,_var(--app-info-surface)_100%)]">
         <div className="absolute inset-0 bg-black/20" />
         <div className="relative grid grid-cols-1 gap-4 lg:grid-cols-[1.2fr_1fr] lg:items-center">
           <div className="space-y-3">
@@ -730,13 +732,13 @@ export const AlunoDashboardPage: React.FC = () => {
           )}
 
           {loadingYoutubeContent && (
-            <div className="h-44 animate-pulse rounded-lg border border-[color:var(--student-border)] bg-[color:var(--student-surface-soft)]/60" />
+            <div className="h-44 animate-pulse rounded-lg border border-[color:var(--student-border)] bg-[color:var(--student-surface-soft)]" />
           )}
         </div>
       </Card>
 
       {(treinoError && !treinoNaoEncontrado) || (dietaError && !dietaNaoEncontrada) ? (
-        <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:rgba(239,68,68,0.45)]">
+        <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:var(--app-danger-border)]">
           <p className="text-[color:var(--student-danger)]">
             Erro ao carregar parte dos dados do dashboard. Treino:{" "}
             {treinoError?.message || "ok"} | Dieta: {dietaError?.message || "ok"}

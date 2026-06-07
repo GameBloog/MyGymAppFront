@@ -94,7 +94,7 @@ export const EvolucaoPage: React.FC = () => {
 
   if (!aluno) {
     return (
-      <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:rgba(239,68,68,0.45)]">
+      <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:var(--app-danger-border)]">
         <div className="flex items-start gap-3">
           <AlertCircle className="h-6 w-6 text-[color:var(--student-danger)] flex-shrink-0 mt-1" />
           <div className="flex-1">
@@ -114,7 +114,7 @@ export const EvolucaoPage: React.FC = () => {
   }
 
   return (
-    <div className="min-w-0">
+    <div className="min-w-0" data-onboarding-target="onboarding-evolution-main">
       <div className="mb-6 flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex min-w-0 items-start gap-3 sm:gap-4">
           <button

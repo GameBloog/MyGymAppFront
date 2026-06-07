@@ -384,7 +384,7 @@ export const AnswerForm: React.FC = () => {
   if (alunoSemRegistro) {
     return (
       <div>
-        <Card className="bg-[color:var(--student-warning-surface)] border-2 border-[color:rgba(241,211,139,0.45)]">
+        <Card className="bg-[color:var(--student-warning-surface)] border-2 border-[color:var(--app-warning-border)]">
           <div className="flex items-start gap-3">
             <AlertCircle className="h-6 w-6 text-[color:var(--student-warning)] flex-shrink-0 mt-1" />
             <div className="flex-1">
@@ -405,7 +405,7 @@ export const AnswerForm: React.FC = () => {
     )
   }
   return (
-    <div>
+    <div data-onboarding-target="onboarding-student-form">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           {!isAluno && (

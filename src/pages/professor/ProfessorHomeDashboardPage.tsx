@@ -166,7 +166,10 @@ export const ProfessorHomeDashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div
+        className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between"
+        data-onboarding-target="onboarding-professor-dashboard-title"
+      >
         <div>
           <h1 className="text-3xl font-bold text-white">Dashboard do Professor</h1>
           <p className="mt-1 text-zinc-300">
@@ -187,13 +190,19 @@ export const ProfessorHomeDashboardPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div
+        className="grid gap-4 md:grid-cols-2 xl:grid-cols-4"
+        data-onboarding-target="onboarding-professor-dashboard-metrics"
+      >
         {metrics.map((metric) => (
           <MetricCard key={metric.label} {...metric} />
         ))}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div
+        className="grid gap-6 lg:grid-cols-2"
+        data-onboarding-target="onboarding-professor-feedbacks"
+      >
         <FeedbackColumn
           title="Feedbacks de treino"
           items={data.feedbacks.treino}

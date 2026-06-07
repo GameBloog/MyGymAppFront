@@ -43,7 +43,7 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
 
   if (error) {
     return (
-      <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:rgba(239,68,68,0.45)]">
+      <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:var(--app-danger-border)]">
         <div className="flex items-start gap-3">
           <AlertCircle className="h-6 w-6 text-[color:var(--student-danger)] flex-shrink-0 mt-1" />
           <div className="flex-1">
@@ -128,7 +128,7 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
               {valores[valores.length - 1].toFixed(1)}
             </p>
           </div>
-          <div className="bg-[color:var(--student-success-surface)] border border-[color:rgba(125,224,211,0.45)] p-3 rounded-lg">
+          <div className="bg-[color:var(--student-success-surface)] border border-[color:var(--app-success-border)] p-3 rounded-lg">
             <p className="text-xs text-[color:var(--student-text-soft)] mb-1">Média</p>
             <p className="text-lg font-bold text-[color:var(--student-success)]">
               {valorMedio.toFixed(1)}
@@ -140,7 +140,7 @@ export const GraficoEvolucao: React.FC<GraficoEvolucaoProps> = ({
               {valorMinimo.toFixed(1)}
             </p>
           </div>
-          <div className="bg-[color:var(--student-warning-surface)] border border-[color:rgba(241,211,139,0.45)] p-3 rounded-lg">
+          <div className="bg-[color:var(--student-warning-surface)] border border-[color:var(--app-warning-border)] p-3 rounded-lg">
             <p className="text-xs text-[color:var(--student-text-soft)] mb-1">Máximo</p>
             <p className="text-lg font-bold text-[color:var(--student-warning)]">
               {valorMaximo.toFixed(1)}

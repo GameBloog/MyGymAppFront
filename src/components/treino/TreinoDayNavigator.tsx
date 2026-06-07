@@ -230,7 +230,7 @@ export const TreinoDayNavigator: React.FC<TreinoDayNavigatorProps> = ({
           aria-label={isMobileMenuOpen ? "Fechar menu de dias" : "Abrir menu de dias"}
           aria-expanded={isMobileMenuOpen}
           aria-controls={`${idPrefix}-mobile-menu`}
-          className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-[color:rgba(242,242,242,0.26)] bg-[color:var(--student-accent)] bg-[image:var(--student-accent-gradient)] text-[color:var(--student-accent-contrast)] shadow-[var(--student-shadow)] transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[color:var(--student-border-strong)]"
+          className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-[color:var(--app-border)] bg-[color:var(--student-accent)] bg-[image:var(--student-accent-gradient)] text-[color:var(--student-accent-contrast)] shadow-[var(--student-shadow)] transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[color:var(--student-border-strong)]"
         >
           {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>

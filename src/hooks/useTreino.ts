@@ -180,8 +180,8 @@ export const useClearExercicioMedia = (): UseMutationResult<
 export const usePlanoTreinoAtivo = (
   alunoId: string,
   enabled = true,
-): UseQueryResult<PlanoTreino, Error> => {
-  return useQuery<PlanoTreino, Error>(
+): UseQueryResult<PlanoTreino | null, Error> => {
+  return useQuery<PlanoTreino | null, Error>(
     ["plano-treino-ativo", alunoId],
     () => treinoApi.getPlanoAtivo(alunoId),
     {

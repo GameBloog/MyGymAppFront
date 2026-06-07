@@ -15,6 +15,10 @@ import { Layout } from "./components/Layout"
 import LandingPage from "./pages/LandingPage"
 import PlanosPage from "./pages/PlanosPage"
 import CamisasPage from "./pages/CamisasPage"
+import { LegalDocumentPage } from "./pages/LegalDocumentPage"
+import { LegalAcceptancePage } from "./pages/LegalAcceptancePage"
+import { PrivacySettingsPage } from "./pages/PrivacySettingsPage"
+import { OnboardingHelpPage } from "./pages/OnboardingHelpPage"
 
 // Auth Pages
 import { LoginPage } from "./pages/LoginPage"
@@ -82,10 +86,26 @@ function AppRoutes() {
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/planos" element={<PlanosPage />} />
         <Route path="/camisas" element={<CamisasPage />} />
+        <Route
+          path="/privacidade"
+          element={<LegalDocumentPage documentType="PRIVACY_POLICY" />}
+        />
+        <Route
+          path="/termos"
+          element={<LegalDocumentPage documentType="TERMS_OF_USE" />}
+        />
 
         {/* Auth */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route
+          path="/legal/pendente"
+          element={
+            <AuthGuard>
+              <LegalAcceptancePage />
+            </AuthGuard>
+          }
+        />
 
         {/* Root redirect */}
         <Route path="/" element={<RoleBasedRedirect />} />
@@ -120,6 +140,7 @@ function AppRoutes() {
                   <Route path="invite-codes" element={<InviteCodesPage />} />
                   <Route path="lead-links" element={<LeadLinksPage />} />
                   <Route path="financeiro" element={<FinanceiroPage />} />
+                  <Route path="privacidade" element={<PrivacySettingsPage />} />
                   <Route path="professores" element={<ProfessoresPage />} />
                   <Route path="professores/new" element={<ProfessorForm />} />
                   <Route
@@ -161,6 +182,8 @@ function AppRoutes() {
                     element={<PlanoDietaEditorPage />}
                   />
                   <Route path="financeiro" element={<ProfessorFinanceiroPage />} />
+                  <Route path="privacidade" element={<PrivacySettingsPage />} />
+                  <Route path="ajuda" element={<OnboardingHelpPage />} />
                   <Route path="*" element={<Navigate to="dashboard" replace />} />
                 </Routes>
               </Layout>
@@ -184,6 +207,8 @@ function AppRoutes() {
                     path="fotos-arquivos"
                     element={<FotosArquivosPage />}
                   />
+                  <Route path="privacidade" element={<PrivacySettingsPage />} />
+                  <Route path="ajuda" element={<OnboardingHelpPage />} />
                   <Route path="*" element={<Navigate to="dashboard" replace />} />
                 </Routes>
               </Layout>

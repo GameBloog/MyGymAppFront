@@ -28,6 +28,7 @@ import {
 import { showToast } from "../../utils/toast"
 import { formatDiaSemana, grupamentoLabels } from "../../utils/treino"
 import { TreinoDayNavigator } from "../../components/treino/TreinoDayNavigator"
+import { useOnboarding } from "../../features/onboarding/useOnboarding"
 import type {
   ProgressSerieTreino,
   TimelineEventoTreino,
@@ -144,6 +145,7 @@ const isExerciseDraftDirty = (
 
 export const MeuTreinoPage: React.FC = () => {
   const { data: aluno, isLoading: loadingAluno } = useMyAluno()
+  const { markChecklistItem } = useOnboarding()
 
   const alunoId = aluno?.id || ""
 
@@ -181,6 +183,7 @@ export const MeuTreinoPage: React.FC = () => {
   const [comentarioDia, setComentarioDia] = useState("")
   const autofilledExerciseIdsRef = useRef<Record<string, true>>({})
   const initializedCheckinIdRef = useRef<string | null>(null)
+  const markedOpenWorkoutRef = useRef(false)
 
   const erroPlanoNaoEncontrado =
     erroPlano?.message?.toLowerCase().includes("não encontrado") ||
@@ -247,6 +250,12 @@ export const MeuTreinoPage: React.FC = () => {
       setSelectedDiaId(planoAtivo.dias[0].id)
     }
   }, [planoAtivo, selectedDiaId])
+
+  useEffect(() => {
+    if (markedOpenWorkoutRef.current || !planoAtivo) return
+    markedOpenWorkoutRef.current = true
+    markChecklistItem("OPEN_FIRST_WORKOUT")
+  }, [markChecklistItem, planoAtivo])
 
   useEffect(() => {
     if (!checkins || checkins.length === 0) {
@@ -519,7 +528,7 @@ export const MeuTreinoPage: React.FC = () => {
 
   if (!aluno) {
     return (
-      <Card className="bg-[color:var(--student-warning-surface)] border-2 border-[color:rgba(241,211,139,0.45)]">
+      <Card className="bg-[color:var(--student-warning-surface)] border-2 border-[color:var(--app-warning-border)]">
         <p className="text-[color:var(--student-text)]">
           Não foi possível localizar o perfil do aluno para carregar o treino.
         </p>
@@ -529,7 +538,7 @@ export const MeuTreinoPage: React.FC = () => {
 
   if (erroPlano && !erroPlanoNaoEncontrado) {
     return (
-      <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:rgba(239,68,68,0.45)]">
+      <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:var(--app-danger-border)]">
         <p className="text-[color:var(--student-danger)]">{erroPlano.message}</p>
       </Card>
     )
@@ -537,7 +546,7 @@ export const MeuTreinoPage: React.FC = () => {
 
   if (!planoAtivo) {
     return (
-      <Card className="border border-[#d4a548]/20 bg-[#171208]">
+      <Card className="border border-[color:var(--app-warning-border)] bg-[color:var(--app-warning-surface)]">
         <div className="text-center py-8">
           <Dumbbell className="h-12 w-12 text-[color:var(--student-text-muted)] mx-auto mb-3" />
           <h2 className="text-xl font-semibold text-[color:var(--student-text)] mb-2">
@@ -562,33 +571,35 @@ export const MeuTreinoPage: React.FC = () => {
         </p>
       </div>
 
-      <Card className="border border-[color:rgba(125,224,211,0.45)] bg-[color:var(--student-surface-strong)]">
-        <div className="flex items-center gap-2 mb-3">
-          <MessageSquare className="h-5 w-5 text-[color:var(--student-success)]" />
-          <h2 className="text-lg font-semibold">Feedback em destaque</h2>
-        </div>
-        {ultimoComentarioProfessor ? (
-          <div className="rounded-2xl border border-[color:rgba(125,224,211,0.45)] bg-[color:var(--student-success-surface)] p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--student-success)]">
-              Último recado do professor
-            </p>
-            <p className="mt-3 text-sm leading-7 text-[color:var(--student-text)]">
-              {ultimoComentarioProfessor.comentarioProfessor}
-            </p>
-            <p className="mt-3 text-xs text-[color:var(--student-text-soft)]">
-              {format(new Date(ultimoComentarioProfessor.updatedAt), "dd/MM/yyyy HH:mm", {
-                locale: ptBR,
-              })} • {ultimoComentarioProfessor.treinoDia.titulo}
-            </p>
+      <div data-onboarding-target="onboarding-feedback-area">
+        <Card className="border border-[color:var(--app-success-border)] bg-[color:var(--student-surface-strong)]">
+          <div className="flex items-center gap-2 mb-3">
+            <MessageSquare className="h-5 w-5 text-[color:var(--student-success)]" />
+            <h2 className="text-lg font-semibold">Feedback em destaque</h2>
           </div>
-        ) : (
-          <p className="text-sm text-[color:var(--student-text-soft)]">
-            Quando houver um comentário do professor ele aparece aqui antes do restante do treino.
-          </p>
-        )}
-      </Card>
+          {ultimoComentarioProfessor ? (
+            <div className="rounded-2xl border border-[color:var(--app-success-border)] bg-[color:var(--student-success-surface)] p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--student-success)]">
+                Último recado do professor
+              </p>
+              <p className="mt-3 text-sm leading-7 text-[color:var(--student-text)]">
+                {ultimoComentarioProfessor.comentarioProfessor}
+              </p>
+              <p className="mt-3 text-xs text-[color:var(--student-text-soft)]">
+                {format(new Date(ultimoComentarioProfessor.updatedAt), "dd/MM/yyyy HH:mm", {
+                  locale: ptBR,
+                })} • {ultimoComentarioProfessor.treinoDia.titulo}
+              </p>
+            </div>
+          ) : (
+            <p className="text-sm text-[color:var(--student-text-soft)]">
+              Quando houver um comentário do professor ele aparece aqui antes do restante do treino.
+            </p>
+          )}
+        </Card>
+      </div>
 
-      <Card className="border border-[#d4a548]/20 bg-[#171208]">
+      <Card className="border border-[color:var(--app-warning-border)] bg-[color:var(--app-warning-surface)]">
         <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
           <CalendarCheck className="h-5 w-5" />
           Selecionar dia para treinar
@@ -620,15 +631,15 @@ export const MeuTreinoPage: React.FC = () => {
           aria-labelledby={`treino-day-tab-${selectedDia.id}`}
           className="space-y-6"
         >
-          <Card className="border border-[#49b4a6]/20 bg-[#0f1716]">
+          <Card className="border border-[color:var(--app-success-border)] bg-[color:var(--app-surface-strong)]">
             <h2 className="text-lg font-semibold text-white mb-2">
               Orientações do dia: {selectedDia.titulo}
             </h2>
             {(selectedDia.metodo || selectedDia.observacoes) ? (
               <div className="space-y-3">
                 {selectedDia.metodo && (
-                  <div className="rounded-lg border border-[#49b4a6]/25 bg-[#12302c] p-3">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7de0d3]">
+                  <div className="rounded-lg border border-[color:var(--app-success-border)] bg-[color:var(--app-success-surface)] p-3">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--app-success)]">
                       Método
                     </p>
                     <p className="mt-1 text-sm text-zinc-100">{selectedDia.metodo}</p>
@@ -651,13 +662,13 @@ export const MeuTreinoPage: React.FC = () => {
           </Card>
 
           {!checkinAtual && (
-            <Card className="border border-[#49b4a6]/20 bg-[#0f1716]">
+            <Card className="border border-[color:var(--app-success-border)] bg-[color:var(--app-surface-strong)]">
               <h2 className="text-lg font-semibold mb-4">Exercícios planejados do dia</h2>
               <div className="space-y-3">
                 {selectedDia.exercicios.map((item) => (
                   <div
                     key={item.id}
-                    className="border border-[#49b4a6]/20 rounded-lg p-4 bg-[#12302c]/40"
+                    className="border border-[color:var(--app-success-border)] rounded-lg p-4 bg-[color:var(--app-success-surface)]"
                   >
                     <p className="font-semibold text-white">{item.exercicio.nome}</p>
                     <p className="text-xs text-zinc-300 mt-1">
@@ -668,8 +679,8 @@ export const MeuTreinoPage: React.FC = () => {
                     {(item.metodo || item.observacoes) && (
                       <div className="mt-2 space-y-2">
                         {item.metodo && (
-                          <div className="rounded-md border border-[#49b4a6]/25 bg-[#12302c] px-3 py-2">
-                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7de0d3]">
+                          <div className="rounded-md border border-[color:var(--app-success-border)] bg-[color:var(--app-success-surface)] px-3 py-2">
+                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--app-success)]">
                               Método
                             </p>
                             <p className="text-sm text-zinc-100">{item.metodo}</p>
@@ -691,7 +702,8 @@ export const MeuTreinoPage: React.FC = () => {
       )}
 
       {checkinAtual && (
-        <Card>
+        <div data-onboarding-target="onboarding-exercise-checkin">
+          <Card>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
             <div>
               <h2 className="text-lg font-semibold">
@@ -739,7 +751,7 @@ export const MeuTreinoPage: React.FC = () => {
                   key={exercise.id}
                   className={`rounded-lg border p-4 transition-colors duration-200 motion-reduce:transition-none ${
                     isCompleted
-                      ? "border-[color:rgba(125,224,211,0.55)] bg-[color:var(--student-success-surface)]"
+                      ? "border-[color:var(--app-success-border)] bg-[color:var(--student-success-surface)]"
                       : "border-[color:var(--student-border)] bg-[color:var(--student-surface)]"
                   }`}
                 >
@@ -834,7 +846,7 @@ export const MeuTreinoPage: React.FC = () => {
                   )}
 
                   {latestPerformance && (
-                    <div className="mb-4 rounded-lg border border-[color:rgba(241,211,139,0.45)] bg-[color:var(--student-warning-surface)] p-3">
+                    <div className="mb-4 rounded-lg border border-[color:var(--app-warning-border)] bg-[color:var(--student-warning-surface)] p-3">
                       <div className="flex items-center gap-2">
                         <Target className="h-4 w-4 text-[color:var(--student-warning)]" />
                         <p className="text-sm font-medium text-[color:var(--student-text)]">
@@ -940,7 +952,8 @@ export const MeuTreinoPage: React.FC = () => {
                 : "Finalizar dia de treino"}
             </Button>
           </div>
-        </Card>
+          </Card>
+        </div>
       )}
 
       <Card>

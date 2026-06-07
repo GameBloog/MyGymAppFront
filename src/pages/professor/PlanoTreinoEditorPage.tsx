@@ -809,7 +809,7 @@ export const PlanoTreinoEditorPage: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-onboarding-target="onboarding-workout-editor">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <button
@@ -1221,7 +1221,7 @@ export const PlanoTreinoEditorPage: React.FC = () => {
         </div>
       </Card>
 
-      <div ref={exerciseBankRef}>
+      <div ref={exerciseBankRef} data-onboarding-target="onboarding-exercises-area">
         <Card>
           <h2 className="text-lg font-semibold mb-4">Banco de Exercícios</h2>
 

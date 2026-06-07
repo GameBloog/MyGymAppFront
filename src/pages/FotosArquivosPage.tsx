@@ -100,7 +100,7 @@ export const FotosArquivosPage: React.FC = () => {
 
   if (!aluno) {
     return (
-      <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:rgba(239,68,68,0.45)]">
+      <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:var(--app-danger-border)]">
         <div className="flex items-start gap-3">
           <AlertCircle className="h-6 w-6 text-[color:var(--student-danger)] flex-shrink-0 mt-1" />
           <div className="flex-1">
@@ -133,7 +133,7 @@ export const FotosArquivosPage: React.FC = () => {
             Erro ao carregar dados
           </h1>
         </div>
-        <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:rgba(239,68,68,0.45)]">
+        <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:var(--app-danger-border)]">
           <div className="flex items-start gap-3">
             <AlertCircle className="h-6 w-6 text-[color:var(--student-danger)] flex-shrink-0 mt-1" />
             <div className="flex-1">
@@ -163,7 +163,7 @@ export const FotosArquivosPage: React.FC = () => {
   }
 
   return (
-    <div>
+    <div data-onboarding-target="onboarding-photos-main">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           <button
@@ -220,7 +220,7 @@ export const FotosArquivosPage: React.FC = () => {
                   <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all flex items-center justify-center">
                     <button
                       onClick={() => handleDeleteFoto(foto.id)}
-                      className="opacity-0 group-hover:opacity-100 p-2 bg-[color:var(--student-danger-surface)] text-[color:var(--student-text)] rounded-lg hover:bg-[color:rgba(239,68,68,0.28)] transition-all"
+                      className="opacity-0 group-hover:opacity-100 p-2 bg-[color:var(--student-danger-surface)] text-[color:var(--student-text)] rounded-lg hover:bg-[color:var(--app-danger-surface-hover)] transition-all"
                       title="Excluir"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -287,7 +287,7 @@ export const FotosArquivosPage: React.FC = () => {
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all flex items-center justify-center">
                       <button
                         onClick={() => handleDeleteFoto(foto.id)}
-                        className="opacity-0 group-hover:opacity-100 p-2 bg-[color:var(--student-danger-surface)] text-[color:var(--student-text)] rounded-lg hover:bg-[color:rgba(239,68,68,0.28)] transition-all"
+                        className="opacity-0 group-hover:opacity-100 p-2 bg-[color:var(--student-danger-surface)] text-[color:var(--student-text)] rounded-lg hover:bg-[color:var(--app-danger-surface-hover)] transition-all"
                         title="Excluir"
                       >
                         <Trash2 className="h-4 w-4" />

@@ -848,7 +848,7 @@ export const PlanoDietaEditorPage: React.FC = () => {
     )
   }
 
-  if (loadingAluno || loadingPlano || loadingRecomendacao) {
+  if (loadingAluno || loadingPlano) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-4">
         <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
@@ -866,7 +866,7 @@ export const PlanoDietaEditorPage: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-onboarding-target="onboarding-diet-editor">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <button
@@ -937,6 +937,13 @@ export const PlanoDietaEditorPage: React.FC = () => {
                 {recomendacao.caloriasMeta ?? "-"}
               </p>
             </div>
+          </div>
+        )}
+
+        {loadingRecomendacao && (
+          <div className="mb-4 flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-900/60 p-3 text-sm text-zinc-300">
+            <Loader2 className="h-4 w-4 animate-spin text-blue-400" />
+            Calculando recomendação nutricional...
           </div>
         )}
 
@@ -1382,7 +1389,11 @@ export const PlanoDietaEditorPage: React.FC = () => {
         </div>
       </Card>
 
-      <div ref={foodBankRef} tabIndex={-1}>
+      <div
+        ref={foodBankRef}
+        tabIndex={-1}
+        data-onboarding-target="onboarding-foods-area"
+      >
         <Card>
           <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <UtensilsCrossed className="h-5 w-5" />

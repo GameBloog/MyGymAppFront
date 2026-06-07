@@ -40,7 +40,7 @@ export const ActivityProgressSummary: React.FC<ActivityProgressSummaryProps> = (
     <div
       className={`mb-4 rounded-lg border p-4 transition-colors ${
         isComplete
-          ? "border-[color:rgba(125,224,211,0.55)] bg-[color:var(--student-success-surface)]"
+          ? "border-[color:var(--app-success-border)] bg-[color:var(--student-success-surface)]"
           : "border-[color:var(--student-border)] bg-[color:var(--student-surface)]"
       }`}
       aria-live="polite"
@@ -50,7 +50,7 @@ export const ActivityProgressSummary: React.FC<ActivityProgressSummaryProps> = (
           <span
             className={`mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border ${
               isComplete
-                ? "border-[color:rgba(125,224,211,0.6)] bg-[color:var(--student-success-surface)] text-[color:var(--student-success)]"
+                ? "border-[color:var(--app-success-border)] bg-[color:var(--student-success-surface)] text-[color:var(--student-success)]"
                 : "border-[color:var(--student-border)] bg-[color:var(--student-surface-soft)] text-[color:var(--student-text-soft)]"
             }`}
             aria-hidden="true"
@@ -116,7 +116,7 @@ export const CompletionToggle: React.FC<CompletionToggleProps> = ({
       onClick={() => onChange(!checked)}
       className={`flex min-h-12 w-full items-center justify-between gap-3 rounded-lg border px-3 py-3 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[color:var(--student-border-strong)] motion-reduce:transition-none sm:w-auto sm:min-w-56 ${
         checked
-          ? "border-[color:rgba(125,224,211,0.58)] bg-[color:var(--student-success-surface)] text-[color:var(--student-text)]"
+          ? "border-[color:var(--app-success-border)] bg-[color:var(--student-success-surface)] text-[color:var(--student-text)]"
           : "border-[color:var(--student-border)] bg-[color:var(--student-surface)] text-[color:var(--student-text-soft)] hover:border-[color:var(--student-border-strong)] hover:bg-[color:var(--student-surface-soft)]"
       }`}
     >
@@ -124,7 +124,7 @@ export const CompletionToggle: React.FC<CompletionToggleProps> = ({
         <span
           className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border ${
             checked
-              ? "border-[color:rgba(125,224,211,0.55)] bg-[color:rgba(125,224,211,0.18)] text-[color:var(--student-success)]"
+              ? "border-[color:var(--app-success-border)] bg-[color:var(--app-success-surface)] text-[color:var(--student-success)]"
               : "border-[color:var(--student-border)] bg-[color:var(--student-surface-soft)] text-[color:var(--student-text-muted)]"
           }`}
           aria-hidden="true"
