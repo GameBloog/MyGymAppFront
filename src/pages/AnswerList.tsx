@@ -73,7 +73,7 @@ export const AnswersList: React.FC = () => {
 
   const getEditRoute = (id: string) => {
     if (user?.role === "ADMIN") return `/admin/alunos/${id}/edit`
-    if (user?.role === "PROFESSOR") return `/professor/alunos/${id}/edit`
+    if (user?.role === "PROFESSOR") return `/professor/alunos/${id}/formulario`
     return `/aluno/perfil`
   }
 
@@ -85,8 +85,7 @@ export const AnswersList: React.FC = () => {
 
   const getFotosRoute = (id: string) => {
     if (user?.role === "ADMIN") return `/admin/alunos/${id}/fotos-arquivos`
-    if (user?.role === "PROFESSOR")
-      return `/professor/alunos/${id}/fotos-arquivos`
+    if (user?.role === "PROFESSOR") return `/professor/alunos/${id}/fotos`
     return `/aluno/fotos-arquivos`
   }
 
@@ -100,6 +99,12 @@ export const AnswersList: React.FC = () => {
     if (user?.role === "ADMIN") return `/admin/alunos/${id}/dieta`
     if (user?.role === "PROFESSOR") return `/professor/alunos/${id}/dieta`
     return "/aluno/dieta"
+  }
+
+  const getAlunoContextRoute = (id: string) => {
+    if (user?.role === "PROFESSOR") return `/professor/alunos/${id}`
+    if (user?.role === "ADMIN") return `/admin/alunos/${id}/edit`
+    return "/aluno/perfil"
   }
 
   const canDelete = user?.role === "ADMIN" || user?.role === "PROFESSOR"
@@ -312,6 +317,15 @@ export const AnswersList: React.FC = () => {
           <Card
             key={aluno.id}
             className="min-w-0 max-w-full !p-4 shadow-none transition-shadow sm:!p-6 sm:shadow-[var(--student-shadow)] sm:hover:shadow-lg"
+            onClick={
+              user?.role === "PROFESSOR"
+                ? (event) => {
+                    const target = event.target as HTMLElement
+                    if (target.closest("button")) return
+                    navigate(getAlunoContextRoute(aluno.id))
+                  }
+                : undefined
+            }
           >
             <div className="flex flex-col gap-4">
               <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">

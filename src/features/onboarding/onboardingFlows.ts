@@ -100,7 +100,7 @@ export const onboardingFlows: Partial<Record<UserRole, OnboardingStep[]>> = {
       title: "Fotos de evolução",
       body: "Use fotos para comparação temporal e para complementar as métricas de avaliação física.",
       target: "onboarding-photos-main",
-      route: (context) => professorAlunoRoute(context, "fotos-arquivos"),
+      route: (context) => professorAlunoRoute(context, "fotos"),
     },
     {
       key: "finance",

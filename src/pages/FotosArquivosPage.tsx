@@ -19,7 +19,13 @@ import { showToast } from "../utils/toast"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
 
-export const FotosArquivosPage: React.FC = () => {
+interface FotosArquivosPageProps {
+  embeddedInStudentContext?: boolean
+}
+
+export const FotosArquivosPage: React.FC<FotosArquivosPageProps> = ({
+  embeddedInStudentContext = false,
+}) => {
   const navigate = useNavigate()
   const { id: alunoIdParam } = useParams<{ id: string }>()
   const { user, token } = useAuth()
@@ -122,17 +128,19 @@ export const FotosArquivosPage: React.FC = () => {
   if (fotoHook.error) {
     return (
       <div>
-        <div className="flex items-center gap-4 mb-6">
-          <button
-            onClick={() => navigate(getBackRoute())}
-            className="p-2 hover:bg-[color:var(--student-surface-soft)] rounded-lg transition-colors"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </button>
-          <h1 className="text-3xl font-bold text-[color:var(--student-text)]">
-            Erro ao carregar dados
-          </h1>
-        </div>
+        {!embeddedInStudentContext && (
+          <div className="flex items-center gap-4 mb-6">
+            <button
+              onClick={() => navigate(getBackRoute())}
+              className="p-2 hover:bg-[color:var(--student-surface-soft)] rounded-lg transition-colors"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+            <h1 className="text-3xl font-bold text-[color:var(--student-text)]">
+              Erro ao carregar dados
+            </h1>
+          </div>
+        )}
         <Card className="bg-[color:var(--student-danger-surface)] border-2 border-[color:var(--app-danger-border)]">
           <div className="flex items-start gap-3">
             <AlertCircle className="h-6 w-6 text-[color:var(--student-danger)] flex-shrink-0 mt-1" />
@@ -166,17 +174,21 @@ export const FotosArquivosPage: React.FC = () => {
     <div data-onboarding-target="onboarding-photos-main">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
-          <button
-            onClick={() => navigate(getBackRoute())}
-            className="p-2 hover:bg-[color:var(--student-surface-soft)] rounded-lg transition-colors"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </button>
+          {!embeddedInStudentContext && (
+            <button
+              onClick={() => navigate(getBackRoute())}
+              className="p-2 hover:bg-[color:var(--student-surface-soft)] rounded-lg transition-colors"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+          )}
           <div>
             <h1 className="text-3xl font-bold text-[color:var(--student-text)]">
-              {isAluno
-                ? "Minhas Fotos"
-                : `Fotos - ${aluno.user?.nome}`}
+              {embeddedInStudentContext
+                ? "Fotos"
+                : isAluno
+                  ? "Minhas Fotos"
+                  : `Fotos - ${aluno.user?.nome}`}
             </h1>
             <p className="text-[color:var(--student-text-soft)] mt-1">
               {fotoHook.fotos.length} foto(s)

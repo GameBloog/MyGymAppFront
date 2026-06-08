@@ -234,7 +234,7 @@ export const ProfessorDashboard: React.FC = () => {
                   </button>
                   <button
                     onClick={() =>
-                      navigate(`/professor/alunos/${aluno.id}/fotos-arquivos`)
+                      navigate(`/professor/alunos/${aluno.id}/fotos`)
                     }
                     className="p-2 hover:bg-purple-950/40 rounded-lg transition-colors"
                     title="Ver Fotos"
@@ -311,7 +311,7 @@ export const ProfessorDashboard: React.FC = () => {
                   variant="secondary"
                   icon={Camera}
                   onClick={() =>
-                    navigate(`/professor/alunos/${aluno.id}/fotos-arquivos`)
+                    navigate(`/professor/alunos/${aluno.id}/fotos`)
                   }
                   className="w-full"
                 >

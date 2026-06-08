@@ -151,7 +151,13 @@ const mapModeloToDraftDays = (modelo: TreinoModelo): DraftDay[] =>
         })),
     }))
 
-export const PlanoTreinoEditorPage: React.FC = () => {
+interface PlanoTreinoEditorPageProps {
+  embeddedInStudentContext?: boolean
+}
+
+export const PlanoTreinoEditorPage: React.FC<PlanoTreinoEditorPageProps> = ({
+  embeddedInStudentContext = false,
+}) => {
   const navigate = useNavigate()
   const { id: alunoId } = useParams<{ id: string }>()
   const { user } = useAuth()
@@ -812,20 +818,23 @@ export const PlanoTreinoEditorPage: React.FC = () => {
     <div className="space-y-6" data-onboarding-target="onboarding-workout-editor">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate(getBackRoute(isAdmin))}
-            className="p-2 hover:bg-zinc-900 rounded-lg transition-colors"
-            title="Voltar"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </button>
+          {!embeddedInStudentContext && (
+            <button
+              onClick={() => navigate(getBackRoute(isAdmin))}
+              className="p-2 hover:bg-zinc-900 rounded-lg transition-colors"
+              title="Voltar"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+          )}
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-white">
               Editor de Treino
             </h1>
             <p className="text-zinc-300 text-sm sm:text-base">
-              {aluno.user?.nome || "Aluno"} • monte dias, exercícios, métodos e
-              observações
+              {embeddedInStudentContext
+                ? "Monte dias, exercícios, métodos e observações"
+                : `${aluno.user?.nome || "Aluno"} • monte dias, exercícios, métodos e observações`}
             </p>
           </div>
         </div>

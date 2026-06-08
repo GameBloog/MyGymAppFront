@@ -35,6 +35,7 @@ import { FinanceiroPage } from "./pages/admin/FinanceiroPage"
 // Professor Pages
 import { ProfessorHomeDashboardPage } from "./pages/professor/ProfessorHomeDashboardPage"
 import { ProfessorFinanceiroPage } from "./pages/professor/ProfessorFinanceiroPage"
+import { ProfessorAlunoContextPage } from "./pages/professor/ProfessorAlunoContextPage"
 import { PlanoTreinoEditorPage } from "./pages/professor/PlanoTreinoEditorPage"
 import { PlanoDietaEditorPage } from "./pages/professor/PlanoDietaEditorPage"
 
@@ -164,23 +165,7 @@ function AppRoutes() {
                   <Route path="dashboard" element={<ProfessorHomeDashboardPage />} />
                   <Route path="alunos" element={<AnswersList />} />
                   <Route path="alunos/new" element={<AnswerForm />} />
-                  <Route path="alunos/:id/edit" element={<AnswerForm />} />
-                  <Route
-                    path="alunos/:id/evolucao"
-                    element={<EvolucaoPage />}
-                  />
-                  <Route
-                    path="alunos/:id/fotos-arquivos"
-                    element={<FotosArquivosPage />}
-                  />
-                  <Route
-                    path="alunos/:id/treino"
-                    element={<PlanoTreinoEditorPage />}
-                  />
-                  <Route
-                    path="alunos/:id/dieta"
-                    element={<PlanoDietaEditorPage />}
-                  />
+                  <Route path="alunos/:id/*" element={<ProfessorAlunoContextPage />} />
                   <Route path="financeiro" element={<ProfessorFinanceiroPage />} />
                   <Route path="privacidade" element={<PrivacySettingsPage />} />
                   <Route path="ajuda" element={<OnboardingHelpPage />} />

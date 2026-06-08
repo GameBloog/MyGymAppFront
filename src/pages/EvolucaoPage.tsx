@@ -20,7 +20,13 @@ import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { type MetricaEvolucao } from "../types/historico"
 
-export const EvolucaoPage: React.FC = () => {
+interface EvolucaoPageProps {
+  embeddedInStudentContext?: boolean
+}
+
+export const EvolucaoPage: React.FC<EvolucaoPageProps> = ({
+  embeddedInStudentContext = false,
+}) => {
   const navigate = useNavigate()
   const { id: alunoIdParam } = useParams<{ id: string }>()
   const { user } = useAuth()
@@ -117,16 +123,20 @@ export const EvolucaoPage: React.FC = () => {
     <div className="min-w-0" data-onboarding-target="onboarding-evolution-main">
       <div className="mb-6 flex min-w-0 flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex min-w-0 items-start gap-3 sm:gap-4">
-          <button
-            onClick={() => navigate(getBackRoute())}
-            className="mt-1 flex-shrink-0 p-2 hover:bg-[color:var(--student-surface-soft)] rounded-lg transition-colors"
-            title="Voltar"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </button>
+          {!embeddedInStudentContext && (
+            <button
+              onClick={() => navigate(getBackRoute())}
+              className="mt-1 flex-shrink-0 p-2 hover:bg-[color:var(--student-surface-soft)] rounded-lg transition-colors"
+              title="Voltar"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+          )}
           <div className="min-w-0">
             <h1 className="break-words text-2xl font-bold leading-tight text-[color:var(--student-text)] sm:text-3xl">
-              Evolução - {aluno.user?.nome || "Aluno"}
+              {embeddedInStudentContext
+                ? "Evolução física"
+                : `Evolução - ${aluno.user?.nome || "Aluno"}`}
             </h1>
             <p className="text-[color:var(--student-text-soft)] mt-1">
               {historico?.length || 0}{" "}

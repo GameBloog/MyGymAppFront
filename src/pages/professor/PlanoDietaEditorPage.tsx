@@ -119,7 +119,13 @@ const mapCheckinStatus = (checkin: DietaCheckin) => {
   return { text: "Em andamento", variant: "warning" as const }
 }
 
-export const PlanoDietaEditorPage: React.FC = () => {
+interface PlanoDietaEditorPageProps {
+  embeddedInStudentContext?: boolean
+}
+
+export const PlanoDietaEditorPage: React.FC<PlanoDietaEditorPageProps> = ({
+  embeddedInStudentContext = false,
+}) => {
   const navigate = useNavigate()
   const { id: alunoId } = useParams<{ id: string }>()
   const { user } = useAuth()
@@ -869,21 +875,25 @@ export const PlanoDietaEditorPage: React.FC = () => {
     <div className="space-y-6" data-onboarding-target="onboarding-diet-editor">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <button
-            onClick={() =>
-              navigate(isAdmin ? "/admin/alunos" : "/professor/dashboard")
-            }
-            className="p-2 hover:bg-zinc-900 rounded-lg transition-colors"
-            title="Voltar"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </button>
+          {!embeddedInStudentContext && (
+            <button
+              onClick={() =>
+                navigate(isAdmin ? "/admin/alunos" : "/professor/dashboard")
+              }
+              className="p-2 hover:bg-zinc-900 rounded-lg transition-colors"
+              title="Voltar"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+          )}
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-white">
               Editor de Dieta
             </h1>
             <p className="text-zinc-300">
-              {aluno.user?.nome || "Aluno"} • plano semanal com macros e check-ins
+              {embeddedInStudentContext
+                ? "Plano semanal com macros e check-ins"
+                : `${aluno.user?.nome || "Aluno"} • plano semanal com macros e check-ins`}
             </p>
           </div>
         </div>

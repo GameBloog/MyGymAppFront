@@ -54,7 +54,13 @@ const measurementInstructionLinks = [
   },
 ]
 
-export const AnswerForm: React.FC = () => {
+interface AnswerFormProps {
+  embeddedInStudentContext?: boolean
+}
+
+export const AnswerForm: React.FC<AnswerFormProps> = ({
+  embeddedInStudentContext = false,
+}) => {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const { user } = useAuth()
@@ -274,7 +280,7 @@ export const AnswerForm: React.FC = () => {
         await updateAluno.mutateAsync({ id: alunoId, data: dataToSend })
         showToast.success("✅ Dados atualizados com sucesso!")
 
-        if (!isAluno) {
+        if (!isAluno && !embeddedInStudentContext) {
           setTimeout(() => {
             navigate(getBackRoute())
           }, 300)
@@ -406,33 +412,35 @@ export const AnswerForm: React.FC = () => {
   }
   return (
     <div data-onboarding-target="onboarding-student-form">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-4">
-          {!isAluno && (
-            <button
-              onClick={() => navigate(getBackRoute())}
-              className="p-2 hover:bg-[color:var(--student-surface-soft)] rounded-lg transition-colors"
-              title="Voltar"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </button>
-          )}
-          <h1 className="text-3xl font-bold text-[color:var(--student-text)]">
-            {isAluno ? "Meu Perfil" : isEdit ? "Editar Aluno" : "Novo Aluno"}
-          </h1>
-        </div>
+      {!embeddedInStudentContext && (
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-4">
+            {!isAluno && (
+              <button
+                onClick={() => navigate(getBackRoute())}
+                className="p-2 hover:bg-[color:var(--student-surface-soft)] rounded-lg transition-colors"
+                title="Voltar"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </button>
+            )}
+            <h1 className="text-3xl font-bold text-[color:var(--student-text)]">
+              {isAluno ? "Meu Perfil" : isEdit ? "Editar Aluno" : "Novo Aluno"}
+            </h1>
+          </div>
 
-        {isCreating && (
-          <Button
-            variant="secondary"
-            icon={RotateCcw}
-            onClick={resetForm}
-            disabled={isLoading}
-          >
-            Limpar Formulário
-          </Button>
-        )}
-      </div>
+          {isCreating && (
+            <Button
+              variant="secondary"
+              icon={RotateCcw}
+              onClick={resetForm}
+              disabled={isLoading}
+            >
+              Limpar Formulário
+            </Button>
+          )}
+        </div>
+      )}
 
       {isCreating && (
         <Card className="mb-6">
@@ -919,7 +927,7 @@ export const AnswerForm: React.FC = () => {
         >
           {isEdit ? "Salvar Alterações" : "Cadastrar Aluno"}
         </Button>
-        {!isAluno && (
+        {!isAluno && !embeddedInStudentContext && (
           <Button
             variant="secondary"
             onClick={() => navigate(getBackRoute())}
