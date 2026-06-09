@@ -255,6 +255,12 @@ api.interceptors.response.use(
       return Promise.reject(new Error("Recurso não encontrado"))
     }
 
+    if (status === 409) {
+      const err = new Error(errorMessage) as Error & { status: number }
+      err.status = 409
+      return Promise.reject(err)
+    }
+
     if (error.response.data?.details) {
       const details = error.response.data.details
         .map((d) => `${d.campo}: ${d.mensagem}`)

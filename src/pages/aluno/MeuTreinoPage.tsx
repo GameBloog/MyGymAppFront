@@ -28,6 +28,7 @@ import {
 import { showToast } from "../../utils/toast"
 import { formatDiaSemana, grupamentoLabels } from "../../utils/treino"
 import { TreinoDayNavigator } from "../../components/treino/TreinoDayNavigator"
+import { ConfirmModal } from "../../components/ConfirmModal"
 import { useOnboarding } from "../../features/onboarding/useOnboarding"
 import type {
   ProgressSerieTreino,
@@ -181,10 +182,10 @@ export const MeuTreinoPage: React.FC = () => {
   const [checkinAtual, setCheckinAtual] = useState<TreinoCheckin | null>(null)
   const [exerciseDrafts, setExerciseDrafts] = useState<Record<string, ExerciseDraft>>({})
   const [comentarioDia, setComentarioDia] = useState("")
+  const [showRepetirTreinoModal, setShowRepetirTreinoModal] = useState(false)
   const autofilledExerciseIdsRef = useRef<Record<string, true>>({})
   const initializedCheckinIdRef = useRef<string | null>(null)
   const markedOpenWorkoutRef = useRef(false)
-  const finalizedCheckinIdRef = useRef<string | null>(null)
 
   const erroPlanoNaoEncontrado =
     erroPlano?.message?.toLowerCase().includes("não encontrado") ||
@@ -264,9 +265,7 @@ export const MeuTreinoPage: React.FC = () => {
       return
     }
 
-    const openCheckin = checkins.find(
-      (item) => item.status === "INICIADO" && item.id !== finalizedCheckinIdRef.current,
-    )
+    const openCheckin = checkins.find((item) => item.status === "INICIADO")
     if (!openCheckin) {
       setCheckinAtual(null)
       return
@@ -375,18 +374,31 @@ export const MeuTreinoPage: React.FC = () => {
     )
   }, [checkins])
 
-  const handleStartCheckin = async () => {
+  const handleStartCheckin = async (force = false) => {
     if (!selectedDiaId || !alunoId) {
       showToast.error("Selecione o dia de treino")
       return
     }
 
-    const checkin = await startCheckin.mutateAsync({
-      treinoDiaId: selectedDiaId,
-      alunoId,
-    })
-    setCheckinAtual(normalizeTreinoCheckin(checkin))
-    showToast.success("Treino iniciado com sucesso")
+    try {
+      const checkin = await startCheckin.mutateAsync({
+        treinoDiaId: selectedDiaId,
+        alunoId,
+        force,
+      })
+      setCheckinAtual(normalizeTreinoCheckin(checkin))
+      showToast.success("Treino iniciado com sucesso")
+    } catch (error) {
+      const err = error as Error & { status?: number }
+      if (err.status === 409) {
+        setShowRepetirTreinoModal(true)
+      }
+    }
+  }
+
+  const handleConfirmRepetirTreino = async () => {
+    setShowRepetirTreinoModal(false)
+    await handleStartCheckin(true)
   }
 
   const handleExerciseDraftChange = (
@@ -447,20 +459,12 @@ export const MeuTreinoPage: React.FC = () => {
       return
     }
 
-    finalizedCheckinIdRef.current = checkinAtual.id
-
-    try {
-      const finalizado = await finalizeCheckin.mutateAsync({
-        checkinId: checkinAtual.id,
-        alunoId,
-        comentarioAluno: comentarioDia.trim() || undefined,
-      })
-      setCheckinAtual(finalizado.status === "INICIADO" ? normalizeTreinoCheckin(finalizado) : null)
-      showToast.success("Dia de treino marcado como concluído")
-    } catch (error) {
-      finalizedCheckinIdRef.current = null
-      throw error
-    }
+    const finalizado = await finalizeCheckin.mutateAsync({
+      checkinId: checkinAtual.id,
+      alunoId,
+      comentarioAluno: comentarioDia.trim() || undefined,
+    })
+    setCheckinAtual(finalizado.status === "INICIADO" ? normalizeTreinoCheckin(finalizado) : null)
   }
 
   const selectedDia = useMemo(() => {
@@ -647,16 +651,18 @@ export const MeuTreinoPage: React.FC = () => {
           mobileLabel="Dias do treino"
         />
 
-        <div className="mt-4">
-          <Button
-            icon={PlayCircle}
-            onClick={handleStartCheckin}
-            isLoading={startCheckin.isLoading}
-            disabled={!selectedDiaId || finalizeCheckin.isLoading}
-          >
-            {selectedDia ? `Iniciar ${selectedDia.titulo}` : "Iniciar treino do dia"}
-          </Button>
-        </div>
+        {!hasTreinoEmAndamento && (
+          <div className="mt-4">
+            <Button
+              icon={PlayCircle}
+              onClick={() => handleStartCheckin()}
+              isLoading={startCheckin.isLoading}
+              disabled={!selectedDiaId}
+            >
+              {selectedDia ? `Iniciar ${selectedDia.titulo}` : "Iniciar treino do dia"}
+            </Button>
+          </div>
+        )}
       </Card>
 
       {selectedDia && (
@@ -1147,6 +1153,18 @@ export const MeuTreinoPage: React.FC = () => {
           ))}
         </div>
       </Card>
+
+      <ConfirmModal
+        isOpen={showRepetirTreinoModal}
+        title="Treino já realizado hoje"
+        message={`Você já concluiu o treino${selectedDia ? ` "${selectedDia.titulo}"` : ""} hoje.\n\nIniciar novamente criará uma nova sessão independente, sem apagar o registro anterior.`}
+        confirmText="Iniciar mesmo assim"
+        cancelText="Cancelar"
+        variant="warning"
+        onConfirm={handleConfirmRepetirTreino}
+        onCancel={() => setShowRepetirTreinoModal(false)}
+        isLoading={startCheckin.isLoading}
+      />
     </div>
   )
 }

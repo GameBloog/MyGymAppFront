@@ -275,19 +275,20 @@ export const useTreinoProgress = (
 export const useStartTreinoCheckin = (): UseMutationResult<
   TreinoCheckin,
   Error,
-  { treinoDiaId: string; alunoId: string }
+  { treinoDiaId: string; alunoId: string; force?: boolean }
 > => {
   const queryClient = useQueryClient()
 
-  return useMutation<TreinoCheckin, Error, { treinoDiaId: string; alunoId: string }>(
-    ({ treinoDiaId }) => treinoApi.startCheckin({ treinoDiaId }),
+  return useMutation<TreinoCheckin, Error, { treinoDiaId: string; alunoId: string; force?: boolean }>(
+    ({ treinoDiaId, force }) => treinoApi.startCheckin({ treinoDiaId, force }),
     {
       onSuccess: (checkin, variables) => {
         queryClient.invalidateQueries(["treino-checkins", variables.alunoId])
         queryClient.invalidateQueries(["treino-timeline", variables.alunoId])
         queryClient.setQueryData(["checkin-ativo", variables.alunoId], checkin)
       },
-      onError: (error) => {
+      onError: (error: Error & { status?: number }) => {
+        if (error.status === 409) return
         showToast.error(error.message || "Erro ao iniciar check-in")
       },
     },
@@ -336,7 +337,11 @@ export const useFinalizeTreinoCheckin = (): UseMutationResult<
     ({ checkinId, comentarioAluno }) =>
       treinoApi.finalizeCheckin(checkinId, { comentarioAluno }),
     {
-      onSuccess: (_, variables) => {
+      onSuccess: (finalizado, variables) => {
+        queryClient.setQueriesData<TreinoCheckin[]>(
+          ["treino-checkins", variables.alunoId],
+          (old) => old?.map((c) => (c.id === finalizado.id ? finalizado : c)) ?? [],
+        )
         queryClient.invalidateQueries(["treino-checkins", variables.alunoId])
         queryClient.invalidateQueries(["treino-timeline", variables.alunoId])
         queryClient.invalidateQueries(["treino-progress", variables.alunoId])

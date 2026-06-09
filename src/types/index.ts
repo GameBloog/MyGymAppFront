@@ -916,6 +916,7 @@ export interface UpsertPlanoTreinoDTO {
 
 export interface StartCheckinDTO {
   treinoDiaId: string
+  force?: boolean
 }
 
 export interface UpdateExercicioCheckinDTO {
