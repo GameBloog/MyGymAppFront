@@ -448,6 +448,12 @@ export const MeuTreinoPage: React.FC = () => {
     return planoAtivo.dias.find((dia) => dia.id === selectedDiaId)
   }, [planoAtivo, selectedDiaId])
 
+  const isSelectedDiaSessionActive = !!(
+    selectedDia &&
+    checkinAtual &&
+    checkinAtual.treinoDiaId === selectedDia.id
+  )
+
   const dayNavigationItems = useMemo(
     () =>
       (planoAtivo?.dias || []).map((dia) => ({
@@ -619,8 +625,14 @@ export const MeuTreinoPage: React.FC = () => {
             isLoading={startCheckin.isLoading}
             disabled={!selectedDiaId}
           >
-            Iniciar treino do dia
+            {selectedDia ? `Iniciar ${selectedDia.titulo}` : "Iniciar treino do dia"}
           </Button>
+          {checkinAtual && selectedDia && !isSelectedDiaSessionActive && (
+            <p className="mt-2 text-sm text-[color:var(--student-text-soft)]">
+              Você está vendo {selectedDia.titulo}. A sessão em andamento abaixo é de{" "}
+              {checkinAtual.treinoDia.titulo}.
+            </p>
+          )}
         </div>
       </Card>
 
@@ -661,7 +673,7 @@ export const MeuTreinoPage: React.FC = () => {
             )}
           </Card>
 
-          {!checkinAtual && (
+          {!isSelectedDiaSessionActive && (
             <Card className="border border-[color:var(--app-success-border)] bg-[color:var(--app-surface-strong)]">
               <h2 className="text-lg font-semibold mb-4">Exercícios planejados do dia</h2>
               <div className="space-y-3">
