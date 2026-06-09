@@ -259,11 +259,13 @@ export const MeuTreinoPage: React.FC = () => {
 
   useEffect(() => {
     if (!checkins || checkins.length === 0) {
+      setCheckinAtual(null)
       return
     }
 
     const openCheckin = checkins.find((item) => item.status === "INICIADO")
     if (!openCheckin) {
+      setCheckinAtual(null)
       return
     }
 
@@ -447,7 +449,7 @@ export const MeuTreinoPage: React.FC = () => {
       alunoId,
       comentarioAluno: comentarioDia.trim() || undefined,
     })
-    setCheckinAtual(normalizeTreinoCheckin(finalizado))
+    setCheckinAtual(finalizado.status === "INICIADO" ? normalizeTreinoCheckin(finalizado) : null)
     showToast.success("Dia de treino marcado como concluído")
   }
 
