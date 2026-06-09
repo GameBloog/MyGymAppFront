@@ -184,6 +184,7 @@ export const MeuTreinoPage: React.FC = () => {
   const autofilledExerciseIdsRef = useRef<Record<string, true>>({})
   const initializedCheckinIdRef = useRef<string | null>(null)
   const markedOpenWorkoutRef = useRef(false)
+  const finalizedCheckinIdRef = useRef<string | null>(null)
 
   const erroPlanoNaoEncontrado =
     erroPlano?.message?.toLowerCase().includes("não encontrado") ||
@@ -263,7 +264,9 @@ export const MeuTreinoPage: React.FC = () => {
       return
     }
 
-    const openCheckin = checkins.find((item) => item.status === "INICIADO")
+    const openCheckin = checkins.find(
+      (item) => item.status === "INICIADO" && item.id !== finalizedCheckinIdRef.current,
+    )
     if (!openCheckin) {
       setCheckinAtual(null)
       return
@@ -444,13 +447,20 @@ export const MeuTreinoPage: React.FC = () => {
       return
     }
 
-    const finalizado = await finalizeCheckin.mutateAsync({
-      checkinId: checkinAtual.id,
-      alunoId,
-      comentarioAluno: comentarioDia.trim() || undefined,
-    })
-    setCheckinAtual(finalizado.status === "INICIADO" ? normalizeTreinoCheckin(finalizado) : null)
-    showToast.success("Dia de treino marcado como concluído")
+    finalizedCheckinIdRef.current = checkinAtual.id
+
+    try {
+      const finalizado = await finalizeCheckin.mutateAsync({
+        checkinId: checkinAtual.id,
+        alunoId,
+        comentarioAluno: comentarioDia.trim() || undefined,
+      })
+      setCheckinAtual(finalizado.status === "INICIADO" ? normalizeTreinoCheckin(finalizado) : null)
+      showToast.success("Dia de treino marcado como concluído")
+    } catch (error) {
+      finalizedCheckinIdRef.current = null
+      throw error
+    }
   }
 
   const selectedDia = useMemo(() => {
@@ -642,7 +652,7 @@ export const MeuTreinoPage: React.FC = () => {
             icon={PlayCircle}
             onClick={handleStartCheckin}
             isLoading={startCheckin.isLoading}
-            disabled={!selectedDiaId}
+            disabled={!selectedDiaId || finalizeCheckin.isLoading}
           >
             {selectedDia ? `Iniciar ${selectedDia.titulo}` : "Iniciar treino do dia"}
           </Button>
