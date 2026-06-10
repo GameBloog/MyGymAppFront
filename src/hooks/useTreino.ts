@@ -342,7 +342,7 @@ export const useFinalizeTreinoCheckin = (): UseMutationResult<
           ["treino-checkins", variables.alunoId],
           (old) => old?.map((c) => (c.id === finalizado.id ? finalizado : c)) ?? [],
         )
-        queryClient.invalidateQueries(["treino-checkins", variables.alunoId])
+        queryClient.invalidateQueries(["treino-checkins", variables.alunoId], { refetchActive: false })
         queryClient.invalidateQueries(["treino-timeline", variables.alunoId])
         queryClient.invalidateQueries(["treino-progress", variables.alunoId])
         showToast.success("Treino finalizado com sucesso!")
