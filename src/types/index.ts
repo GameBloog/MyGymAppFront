@@ -339,6 +339,7 @@ export interface FinanceEntry {
   descricao?: string | null
   dataLancamento: string
   createdBy: string
+  professorId?: string | null
   createdAt: string
   updatedAt: string
 }
@@ -533,6 +534,8 @@ export interface ProfessorFinanceDashboardResponse {
     from: string
     to: string
   }
+  currentMonth: string
+  currentMonthStatus: FinanceMonthStatus
   totals: {
     receita: number
     receitaMensalAtual: number
@@ -550,6 +553,7 @@ export interface ProfessorFinanceDashboardResponse {
   }
   months: Array<{
     month: string
+    status: FinanceMonthStatus
     receita: number
     alunosPagantes: number
     ticketMedio: number
