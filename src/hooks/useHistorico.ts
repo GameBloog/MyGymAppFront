@@ -4,7 +4,7 @@ import {
   useQueryClient,
   type UseQueryResult,
   type UseMutationResult,
-} from "react-query"
+} from "@tanstack/react-query"
 import { historicoApi } from "../services/historyApi"
 import {
   type HistoricoEvolucao,

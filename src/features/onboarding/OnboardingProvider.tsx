@@ -6,8 +6,8 @@ import React, {
   useState,
   type ReactNode,
 } from "react"
-import { useMutation, useQuery, useQueryClient } from "react-query"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useLocation, useNavigate } from "react-router"
 import { onboardingApi } from "../../services/api"
 import { useAuth } from "../../hooks/useAuth"
 import { OnboardingContext } from "./OnboardingContext"

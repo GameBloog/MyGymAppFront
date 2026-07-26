@@ -5,7 +5,7 @@ import {
   type UseQueryResult,
   type UseMutationResult,
   type UseQueryOptions,
-} from "react-query"
+} from "@tanstack/react-query"
 import { alunosApi } from "../services/api"
 import {
   type Aluno,
@@ -46,7 +46,7 @@ const mergeAlunoWithUpdate = (aluno: Aluno, data: UpdateAlunoDTO): Aluno => {
 }
 
 export const useAlunos = (): UseQueryResult<Aluno[], Error> => {
-  return useQuery<Aluno[], Error>("alunos", alunosApi.getAll, {
+  return useQuery<Aluno[], Error>(["alunos"], alunosApi.getAll, {
     staleTime: 30000,
     cacheTime: 300000,
     refetchOnMount: true,
@@ -80,12 +80,12 @@ export const useCreateAluno = (): UseMutationResult<
     (data) => alunosApi.create(data),
     {
       onSuccess: (newAluno) => {
-        queryClient.setQueryData<Aluno[]>("alunos", (old) => {
+        queryClient.setQueryData<Aluno[]>(["alunos"], (old) => {
           if (!old) return [newAluno]
           return [newAluno, ...old]
         })
 
-        queryClient.invalidateQueries("alunos")
+        queryClient.invalidateQueries(["alunos"])
 
         showToast.success("Aluno criado com sucesso!")
       },
@@ -112,14 +112,14 @@ export const useUpdateAluno = (): UseMutationResult<
     UpdateAlunoContext
   >(({ id, data }) => alunosApi.update(id, data), {
     onMutate: async ({ id, data }): Promise<UpdateAlunoContext> => {
-      await queryClient.cancelQueries("alunos")
+      await queryClient.cancelQueries(["alunos"])
       await queryClient.cancelQueries(["aluno", id])
 
-      const previousAlunos = queryClient.getQueryData<Aluno[]>("alunos")
+      const previousAlunos = queryClient.getQueryData<Aluno[]>(["alunos"])
       const previousAluno = queryClient.getQueryData<Aluno>(["aluno", id])
 
       if (previousAlunos) {
-        queryClient.setQueryData<Aluno[]>("alunos", (old) => {
+        queryClient.setQueryData<Aluno[]>(["alunos"], (old) => {
           if (!old) return []
           return old.map((aluno) =>
             aluno.id === id ? mergeAlunoWithUpdate(aluno, data) : aluno,
@@ -138,7 +138,7 @@ export const useUpdateAluno = (): UseMutationResult<
     },
 
     onSuccess: (updatedAluno) => {
-      queryClient.setQueryData<Aluno[]>("alunos", (old) => {
+      queryClient.setQueryData<Aluno[]>(["alunos"], (old) => {
         if (!old) return [updatedAluno]
         return old.map((aluno) =>
           aluno.id === updatedAluno.id ? updatedAluno : aluno,
@@ -147,7 +147,7 @@ export const useUpdateAluno = (): UseMutationResult<
 
       queryClient.setQueryData(["aluno", updatedAluno.id], updatedAluno)
 
-      queryClient.invalidateQueries("alunos")
+      queryClient.invalidateQueries(["alunos"])
       queryClient.invalidateQueries(["aluno", updatedAluno.id])
 
       showToast.success("Dados atualizados com sucesso!")
@@ -157,7 +157,7 @@ export const useUpdateAluno = (): UseMutationResult<
       console.error("❌ Erro ao atualizar aluno:", error)
 
       if (context?.previousAlunos) {
-        queryClient.setQueryData("alunos", context.previousAlunos)
+        queryClient.setQueryData(["alunos"], context.previousAlunos)
       }
       if (context?.previousAluno) {
         queryClient.setQueryData(["aluno", variables.id], context.previousAluno)
@@ -180,11 +180,11 @@ export const useDeleteAluno = (): UseMutationResult<
     (id) => alunosApi.delete(id),
     {
       onMutate: async (deletedId): Promise<DeleteAlunoContext> => {
-        await queryClient.cancelQueries("alunos")
+        await queryClient.cancelQueries(["alunos"])
 
-        const previousAlunos = queryClient.getQueryData<Aluno[]>("alunos")
+        const previousAlunos = queryClient.getQueryData<Aluno[]>(["alunos"])
 
-        queryClient.setQueryData<Aluno[]>("alunos", (old) => {
+        queryClient.setQueryData<Aluno[]>(["alunos"], (old) => {
           if (!old) return []
           return old.filter((aluno) => aluno.id !== deletedId)
         })
@@ -194,7 +194,7 @@ export const useDeleteAluno = (): UseMutationResult<
 
       onSuccess: (_, deletedId) => {
         queryClient.removeQueries(["aluno", deletedId])
-        queryClient.invalidateQueries("alunos")
+        queryClient.invalidateQueries(["alunos"])
 
         showToast.success("Aluno excluído com sucesso!")
       },
@@ -203,7 +203,7 @@ export const useDeleteAluno = (): UseMutationResult<
         console.error("❌ Erro ao deletar aluno:", error)
 
         if (context?.previousAlunos) {
-          queryClient.setQueryData("alunos", context.previousAlunos)
+          queryClient.setQueryData(["alunos"], context.previousAlunos)
         }
 
         showToast.error(error.message || "Erro ao excluir aluno")
@@ -227,14 +227,14 @@ export const useUpdateAlunoStatus = (): UseMutationResult<
     UpdateAlunoContext
   >(({ id, data }) => alunosApi.updateStatus(id, data), {
     onMutate: async ({ id, data }): Promise<UpdateAlunoContext> => {
-      await queryClient.cancelQueries("alunos")
+      await queryClient.cancelQueries(["alunos"])
       await queryClient.cancelQueries(["aluno", id])
 
-      const previousAlunos = queryClient.getQueryData<Aluno[]>("alunos")
+      const previousAlunos = queryClient.getQueryData<Aluno[]>(["alunos"])
       const previousAluno = queryClient.getQueryData<Aluno>(["aluno", id])
 
       if (previousAlunos) {
-        queryClient.setQueryData<Aluno[]>("alunos", (old) => {
+        queryClient.setQueryData<Aluno[]>(["alunos"], (old) => {
           if (!old) return []
           return old.map((aluno) =>
             aluno.id === id ? { ...aluno, ativo: data.ativo } : aluno,
@@ -252,7 +252,7 @@ export const useUpdateAlunoStatus = (): UseMutationResult<
       return { previousAlunos, previousAluno }
     },
     onSuccess: (updatedAluno) => {
-      queryClient.setQueryData<Aluno[]>("alunos", (old) => {
+      queryClient.setQueryData<Aluno[]>(["alunos"], (old) => {
         if (!old) return [updatedAluno]
         return old.map((aluno) =>
           aluno.id === updatedAluno.id ? { ...aluno, ...updatedAluno } : aluno,
@@ -260,7 +260,7 @@ export const useUpdateAlunoStatus = (): UseMutationResult<
       })
 
       queryClient.setQueryData(["aluno", updatedAluno.id], updatedAluno)
-      queryClient.invalidateQueries("alunos")
+      queryClient.invalidateQueries(["alunos"])
       queryClient.invalidateQueries(["aluno", updatedAluno.id])
       showToast.success(
         updatedAluno.ativo
@@ -270,7 +270,7 @@ export const useUpdateAlunoStatus = (): UseMutationResult<
     },
     onError: (error, variables, context) => {
       if (context?.previousAlunos) {
-        queryClient.setQueryData("alunos", context.previousAlunos)
+        queryClient.setQueryData(["alunos"], context.previousAlunos)
       }
       if (context?.previousAluno) {
         queryClient.setQueryData(["aluno", variables.id], context.previousAluno)

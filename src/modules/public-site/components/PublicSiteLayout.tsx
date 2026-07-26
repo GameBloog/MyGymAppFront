@@ -7,7 +7,7 @@ import {
   Shirt,
   X,
 } from "lucide-react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router"
 import { BrandMark } from "../../../components/BrandMark"
 import { AnalyticsConsent } from "../../../components/AnalyticsConsent"
 import {

@@ -4,7 +4,7 @@ import {
   useQueryClient,
   type UseMutationResult,
   type UseQueryResult,
-} from "react-query"
+} from "@tanstack/react-query"
 import { showToast } from "../../../utils/toast"
 import { treinoModelosApi } from "../api/treinoModelosApi"
 import type { CreateTreinoModeloDTO, TreinoModelo } from "../types"

@@ -5,7 +5,7 @@ import {
   type UseQueryResult,
   type UseMutationResult,
   type UseQueryOptions,
-} from "react-query"
+} from "@tanstack/react-query"
 import { professoresApi } from "../services/api"
 import {
   type Professor,
@@ -17,7 +17,7 @@ import { showToast } from "../utils/toast"
 export const useProfessores = (
   options?: UseQueryOptions<Professor[], Error>,
 ): UseQueryResult<Professor[], Error> => {
-  return useQuery<Professor[], Error>("professores", professoresApi.getAll, {
+  return useQuery<Professor[], Error>(["professores"], professoresApi.getAll, {
     staleTime: 60000,
     cacheTime: 300000,
     refetchOnMount: true,
@@ -63,12 +63,12 @@ export const useCreateProfessor = (): UseMutationResult<
     (data) => professoresApi.create(data),
     {
       onSuccess: (newProfessor) => {
-        queryClient.setQueryData<Professor[]>("professores", (old) => {
+        queryClient.setQueryData<Professor[]>(["professores"], (old) => {
           if (!old) return [newProfessor]
           return [newProfessor, ...old]
         })
 
-        queryClient.invalidateQueries("professores")
+        queryClient.invalidateQueries(["professores"])
         showToast.success("Professor criado com sucesso!")
       },
       onError: (error: Error) => {
@@ -92,7 +92,7 @@ export const useUpdateProfessor = (): UseMutationResult<
     { id: string; data: UpdateProfessorDTO }
   >(({ id, data }) => professoresApi.update(id, data), {
     onSuccess: (updatedProfessor) => {
-      queryClient.setQueryData<Professor[]>("professores", (old) => {
+      queryClient.setQueryData<Professor[]>(["professores"], (old) => {
         if (!old) return [updatedProfessor]
         return old.map((prof) =>
           prof.id === updatedProfessor.id ? updatedProfessor : prof,
@@ -103,7 +103,7 @@ export const useUpdateProfessor = (): UseMutationResult<
         ["professor", updatedProfessor.id],
         updatedProfessor,
       )
-      queryClient.invalidateQueries("professores")
+      queryClient.invalidateQueries(["professores"])
       queryClient.invalidateQueries(["professor", updatedProfessor.id])
       showToast.success("Professor atualizado com sucesso!")
     },
@@ -123,13 +123,13 @@ export const useDeleteProfessor = (): UseMutationResult<
 
   return useMutation<void, Error, string>((id) => professoresApi.delete(id), {
     onSuccess: (_, deletedId) => {
-      queryClient.setQueryData<Professor[]>("professores", (old) => {
+      queryClient.setQueryData<Professor[]>(["professores"], (old) => {
         if (!old) return []
         return old.filter((prof) => prof.id !== deletedId)
       })
 
       queryClient.removeQueries(["professor", deletedId])
-      queryClient.invalidateQueries("professores")
+      queryClient.invalidateQueries(["professores"])
       showToast.success("Professor excluído com sucesso!")
     },
     onError: (error: Error) => {

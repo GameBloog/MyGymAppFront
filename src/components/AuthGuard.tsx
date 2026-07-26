@@ -1,5 +1,5 @@
 import React, { type ReactNode } from "react"
-import { Navigate, useLocation, useNavigate } from "react-router-dom"
+import { Navigate, useLocation, useNavigate } from "react-router"
 import { useAuth } from "../hooks/useAuth"
 import { type UserRole } from "../types"
 import { Loader2, LogOut, Home } from "lucide-react"

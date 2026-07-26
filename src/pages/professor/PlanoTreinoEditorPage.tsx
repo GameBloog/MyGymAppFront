@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router"
 import {
   ArrowLeft,
   ClipboardList,
@@ -503,10 +503,16 @@ export const PlanoTreinoEditorPage: React.FC<PlanoTreinoEditorPageProps> = ({
   )
 
   const handleFocusExerciseBank = () => {
+    const dayId = ensureDaySelection()
+    if (!dayId) {
+      return
+    }
+
     exerciseBankRef.current?.scrollIntoView({
       behavior: "smooth",
       block: "start",
     })
+    window.setTimeout(() => exerciseBankRef.current?.focus({ preventScroll: true }), 250)
   }
 
   const moveExerciseToDay = (
@@ -963,11 +969,12 @@ export const PlanoTreinoEditorPage: React.FC<PlanoTreinoEditorPageProps> = ({
               onClick: addDay,
             },
             {
-              label: "Adicionar exercício ao dia atual",
+              label: "Buscar exercício para adicionar",
               icon: Search,
               onClick: handleFocusExerciseBank,
             },
           ]}
+          mobileMode="inline"
         />
 
         <div className="space-y-4">
@@ -1231,7 +1238,11 @@ export const PlanoTreinoEditorPage: React.FC<PlanoTreinoEditorPageProps> = ({
         </div>
       </Card>
 
-      <div ref={exerciseBankRef} data-onboarding-target="onboarding-exercises-area">
+      <div
+        ref={exerciseBankRef}
+        tabIndex={-1}
+        data-onboarding-target="onboarding-exercises-area"
+      >
         <Card>
           <h2 className="text-lg font-semibold mb-4">Banco de Exercícios</h2>
 
