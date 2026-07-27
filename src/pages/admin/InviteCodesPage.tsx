@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router"
 import { Ticket, Plus, Copy, Check, ArrowLeft } from "lucide-react"
 import { Card, Button, Badge } from "../../components/ui"
 import { useInviteCodes, useCreateInviteCode } from "../../hooks/useInviteCodes"

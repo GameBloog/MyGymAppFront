@@ -4,7 +4,7 @@ import {
   useQueryClient,
   type UseMutationResult,
   type UseQueryResult,
-} from "react-query"
+} from "@tanstack/react-query"
 import { leadLinksApi } from "../services/api"
 import {
   type CreateLeadLinkDTO,
@@ -57,8 +57,8 @@ export const useCreateLeadLink = (): UseMutationResult<
     (data) => leadLinksApi.create(data),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("leadLinks")
-        queryClient.invalidateQueries("leadAnalytics")
+        queryClient.invalidateQueries(["leadLinks"])
+        queryClient.invalidateQueries(["leadAnalytics"])
         showToast.success("Link de lead criado com sucesso")
       },
       onError: (error) => {
@@ -79,8 +79,8 @@ export const useUpdateLeadLink = (): UseMutationResult<
     ({ id, data }) => leadLinksApi.update(id, data),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("leadLinks")
-        queryClient.invalidateQueries("leadAnalytics")
+        queryClient.invalidateQueries(["leadLinks"])
+        queryClient.invalidateQueries(["leadAnalytics"])
         showToast.success("Link de lead atualizado")
       },
       onError: (error) => {

@@ -1,53 +1,151 @@
-import React, { useEffect } from "react"
+import React, { Suspense, useEffect } from "react"
 import {
   BrowserRouter,
   Routes,
   Route,
   Navigate,
   useNavigate,
-} from "react-router-dom"
+} from "react-router"
 import { AuthProvider } from "./context/AuthContext.tsx"
 import { AuthGuard } from "./components/AuthGuard"
 import { TokenValidator } from "./components/TokkenValidator.tsx"
 import { Layout } from "./components/Layout"
 
-// Landing Page
-import LandingPage from "./pages/LandingPage"
-import PlanosPage from "./pages/PlanosPage"
-import CamisasPage from "./pages/CamisasPage"
-import { LegalDocumentPage } from "./pages/LegalDocumentPage"
-import { LegalAcceptancePage } from "./pages/LegalAcceptancePage"
-import { PrivacySettingsPage } from "./pages/PrivacySettingsPage"
-import { OnboardingHelpPage } from "./pages/OnboardingHelpPage"
-
-// Auth Pages
-import { LoginPage } from "./pages/LoginPage"
-import { RegisterPage } from "./pages/auth/RegisterPage"
-
-// Admin Pages
-import { AdminDashboard } from "./pages/auth/AdminDashboard"
-import { InviteCodesPage } from "./pages/admin/InviteCodesPage"
-import { LeadLinksPage } from "./pages/admin/LeadLinksPage"
-import { ProfessoresPage } from "./pages/admin/ProfessoresPage"
-import { ProfessorForm } from "./pages/admin/ProfessorForm"
-import { FinanceiroPage } from "./pages/admin/FinanceiroPage"
-
-// Professor Pages
-import { ProfessorHomeDashboardPage } from "./pages/professor/ProfessorHomeDashboardPage"
-import { ProfessorFinanceiroPage } from "./pages/professor/ProfessorFinanceiroPage"
-import { ProfessorAlunoContextPage } from "./pages/professor/ProfessorAlunoContextPage"
-import { PlanoTreinoEditorPage } from "./pages/professor/PlanoTreinoEditorPage"
-import { PlanoDietaEditorPage } from "./pages/professor/PlanoDietaEditorPage"
-
-// Shared Pages
-import { AnswersList } from "./pages/AnswerList"
-import { AnswerForm } from "./pages/AnswerForm"
-import { EvolucaoPage } from "./pages/EvolucaoPage"
 import { useAuth } from "./hooks/useAuth.ts"
-import { FotosArquivosPage } from "./pages/FotosArquivosPage.tsx"
-import { MeuTreinoPage } from "./pages/aluno/MeuTreinoPage"
-import { MinhaDietaPage } from "./pages/aluno/MinhaDietaPage"
-import { AlunoDashboardPage } from "./pages/aluno/AlunoDashboardPage"
+
+const LandingPage = React.lazy(() => import("./pages/LandingPage"))
+const PlanosPage = React.lazy(() => import("./pages/PlanosPage"))
+const CamisasPage = React.lazy(() => import("./pages/CamisasPage"))
+const LegalDocumentPage = React.lazy(() =>
+  import("./pages/LegalDocumentPage").then(({ LegalDocumentPage }) => ({
+    default: LegalDocumentPage,
+  })),
+)
+const LegalAcceptancePage = React.lazy(() =>
+  import("./pages/LegalAcceptancePage").then(({ LegalAcceptancePage }) => ({
+    default: LegalAcceptancePage,
+  })),
+)
+const PrivacySettingsPage = React.lazy(() =>
+  import("./pages/PrivacySettingsPage").then(({ PrivacySettingsPage }) => ({
+    default: PrivacySettingsPage,
+  })),
+)
+const OnboardingHelpPage = React.lazy(() =>
+  import("./pages/OnboardingHelpPage").then(({ OnboardingHelpPage }) => ({
+    default: OnboardingHelpPage,
+  })),
+)
+const LoginPage = React.lazy(() =>
+  import("./pages/LoginPage").then(({ LoginPage }) => ({ default: LoginPage })),
+)
+const RegisterPage = React.lazy(() =>
+  import("./pages/auth/RegisterPage").then(({ RegisterPage }) => ({
+    default: RegisterPage,
+  })),
+)
+const AdminDashboard = React.lazy(() =>
+  import("./pages/auth/AdminDashboard").then(({ AdminDashboard }) => ({
+    default: AdminDashboard,
+  })),
+)
+const InviteCodesPage = React.lazy(() =>
+  import("./pages/admin/InviteCodesPage").then(({ InviteCodesPage }) => ({
+    default: InviteCodesPage,
+  })),
+)
+const LeadLinksPage = React.lazy(() =>
+  import("./pages/admin/LeadLinksPage").then(({ LeadLinksPage }) => ({
+    default: LeadLinksPage,
+  })),
+)
+const ProfessoresPage = React.lazy(() =>
+  import("./pages/admin/ProfessoresPage").then(({ ProfessoresPage }) => ({
+    default: ProfessoresPage,
+  })),
+)
+const ProfessorForm = React.lazy(() =>
+  import("./pages/admin/ProfessorForm").then(({ ProfessorForm }) => ({
+    default: ProfessorForm,
+  })),
+)
+const FinanceiroPage = React.lazy(() => import("./pages/admin/FinanceiroPage"))
+const PrivacyRequestsPage = React.lazy(() =>
+  import("./pages/admin/PrivacyRequestsPage").then(({ PrivacyRequestsPage }) => ({
+    default: PrivacyRequestsPage,
+  })),
+)
+const ProfessorHomeDashboardPage = React.lazy(() =>
+  import("./pages/professor/ProfessorHomeDashboardPage").then(
+    ({ ProfessorHomeDashboardPage }) => ({ default: ProfessorHomeDashboardPage }),
+  ),
+)
+const ProfessorFinanceiroPage = React.lazy(() =>
+  import("./pages/professor/ProfessorFinanceiroPage").then(
+    ({ ProfessorFinanceiroPage }) => ({ default: ProfessorFinanceiroPage }),
+  ),
+)
+const ProfessorAlunoContextPage = React.lazy(() =>
+  import("./pages/professor/ProfessorAlunoContextPage").then(
+    ({ ProfessorAlunoContextPage }) => ({ default: ProfessorAlunoContextPage }),
+  ),
+)
+const PlanoTreinoEditorPage = React.lazy(() =>
+  import("./pages/professor/PlanoTreinoEditorPage").then(
+    ({ PlanoTreinoEditorPage }) => ({ default: PlanoTreinoEditorPage }),
+  ),
+)
+const PlanoDietaEditorPage = React.lazy(() =>
+  import("./pages/professor/PlanoDietaEditorPage").then(
+    ({ PlanoDietaEditorPage }) => ({ default: PlanoDietaEditorPage }),
+  ),
+)
+const AnswersList = React.lazy(() =>
+  import("./pages/AnswerList").then(({ AnswersList }) => ({
+    default: AnswersList,
+  })),
+)
+const AnswerForm = React.lazy(() =>
+  import("./pages/AnswerForm").then(({ AnswerForm }) => ({
+    default: AnswerForm,
+  })),
+)
+const EvolucaoPage = React.lazy(() =>
+  import("./pages/EvolucaoPage").then(({ EvolucaoPage }) => ({
+    default: EvolucaoPage,
+  })),
+)
+const FotosArquivosPage = React.lazy(() =>
+  import("./pages/FotosArquivosPage.tsx").then(({ FotosArquivosPage }) => ({
+    default: FotosArquivosPage,
+  })),
+)
+const MeuTreinoPage = React.lazy(() =>
+  import("./pages/aluno/MeuTreinoPage").then(({ MeuTreinoPage }) => ({
+    default: MeuTreinoPage,
+  })),
+)
+const MinhaDietaPage = React.lazy(() =>
+  import("./pages/aluno/MinhaDietaPage").then(({ MinhaDietaPage }) => ({
+    default: MinhaDietaPage,
+  })),
+)
+const AlunoDashboardPage = React.lazy(() =>
+  import("./pages/aluno/AlunoDashboardPage").then(({ AlunoDashboardPage }) => ({
+    default: AlunoDashboardPage,
+  })),
+)
+
+const RouteLoading: React.FC = () => (
+  <div className="flex min-h-screen items-center justify-center bg-black">
+    <div
+      aria-label="Carregando"
+      className="h-8 w-8 animate-spin rounded-full border-2 border-zinc-700 border-t-white"
+      role="status"
+    />
+  </div>
+)
+
 
 const RoleBasedRedirect: React.FC = () => {
   const { user } = useAuth()
@@ -82,7 +180,8 @@ function AppRoutes() {
       {/* Verifica token periodicamente */}
       <TokenValidator />
 
-      <Routes>
+      <Suspense fallback={<RouteLoading />}>
+        <Routes>
         {/* Landing pública */}
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/planos" element={<PlanosPage />} />
@@ -141,6 +240,7 @@ function AppRoutes() {
                   <Route path="invite-codes" element={<InviteCodesPage />} />
                   <Route path="lead-links" element={<LeadLinksPage />} />
                   <Route path="financeiro" element={<FinanceiroPage />} />
+                  <Route path="lgpd" element={<PrivacyRequestsPage />} />
                   <Route path="privacidade" element={<PrivacySettingsPage />} />
                   <Route path="professores" element={<ProfessoresPage />} />
                   <Route path="professores/new" element={<ProfessorForm />} />
@@ -226,7 +326,8 @@ function AppRoutes() {
 
         {/* Fallback geral */}
         <Route path="*" element={<Navigate to="/landing" replace />} />
-      </Routes>
+        </Routes>
+      </Suspense>
     </>
   )
 }

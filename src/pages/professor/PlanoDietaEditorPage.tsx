@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router"
 import {
   ArrowLeft,
   ClipboardList,
@@ -368,6 +368,15 @@ export const PlanoDietaEditorPage: React.FC<PlanoDietaEditorPageProps> = ({
     }
     showToast.error("Selecione ou crie uma refeição para adicionar alimentos")
     return null
+  }
+
+  const handleGoToFoodBank = () => {
+    const mealId = ensureSelectedMeal()
+    if (!mealId) {
+      return
+    }
+
+    handleFocusFoodBank()
   }
 
   const updateDay = (dayId: string, patch: Partial<DraftDay>) => {
@@ -1054,11 +1063,12 @@ export const PlanoDietaEditorPage: React.FC<PlanoDietaEditorPageProps> = ({
               onClick: addMealToSelectedDay,
             },
             {
-              label: "Adicionar alimento à refeição ativa",
+              label: "Buscar alimento para refeição",
               icon: Search,
-              onClick: handleFocusFoodBank,
+              onClick: handleGoToFoodBank,
             },
           ]}
+          mobileMode="inline"
         />
 
         <div className="mb-4 rounded-lg border border-zinc-700 bg-zinc-900 p-4">

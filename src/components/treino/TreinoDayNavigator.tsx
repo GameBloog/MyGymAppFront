@@ -73,6 +73,31 @@ export const TreinoDayNavigator: React.FC<TreinoDayNavigatorProps> = ({
     closeMobileMenu()
   }
 
+  const renderActionButtons = (
+    onAfterAction?: () => void,
+    layoutClassName = "grid gap-2",
+  ) => (
+    <div className={layoutClassName}>
+      {actions.map((action) => {
+        const Icon = action.icon || Plus
+        return (
+          <button
+            key={action.label}
+            type="button"
+            onClick={() => {
+              action.onClick()
+              onAfterAction?.()
+            }}
+            className="flex min-h-11 w-full items-center gap-2 rounded-lg border border-[color:var(--student-border)] bg-[color:var(--student-surface)] px-3 py-2 text-left text-sm font-medium text-[color:var(--student-text)] transition-colors hover:bg-[color:var(--student-surface-soft)] focus:outline-none focus:ring-2 focus:ring-[color:var(--student-border-strong)]"
+          >
+            <Icon className="h-4 w-4 shrink-0" />
+            <span className="min-w-0 leading-snug">{action.label}</span>
+          </button>
+        )
+      })}
+    </div>
+  )
+
   const handleTabKeyDown = (
     event: React.KeyboardEvent<HTMLButtonElement>,
     index: number,
@@ -215,6 +240,12 @@ export const TreinoDayNavigator: React.FC<TreinoDayNavigatorProps> = ({
               )
             })}
           </div>
+
+          {actions.length > 0 && (
+            <div className="mt-3 mb-4 border-t border-[color:var(--student-border)] pt-3">
+              {renderActionButtons(undefined, "grid gap-2 sm:grid-cols-2")}
+            </div>
+          )}
         </div>
       ) : (
         <div className="md:hidden">
@@ -269,25 +300,7 @@ export const TreinoDayNavigator: React.FC<TreinoDayNavigatorProps> = ({
 
               {actions.length > 0 && (
                 <div className="mt-3 border-t border-[color:var(--student-border)] pt-3">
-                  <div className="grid gap-2">
-                    {actions.map((action) => {
-                      const Icon = action.icon || Plus
-                      return (
-                        <button
-                          key={action.label}
-                          type="button"
-                          onClick={() => {
-                            action.onClick()
-                            closeMobileMenu()
-                          }}
-                          className="flex items-center gap-2 rounded-lg border border-[color:var(--student-border)] bg-[color:var(--student-surface)] px-3 py-2 text-sm font-medium text-[color:var(--student-text)] transition-colors hover:bg-[color:var(--student-surface-soft)] focus:outline-none focus:ring-2 focus:ring-[color:var(--student-border-strong)]"
-                        >
-                          <Icon className="h-4 w-4" />
-                          {action.label}
-                        </button>
-                      )
-                    })}
-                  </div>
+                  {renderActionButtons(closeMobileMenu)}
                 </div>
               )}
             </div>

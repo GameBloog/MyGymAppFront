@@ -4,12 +4,12 @@ import {
   useQueryClient,
   type UseQueryResult,
   type UseMutationResult,
-} from "react-query"
+} from "@tanstack/react-query"
 import { inviteCodesApi } from "../services/api"
 import { type InviteCode, type CreateInviteCodeDTO } from "../types"
 
 export const useInviteCodes = (): UseQueryResult<InviteCode[], Error> => {
-  return useQuery<InviteCode[], Error>("inviteCodes", inviteCodesApi.getAll, {
+  return useQuery<InviteCode[], Error>(["inviteCodes"], inviteCodesApi.getAll, {
     staleTime: 30000,
     cacheTime: 300000,
     refetchOnMount: true,
@@ -29,12 +29,12 @@ export const useCreateInviteCode = (): UseMutationResult<
     (data) => inviteCodesApi.create(data),
     {
       onSuccess: (newCode) => {
-        queryClient.setQueryData<InviteCode[]>("inviteCodes", (old) => {
+        queryClient.setQueryData<InviteCode[]>(["inviteCodes"], (old) => {
           if (!old) return [newCode]
           return [newCode, ...old]
         })
 
-        queryClient.invalidateQueries("inviteCodes")
+        queryClient.invalidateQueries(["inviteCodes"])
       },
     }
   )

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router"
 import { Button, Card } from "../components/ui"
 import { useAuth } from "../hooks/useAuth"
 import { legalApi, authApi } from "../services/api"

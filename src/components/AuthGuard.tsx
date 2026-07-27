@@ -1,5 +1,5 @@
 import React, { type ReactNode } from "react"
-import { Navigate, useLocation, useNavigate } from "react-router-dom"
+import { Navigate, useLocation, useNavigate } from "react-router"
 import { useAuth } from "../hooks/useAuth"
 import { type UserRole } from "../types"
 import { Loader2, LogOut, Home } from "lucide-react"
@@ -19,6 +19,20 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
   const { isAuthenticated, isLoading, user, logout } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
+  const [isLoggingOut, setIsLoggingOut] = React.useState(false)
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return
+
+    setIsLoggingOut(true)
+
+    try {
+      await logout()
+      navigate("/login", { replace: true })
+    } catch {
+      setIsLoggingOut(false)
+    }
+  }
 
   if (isLoading) {
     return (
@@ -62,10 +76,8 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({
               <Button
                 variant="secondary"
                 icon={LogOut}
-                onClick={() => {
-                  logout()
-                  navigate("/login")
-                }}
+                onClick={handleLogout}
+                isLoading={isLoggingOut}
                 className="w-full"
               >
                 Sair da Conta

@@ -1,4 +1,4 @@
-import { useQuery, type UseQueryResult } from "react-query"
+import { useQuery, type UseQueryResult } from "@tanstack/react-query"
 import { professorOperationsApi } from "../services/api"
 import {
   type ProfessorDashboardResponse,

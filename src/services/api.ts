@@ -22,9 +22,6 @@ import {
   type UpdateAlunoDTO,
   type UpdateAlunoStatusDTO,
   type ApiError,
-  type UserAnswer,
-  type CreateUserAnswerDTO,
-  type UpdateUserAnswerDTO,
   type YoutubeLatestContentResponse,
   type FinanceDashboardResponse,
   type FinanceRenewal,
@@ -43,8 +40,12 @@ import {
   type PrivacyPreferencesInput,
   type DataSubjectRequest,
   type DataSubjectRequestType,
+  type AdminDataSubjectRequest,
+  type ProcessDataSubjectRequestDTO,
   type OnboardingResponse,
   type OnboardingState,
+  type ArquivoAluno,
+  type TipoArquivoAluno,
 } from "../types"
 
 export const api = axios.create({
@@ -88,10 +89,7 @@ const removeContentTypeHeader = (headers: AxiosRequestConfig["headers"]) => {
 const cleanPayload = <T extends object>(data: T): Record<string, unknown> =>
   Object.entries(data as Record<string, unknown>).reduce(
     (acc, [key, value]) => {
-      if (value !== undefined && value !== "" && value !== null) {
-        if (Array.isArray(value) && value.length === 0) {
-          return acc
-        }
+      if (value !== undefined) {
         acc[key] = value
       }
       return acc
@@ -101,22 +99,40 @@ const cleanPayload = <T extends object>(data: T): Record<string, unknown> =>
 
 let isRedirecting = false
 let accessToken: string | null = null
+let authSessionGeneration = 0
+let isLogoutInProgress = false
+
+const LOGOUT_IN_PROGRESS_MESSAGE = "Logout em andamento."
+const STALE_AUTH_REFRESH_MESSAGE = "Sessao encerrada antes da renovacao."
+
+const isAuthRefreshSuppressedError = (error: unknown) =>
+  error instanceof Error &&
+  (error.message === LOGOUT_IN_PROGRESS_MESSAGE ||
+    error.message === STALE_AUTH_REFRESH_MESSAGE)
 
 export const setAccessToken = (token: string | null) => {
   accessToken = token
 }
 
-const clearAuth = () => {
+export const clearAccessToken = () => {
+  authSessionGeneration += 1
   setAccessToken(null)
 }
 
+const clearAuth = () => {
+  clearAccessToken()
+}
+
 const storeAuth = (session: LoginResponse) => {
+  if (isLogoutInProgress) return false
+
   setAccessToken(session.token)
   window.dispatchEvent(
     new CustomEvent<LoginResponse>(AUTH_SESSION_REFRESHED_EVENT, {
       detail: session,
     }),
   )
+  return true
 }
 
 const notifySessionExpired = () => {
@@ -126,10 +142,26 @@ const notifySessionExpired = () => {
 let refreshSessionPromise: Promise<LoginResponse> | null = null
 
 const refreshSession = async (): Promise<LoginResponse> => {
+  if (isLogoutInProgress) {
+    return Promise.reject(new Error(LOGOUT_IN_PROGRESS_MESSAGE))
+  }
+
   if (!refreshSessionPromise) {
+    const refreshGeneration = authSessionGeneration
+
     refreshSessionPromise = api
       .post<LoginResponse>("/auth/refresh")
-      .then((response) => response.data)
+      .then((response) => {
+        if (isLogoutInProgress) {
+          throw new Error(LOGOUT_IN_PROGRESS_MESSAGE)
+        }
+
+        if (refreshGeneration !== authSessionGeneration) {
+          throw new Error(STALE_AUTH_REFRESH_MESSAGE)
+        }
+
+        return response.data
+      })
       .finally(() => {
         refreshSessionPromise = null
       })
@@ -226,11 +258,19 @@ api.interceptors.response.use(
 
         try {
           const refreshedSession = await refreshSession()
-          storeAuth(refreshedSession)
+
+          if (!storeAuth(refreshedSession)) {
+            return Promise.reject(new Error(STALE_AUTH_REFRESH_MESSAGE))
+          }
+
           originalRequest.headers = originalRequest.headers || {}
           originalRequest.headers.Authorization = `Bearer ${refreshedSession.token}`
           return api(originalRequest)
-        } catch {
+        } catch (refreshError) {
+          if (isAuthRefreshSuppressedError(refreshError)) {
+            return Promise.reject(refreshError)
+          }
+
           redirectToPublicEntry()
           return Promise.reject(
             new Error("Sessão expirada. Faça login novamente."),
@@ -370,7 +410,15 @@ export const authApi = {
   },
 
   logout: async (): Promise<void> => {
-    await api.post("/auth/logout")
+    isLogoutInProgress = true
+
+    try {
+      await api.post("/auth/logout")
+      clearAuth()
+    } finally {
+      refreshSessionPromise = null
+      isLogoutInProgress = false
+    }
   },
 }
 
@@ -433,6 +481,24 @@ export const privacyApi = {
 
   exportData: async (): Promise<unknown> => {
     const response = await api.get<unknown>("/privacy/export")
+    return response.data
+  },
+
+  listAdminRequests: async (): Promise<AdminDataSubjectRequest[]> => {
+    const response = await api.get<AdminDataSubjectRequest[]>(
+      "/privacy/admin/requests",
+    )
+    return response.data
+  },
+
+  processAdminRequest: async (
+    id: string,
+    data: ProcessDataSubjectRequestDTO,
+  ): Promise<DataSubjectRequest> => {
+    const response = await api.patch<DataSubjectRequest>(
+      `/privacy/admin/requests/${id}`,
+      data,
+    )
     return response.data
   },
 }
@@ -545,34 +611,38 @@ export const professoresApi = {
   },
 }
 
-export const answersApi = {
-  getAll: async (): Promise<UserAnswer[]> => {
-    const response = await api.get<UserAnswer[]>("/answers")
+export interface UploadArquivoAlunoDTO {
+  alunoId: string
+  tipo: TipoArquivoAluno
+  titulo: string
+  descricao?: string
+  file: File
+}
+
+export const arquivosAlunoApi = {
+  listByAluno: async (alunoId: string): Promise<ArquivoAluno[]> => {
+    const response = await api.get<ArquivoAluno[]>(
+      `/arquivos-aluno/aluno/${alunoId}`,
+    )
     return response.data
   },
 
-  getById: async (id: string): Promise<UserAnswer> => {
-    const response = await api.get<UserAnswer>(`/answers/${id}`)
-    return response.data
-  },
+  upload: async (data: UploadArquivoAlunoDTO): Promise<ArquivoAluno> => {
+    const formData = new FormData()
+    formData.append("alunoId", data.alunoId)
+    formData.append("tipo", data.tipo)
+    formData.append("titulo", data.titulo)
+    if (data.descricao) {
+      formData.append("descricao", data.descricao)
+    }
+    formData.append("file", data.file)
 
-  create: async (data: CreateUserAnswerDTO): Promise<UserAnswer> => {
-    const response = await api.post<UserAnswer>("/answers", data)
-    return response.data
-  },
-
-  update: async (id: string, data: UpdateUserAnswerDTO): Promise<UserAnswer> => {
-    const response = await api.put<UserAnswer>(`/answers/${id}`, data)
+    const response = await api.post<ArquivoAluno>("/arquivos-aluno", formData)
     return response.data
   },
 
   delete: async (id: string): Promise<void> => {
-    await api.delete(`/answers/${id}`)
-  },
-
-  healthCheck: async (): Promise<{ status: string }> => {
-    const response = await api.get<{ status: string }>("/health")
-    return response.data
+    await api.delete(`/arquivos-aluno/${id}`)
   },
 }
 

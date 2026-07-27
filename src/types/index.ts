@@ -125,6 +125,17 @@ export interface DataSubjectRequest {
   updatedAt: string
 }
 
+export interface AdminDataSubjectRequest extends DataSubjectRequest {
+  user: Pick<User, "id" | "nome" | "email" | "role"> & {
+    blockedAt?: string | null
+  }
+}
+
+export interface ProcessDataSubjectRequestDTO {
+  status: DataSubjectRequestStatus
+  response?: string
+}
+
 export type OnboardingStatus =
   | "NOT_STARTED"
   | "IN_PROGRESS"
@@ -673,35 +684,7 @@ export interface UpdateAlunoDTO {
   nome?: string
   email?: string
   password?: string
-  sexoBiologico?: SexoBiologico
-  telefone?: string
-  alturaCm?: number
-  pesoKg?: number
-  idade?: number
-  cinturaCm?: number
-  quadrilCm?: number
-  pescocoCm?: number
-  alimentos_quer_diario?: string[]
-  alimentos_nao_comem?: string[]
-  alergias_alimentares?: string[]
-  suplementos_consumidos?: string[]
-  dores_articulares?: string
-  dias_treino_semana?: number
-  frequencia_horarios_refeicoes?: string
-  objetivos_atuais?: string
-  toma_remedio?: boolean
-  remedios_uso?: string
-}
-
-export interface UpdateAlunoStatusDTO {
-  ativo: boolean
-}
-
-export interface UserAnswer {
-  id: string
-  createdAt: string
-  nome: string
-  email: string
+  sexoBiologico?: SexoBiologico | null
   telefone?: string | null
   alturaCm?: number | null
   pesoKg?: number | null
@@ -712,32 +695,33 @@ export interface UserAnswer {
   alimentos_quer_diario?: string[] | null
   alimentos_nao_comem?: string[] | null
   alergias_alimentares?: string[] | null
-  dores_articulares?: string | null
   suplementos_consumidos?: string[] | null
+  dores_articulares?: string | null
   dias_treino_semana?: number | null
   frequencia_horarios_refeicoes?: string | null
+  objetivos_atuais?: string | null
+  toma_remedio?: boolean | null
+  remedios_uso?: string | null
 }
 
-export interface CreateUserAnswerDTO {
-  nome: string
-  email: string
-  telefone?: string
-  alturaCm?: number
-  pesoKg?: number
-  idade?: number
-  cinturaCm?: number
-  quadrilCm?: number
-  pescocoCm?: number
-  alimentos_quer_diario?: string[]
-  alimentos_nao_comem?: string[]
-  alergias_alimentares?: string[]
-  dores_articulares?: string
-  suplementos_consumidos?: string[]
-  dias_treino_semana?: number
-  frequencia_horarios_refeicoes?: string
+export interface UpdateAlunoStatusDTO {
+  ativo: boolean
 }
 
-export type UpdateUserAnswerDTO = Partial<CreateUserAnswerDTO>
+export type TipoArquivoAluno = "TREINO" | "DIETA"
+
+export interface ArquivoAluno {
+  id: string
+  alunoId: string
+  professorId: string
+  tipo: TipoArquivoAluno
+  titulo: string
+  descricao?: string | null
+  url: string
+  publicId: string
+  createdAt: string
+  updatedAt: string
+}
 
 export interface ApiError {
   error: string

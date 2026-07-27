@@ -4,7 +4,7 @@ import {
   useQueryClient,
   type UseMutationResult,
   type UseQueryResult,
-} from "react-query"
+} from "@tanstack/react-query"
 import { exerciciosApi, treinoApi } from "../services/treinoApi"
 import type {
   ComentarProfessorCheckinDTO,
@@ -64,7 +64,7 @@ export const useGrupamentosExercicios = (): UseQueryResult<
   Error
 > => {
   return useQuery<GrupamentoMuscular[], Error>(
-    "grupamentos-exercicios",
+    ["grupamentos-exercicios"],
     exerciciosApi.listGrupamentos,
     {
       staleTime: 5 * 60 * 1000,
@@ -107,7 +107,7 @@ export const useCreateExercicio = (): UseMutationResult<
     (data) => exerciciosApi.create(data),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("exercicios")
+        queryClient.invalidateQueries(["exercicios"])
         showToast.success("Exercício criado com sucesso!")
       },
       onError: (error) => {
@@ -128,7 +128,7 @@ export const useImportExercicioExterno = (): UseMutationResult<
     (data) => exerciciosApi.importExternal(data),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("exercicios")
+        queryClient.invalidateQueries(["exercicios"])
       },
       onError: (error) => {
         showToast.error(error.message || "Erro ao importar exercício")
@@ -148,7 +148,7 @@ export const useUploadExercicioMedia = (): UseMutationResult<
     ({ exercicioId, kind, file }) => exerciciosApi.uploadMedia(exercicioId, kind, file),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("exercicios")
+        queryClient.invalidateQueries(["exercicios"])
       },
       onError: (error) => {
         showToast.error(error.message || "Erro ao enviar mídia do exercício")
@@ -168,7 +168,7 @@ export const useClearExercicioMedia = (): UseMutationResult<
     ({ exercicioId, kind }) => exerciciosApi.clearMedia(exercicioId, kind),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("exercicios")
+        queryClient.invalidateQueries(["exercicios"])
       },
       onError: (error) => {
         showToast.error(error.message || "Erro ao limpar mídia do exercício")
@@ -311,9 +311,9 @@ export const useUpdateTreinoExercicioCheckin = (): UseMutationResult<
       treinoApi.updateExercicioCheckin(checkinId, treinoDiaExercicioId, data),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("treino-checkins")
-        queryClient.invalidateQueries("treino-timeline")
-        queryClient.invalidateQueries("treino-progress")
+        queryClient.invalidateQueries(["treino-checkins"])
+        queryClient.invalidateQueries(["treino-timeline"])
+        queryClient.invalidateQueries(["treino-progress"])
       },
       onError: (error) => {
         showToast.error(error.message || "Erro ao atualizar exercício")
@@ -342,7 +342,7 @@ export const useFinalizeTreinoCheckin = (): UseMutationResult<
           ["treino-checkins", variables.alunoId],
           (old) => old?.map((c) => (c.id === finalizado.id ? finalizado : c)) ?? [],
         )
-        queryClient.invalidateQueries(["treino-checkins", variables.alunoId], { refetchActive: false })
+        queryClient.invalidateQueries({ queryKey: ["treino-checkins", variables.alunoId], refetchType: "none" })
         queryClient.invalidateQueries(["treino-timeline", variables.alunoId])
         queryClient.invalidateQueries(["treino-progress", variables.alunoId])
         showToast.success("Treino finalizado com sucesso!")

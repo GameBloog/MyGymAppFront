@@ -4,7 +4,7 @@ import {
   useQueryClient,
   type UseMutationResult,
   type UseQueryResult,
-} from "react-query"
+} from "@tanstack/react-query"
 import { dietaAlimentosApi, dietaApi } from "../services/dietaApi"
 import type {
   AlimentoDieta,
@@ -74,7 +74,7 @@ export const useImportAlimentoExterno = (): UseMutationResult<
     (data) => dietaAlimentosApi.importExternal(data),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("dieta-alimentos")
+        queryClient.invalidateQueries(["dieta-alimentos"])
       },
       onError: (error) => {
         showToast.error(error.message || "Erro ao importar alimento")
@@ -94,7 +94,7 @@ export const useCreateAlimentoDieta = (): UseMutationResult<
     (data) => dietaAlimentosApi.create(data),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("dieta-alimentos")
+        queryClient.invalidateQueries(["dieta-alimentos"])
         showToast.success("Alimento criado com sucesso!")
       },
       onError: (error) => {
