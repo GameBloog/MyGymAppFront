@@ -13,13 +13,12 @@ export function validarFoto(file: File): string | null {
   return null 
 }
 
-// 4.000.000 bytes, e nao 4 * 1024 * 1024. Na AWS o backend roda com
-// MAX_FILE_SIZE = 4 MiB (4.194.304) aplicado tanto ao `bodyLimit` do Fastify
-// quanto ao `limits.fileSize` do multipart. Um arquivo de exatamente 4 MiB
-// estoura o teto assim que o envelope multipart (boundary, headers, campos) e
-// somado. Os ~194 KB de folga cobrem esse envelope, e o numero arredondado
-// mantem a mensagem ("Máximo 4MB") igual a que o backend devolve.
-const MAX_MIDIA_EXERCICIO_BYTES = 4_000_000
+// Midia de exercicio sobe direto para o Cloudinary (ver
+// exerciciosApi.uploadMedia), entao nao passa pelo teto de payload da Lambda.
+// O limite aqui e de produto, nao de infraestrutura: 5MB e o valor que sempre
+// valeu, mantido para nao mudar o comportamento junto com a migracao. Da para
+// aumentar sem tocar no backend - quem limita agora e o plano do Cloudinary.
+const MAX_MIDIA_EXERCICIO_BYTES = 5 * 1024 * 1024
 
 export function validarMidiaExercicio(
   file: File,
@@ -42,7 +41,7 @@ export function validarMidiaExercicio(
   }
 
   if (file.size > MAX_SIZE) {
-    return "Arquivo muito grande. Máximo 4MB"
+    return "Arquivo muito grande. Máximo 5MB"
   }
 
   return null

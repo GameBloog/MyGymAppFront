@@ -17,6 +17,14 @@ import type {
   UpsertPlanoTreinoDTO,
 } from "../types"
 
+interface AssinaturaUploadMedia {
+  uploadUrl: string
+  apiKey: string
+  params: Record<string, string | number>
+  signature: string
+  uploadToken: string
+}
+
 interface ListExerciciosParams {
   q?: string
   grupamento?: GrupamentoMuscular
@@ -55,19 +63,58 @@ export const exerciciosApi = {
     return response.data
   },
 
+  // Upload em tres passos: o arquivo vai do navegador direto ao Cloudinary,
+  // sem atravessar a API. O caminho antigo (POST multipart na propria API)
+  // esbarrava no teto de payload da Lambda - ~4,5MB uteis depois da inflacao
+  // base64 do API Gateway. Por aqui, o tamanho deixa de depender da API.
+  //
+  // O servidor escolhe o destino e assina; o navegador nao consegue gravar em
+  // outro lugar da conta Cloudinary sem invalidar a assinatura.
   uploadMedia: async (
     exercicioId: string,
     kind: ExercicioMediaKind,
     file: File,
   ): Promise<Exercicio> => {
+    const { data: assinatura } = await api.post<AssinaturaUploadMedia>(
+      `/exercicios/${exercicioId}/midia/${kind}/assinatura`,
+      { mimetype: file.type },
+    )
+
     const formData = new FormData()
     formData.append("file", file)
+    formData.append("api_key", assinatura.apiKey)
+    formData.append("signature", assinatura.signature)
 
-    const response = await api.post<Exercicio>(
-      `/exercicios/${exercicioId}/midia/${kind}`,
-      formData,
+    // Todo parametro assinado precisa ir junto e identico - o Cloudinary
+    // recalcula a assinatura a partir do que recebe.
+    Object.entries(assinatura.params).forEach(([chave, valor]) => {
+      formData.append(chave, String(valor))
+    })
+
+    // fetch, e nao a instancia `api`: aquela carrega baseURL, interceptors de
+    // autenticacao e withCredentials. Mandar credencial da aplicacao para um
+    // terceiro seria vazamento. fetch usa credentials "same-origin" por
+    // padrao, entao nada de cookie sai daqui.
+    //
+    // Tambem escapa do timeout de 10s do axios, que estrangularia arquivo
+    // grande em conexao lenta.
+    const envio = await fetch(assinatura.uploadUrl, {
+      method: "POST",
+      body: formData,
+    })
+
+    if (!envio.ok) {
+      throw new Error("Falha ao enviar o arquivo. Tente novamente.")
+    }
+
+    // O que autoriza a gravacao e o token, nao a resposta do Cloudinary: o
+    // servidor reconsulta o asset por conta propria antes de gravar.
+    const { data } = await api.post<Exercicio>(
+      `/exercicios/${exercicioId}/midia/${kind}/confirmacao`,
+      { uploadToken: assinatura.uploadToken },
     )
-    return response.data
+
+    return data
   },
 
   clearMedia: async (
