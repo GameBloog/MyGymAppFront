@@ -12,7 +12,10 @@ dist
 dist-ssr
 *.local
 .env
-.env.production
+# .env.production e versionado de proposito: contem so a URL publica da API,
+# que o Vite compila dentro do bundle. Versionado, o build de producao e
+# reproduzivel na Vercel e no CI sem depender de variavel configurada no
+# painel. Segredo nenhum entra nele.
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
