@@ -54,6 +54,7 @@ export const ModalEnviarFoto: React.FC<ModalEnviarFotoProps> = ({
       await onSubmit(file, descricao.trim() || undefined)
       handleClose()
     } catch (error) {
+      logError("ModalEnviarFoto.handleSubmit", error)
       setError(
         error instanceof Error ? error.message : "Não foi possível enviar a foto",
       )
